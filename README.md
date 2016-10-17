@@ -5,10 +5,11 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 
 [Rainmatter](http://rainmatter.com) (c) 2016. Licensed under the MIT License.
 
-#Documentation
+##Documentation
 - [Kite Connect HTTP API documentation](https://kite.trade/docs/connect/v1)
 
 ## API usage
+```java
 Initialize Kiteconnect using apiKey
 Kiteconnect kiteSdk = new Kiteconnect("xxxx");
 
@@ -33,10 +34,14 @@ kiteSdk.registerHook(new SessionExpiryHook() {
     System.out.println("session expired");                    }
 });
 
+#Get margins
+
 Get margins returns margin model, you can pass equity or commodity as arguments to get margins of respective segments.
 Margins margins = kiteSdk.getMargins("equity");
 System.out.println(margins.available.cash);
 System.out.println(margins.utilised.debits);
+
+#Place order
 
 Place order method requires a map argument which contains,
 tradingsymbol, exchange, transaction_type, order_type, quantity, product, price, trigger_price, disclosed_quantity, validity
