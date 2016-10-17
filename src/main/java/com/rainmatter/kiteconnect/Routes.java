@@ -1,4 +1,4 @@
-package com.rainmatter.sdk;
+package com.rainmatter.kiteconnect;
 
 import java.util.HashMap;
 import java.util.Map;

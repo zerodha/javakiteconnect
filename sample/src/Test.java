@@ -4,7 +4,7 @@ import com.rainmatter.kitehttp.exceptions.KiteException;
 import com.rainmatter.models.*;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.rainmatter.sdk.Kiteconnect;
+import com.rainmatter.kiteconnect.KiteConnect;
 import com.rainmatter.ticker.OnConnect;
 import com.rainmatter.ticker.OnDisconnect;
 import com.rainmatter.ticker.OnTick;
@@ -27,7 +27,7 @@ public class Test {
         try {
                 // First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteconnect api call.
                 // Initialize KiteSdk with your apiKey.
-                Kiteconnect kiteconnect = new Kiteconnect("xxxxxx");
+                KiteConnect kiteconnect = new KiteConnect("xxxxxx");
 
                 // set userId
                 kiteconnect.setUserId("xxxxxx");

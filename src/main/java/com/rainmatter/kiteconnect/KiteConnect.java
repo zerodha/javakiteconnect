@@ -1,4 +1,4 @@
-package com.rainmatter.sdk;
+package com.rainmatter.kiteconnect;
 
 import com.rainmatter.kitehttp.KiteRequest;
 import com.rainmatter.kitehttp.SessionExpiryHook;
@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Provides all the capabilities of kiteconnect like place order, fetch orderbook, positions, holdings and more.
  */
-public class Kiteconnect {
+public class KiteConnect {
 
     private String _apiKey;
     private String _accessToken;
@@ -39,7 +39,7 @@ public class Kiteconnect {
     /** Initializes KiteSDK with the api key provided for your App.
      * @param apiKey
      */
-    public Kiteconnect(String apiKey){
+    public KiteConnect(String apiKey){
         _apiKey = apiKey;
     }
 

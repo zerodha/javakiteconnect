@@ -5,7 +5,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.rainmatter.kitehttp.exceptions.*;
-import com.rainmatter.sdk.Kiteconnect;
+import com.rainmatter.kiteconnect.KiteConnect;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -219,8 +219,8 @@ public class KiteRequest {
         switch (exception) {
             // if there is a token exception, generate a signal to logout the user.
             case "TokenException":
-                if(Kiteconnect.sessionExpiryHook != null) {
-                    Kiteconnect.sessionExpiryHook.sessionExpired();
+                if(KiteConnect.sessionExpiryHook != null) {
+                    KiteConnect.sessionExpiryHook.sessionExpired();
                 }
                 return new KiteTokenException(message, errorCode);
 

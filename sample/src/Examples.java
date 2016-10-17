@@ -1,7 +1,7 @@
 import com.neovisionaries.ws.client.WebSocketException;
 import com.rainmatter.kitehttp.exceptions.KiteException;
 import com.rainmatter.models.*;
-import com.rainmatter.sdk.Kiteconnect;
+import com.rainmatter.kiteconnect.KiteConnect;
 import com.rainmatter.ticker.KiteTicker;
 import com.rainmatter.ticker.OnConnect;
 import com.rainmatter.ticker.OnDisconnect;
@@ -20,7 +20,7 @@ import java.util.Map;
 public class Examples {
 
     /**Gets Margin.*/
-    public void getMargins(Kiteconnect kiteconnect) throws KiteException {
+    public void getMargins(KiteConnect kiteconnect) throws KiteException {
         // Get margins returns margin model, you can pass equity or commodity as arguments to get margins of respective segments.
         Margins margins = kiteconnect.getMargins("equity");
         System.out.println(margins.available.cash);
@@ -28,7 +28,7 @@ public class Examples {
     }
 
     /**Place order.*/
-    public void placeOrder(Kiteconnect kiteconnect) throws KiteException {
+    public void placeOrder(KiteConnect kiteconnect) throws KiteException {
         /** Place order method requires a map argument which contains,
          * tradingsymbol, exchange, transaction_type, order_type, quantity, product, price, trigger_price, disclosed_quantity, validity
          * squareoff_value, stoploss_value, trailing_stoploss
@@ -56,7 +56,7 @@ public class Examples {
     }
 
     /** Place bracket order.*/
-    public void placeBracketOrder(Kiteconnect kiteconnect) throws KiteException {
+    public void placeBracketOrder(KiteConnect kiteconnect) throws KiteException {
         /** Bracket order:- following is example param for bracket order*
          * trailing_stoploss and stoploss_value are points not tick or price
          */
@@ -80,7 +80,7 @@ public class Examples {
     }
 
     /** Place cover order.*/
-    public void placeCoverOrder(Kiteconnect kiteconnect) throws KiteException {
+    public void placeCoverOrder(KiteConnect kiteconnect) throws KiteException {
         /** Cover Order:- following is example param for cover order and params sample
          * key: quantity value: 1
          key: price value: 0
@@ -111,7 +111,7 @@ public class Examples {
     }
 
     /** Get trigger range.*/
-    public void getTriggerRange(Kiteconnect kiteconnect) throws KiteException {
+    public void getTriggerRange(KiteConnect kiteconnect) throws KiteException {
         // You need to send a map with transaction_type, exchange and tradingsymbol to get trigger range.
         Map<String, Object> params12 = new HashMap<>();
         params12.put("transaction_type", "SELL");
@@ -120,7 +120,7 @@ public class Examples {
     }
 
     /** Get orderbook.*/
-    public void getOrders(Kiteconnect kiteconnect) throws KiteException {
+    public void getOrders(KiteConnect kiteconnect) throws KiteException {
         // Get orders returns order model which will have list of orders inside, which can be accessed as follows,
         Order order1 = kiteconnect.getOrders();
         for(int i = 0; i< order1.orders.size(); i++){
@@ -130,21 +130,21 @@ public class Examples {
     }
 
     /** Get tradebook*/
-    public void getTrades(Kiteconnect kiteconnect) throws KiteException {
+    public void getTrades(KiteConnect kiteconnect) throws KiteException {
         // Returns tradebook.
         Trade trade = kiteconnect.getTrades();
         System.out.println(trade.trades.size());
     }
 
     /** Get trades for an order.*/
-    public void getTradesWithOrderId(Kiteconnect kiteconnect) throws KiteException {
+    public void getTradesWithOrderId(KiteConnect kiteconnect) throws KiteException {
         // Returns trades for the given order.
         Trade trade1 = kiteconnect.getTrades("161007000088484");
         System.out.println(trade1.trades.size());
     }
 
     /** Modify order.*/
-    public void modifyOrder(Kiteconnect kiteconnect) throws KiteException {
+    public void modifyOrder(KiteConnect kiteconnect) throws KiteException {
         // Order modify request will return order model which will contain only order_id.
         Map<String, Object> params = new HashMap<String, Object>(){
             {
@@ -164,7 +164,7 @@ public class Examples {
     }
 
     /** Cancel an order*/
-    public void cancelOrder(Kiteconnect kiteconnect) throws KiteException {
+    public void cancelOrder(KiteConnect kiteconnect) throws KiteException {
         // Order modify request will return order model which will contain only order_id.
         // Cancel order will return order model which will only have orderId.
         Order order2 = kiteconnect.cancelOrder("161007000088484", "regular");
@@ -172,21 +172,21 @@ public class Examples {
     }
 
     /** Get all positions.*/
-    public void getPositions(Kiteconnect kiteconnect) throws KiteException {
+    public void getPositions(KiteConnect kiteconnect) throws KiteException {
         // Get positions returns position model which contains list of positions.
         Position position = kiteconnect.getPositions();
         System.out.println(position.positions.size());
     }
 
     /** Get holdings.*/
-    public void getHoldings(Kiteconnect kiteconnect) throws KiteException {
+    public void getHoldings(KiteConnect kiteconnect) throws KiteException {
         // Get holdings returns holdings model which contains list of holdings.
         Holding holding = kiteconnect.getHoldings();
         System.out.println(holding.holdings);
     }
 
     /** Converts position*/
-    public void modifyProduct(Kiteconnect kiteconnect) throws KiteException {
+    public void modifyProduct(KiteConnect kiteconnect) throws KiteException {
         //Modify product can be used to change MIS to NRML(CNC) or NRML(CNC) to MIS.
         Map<String, Object> param6 = new HashMap<String, Object>(){
             {
@@ -204,7 +204,7 @@ public class Examples {
     }
 
     /** Get all instruments that can be traded using kite connect.*/
-    public void getAllInstruments(Kiteconnect kiteconnect) throws KiteException, IOException {
+    public void getAllInstruments(KiteConnect kiteconnect) throws KiteException, IOException {
         // Get all instruments list. This call is very expensive as it involves downloading of large data dump.
         // Hence, it is recommended that this call be made once and the results stored locally once every morning before market opening.
         List<Instrument> instruments = kiteconnect.getInstruments();
@@ -212,20 +212,20 @@ public class Examples {
     }
 
     /** Get instruments for the desired exchange.*/
-    public void getInstrumentsForExchange(Kiteconnect kiteconnect) throws KiteException, IOException {
+    public void getInstrumentsForExchange(KiteConnect kiteconnect) throws KiteException, IOException {
         // Get instruments for an exchange.
         List<Instrument> nseInstruments = kiteconnect.getInstruments("NSE");
         System.out.println(nseInstruments.size());
     }
 
     /** Get quote for a scrip.*/
-    public void getQuote(Kiteconnect kiteconnect) throws KiteException {
+    public void getQuote(KiteConnect kiteconnect) throws KiteException {
         // Get quotes returns quote for desired tradingsymbol.
         Quote quote = kiteconnect.getQuote("NSE", "RELIANCE");
     }
 
     /** Get historical data for an instrument.*/
-    public void getHistoricalData(Kiteconnect kiteconnect) throws KiteException {
+    public void getHistoricalData(KiteConnect kiteconnect) throws KiteException {
         /** Get historical data dump, requires from and to date, intrument token, interval
          * returns historical data object which will have list of historical data inside the object*/
         Map<String, Object> param8 = new HashMap<String, Object>(){
@@ -241,14 +241,14 @@ public class Examples {
     }
 
     /** Logout user.*/
-    public void logout(Kiteconnect kiteconnect) throws KiteException {
+    public void logout(KiteConnect kiteconnect) throws KiteException {
         /** Logout user and kill session. */
         JSONObject jsonObject10 = kiteconnect.logout();
         System.out.println(jsonObject10);
     }
 
     /** Demonstrates ticker connection, subcribing for instruments, unsubscribing for instruments, set mode of tick data, ticker disconnection*/
-    public void tickerUsage(Kiteconnect kiteconnect) throws IOException, WebSocketException {
+    public void tickerUsage(KiteConnect kiteconnect) throws IOException, WebSocketException {
         /** To get live price use com.rainmatter.ticker websocket connection. It is recommended to use only one websocket connection at any point of time and make sure you stop connection, once user goes out of app.*/
         ArrayList tokens = new ArrayList<>();
         tokens.add(53287175);

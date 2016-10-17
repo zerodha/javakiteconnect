@@ -3,8 +3,8 @@ package com.rainmatter.ticker;
 import com.neovisionaries.ws.client.*;
 import com.rainmatter.models.Depth;
 import com.rainmatter.models.Tick;
-import com.rainmatter.sdk.Kiteconnect;
-import com.rainmatter.sdk.Routes;
+import com.rainmatter.kiteconnect.KiteConnect;
+import com.rainmatter.kiteconnect.Routes;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +26,7 @@ public class KiteTicker {
     private WebSocket ws;
 
     //private Thread mThread;
-    private Kiteconnect _kiteSdk;
+    private KiteConnect _kiteSdk;
 
     public final int NseCM = 1,
             NseFO = 2,
@@ -48,7 +48,7 @@ public class KiteTicker {
             modeQuote = "quote", // Quote excluding market depth. 52 bytes.
             modeLTP   = "ltp"; // Only LTP. 4 bytes.;
 
-    public KiteTicker(Kiteconnect kiteSdk){
+    public KiteTicker(KiteConnect kiteSdk){
         _kiteSdk = kiteSdk;
         createUrl();
     }
