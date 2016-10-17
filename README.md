@@ -9,7 +9,7 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 - [Kite Connect HTTP API documentation](https://kite.trade/docs/connect/v1)
 
 ##Usage
-- Download jar file which is available [here](https://github.com/rainmattertech/kiteconnectjava/raw/master/dist/kiteconnectjava.jar) and include it in your build path.
+- [Download jar file](https://github.com/rainmattertech/kiteconnectjava/raw/master/dist/kiteconnectjava.jar) and include it in your build path.
 
 ## API usage
 ```java
@@ -42,18 +42,13 @@ kiteSdk.registerHook(new SessionExpiryHook() {
     public void sessionExpired() {
     System.out.println("session expired");                    }
 });
-```
 
-##Get margins
-```java
 //Get margins returns margin model, you can pass equity or commodity as arguments to get margins of respective segments.
 
 Margins margins = kiteSdk.getMargins("equity");
 System.out.println(margins.available.cash);
 System.out.println(margins.utilised.debits);
-```
-##Place order
-```java
+
 /*Place order method requires a map argument which contains,
 tradingsymbol, exchange, transaction_type, order_type, quantity, product, price, trigger_price, disclosed_quantity, validity
 squareoff_value, stoploss_value, trailing_stoploss
@@ -79,3 +74,50 @@ Map<String, Object> param = new HashMap<String, Object>(){
 Order order = kiteconnect.placeOrder(param, "regular");
 System.out.println(order.orderId);
 ```
+For more details, take a look at Examples.java in sample directory.
+
+##Live streaming data
+```java
+
+/** To get live price use com.rainmatter.ticker websocket connection. It is recommended to use only one websocket connection at any point of time and make sure you stop connection, once user goes out of app.*/
+        ArrayList tokens = new ArrayList<>();
+        tokens.add(53287175);
+        KiteTicker tickerProvider = new KiteTicker(kiteconnect);
+        tickerProvider.setOnConnectedListener(new OnConnect() {
+            @Override
+            public void onConnected() {
+                try {
+                    /** Subscribe ticks for token.
+                     * By default, all tokens are subscribed for modeQuote.
+                     * */
+                    tickerProvider.subscribe(tokens);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (WebSocketException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        tickerProvider.setOnDisconnectedListener(new OnDisconnect() {
+            @Override
+            public void onDisconnected() {
+                // your code goes here
+            }
+        });
+
+        tickerProvider.setOnTickerArrivalListener(new OnTick() {
+            @Override
+            public void onTick(ArrayList<Tick> ticks) {
+                System.out.println(ticks.size());
+            }
+        });
+
+        // connects to ticker server for getting live quotes.
+        tickerProvider.connect();
+
+        //disconnect from ticker server.
+        tickerProvider.disconnect();
+
+```
+For more details about different mode of quotes and subscribing for them, take a look at Examples in sample directory.
