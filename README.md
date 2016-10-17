@@ -79,7 +79,8 @@ For more details, take a look at Examples.java in sample directory.
 ##Live streaming data
 ```java
 
-/** To get live price use com.rainmatter.ticker websocket connection. It is recommended to use only one websocket connection at any point of time and make sure you stop connection, once user goes out of app.*/
+/** To get live price use com.rainmatter.ticker websocket connection. 
+It is recommended to use only one websocket connection at any point of time and make sure you stop connection, once user goes out of app.*/
         ArrayList tokens = new ArrayList<>();
         tokens.add(53287175);
         KiteTicker tickerProvider = new KiteTicker(kiteconnect);
