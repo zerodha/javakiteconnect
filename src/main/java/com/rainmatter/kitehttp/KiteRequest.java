@@ -15,9 +15,7 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 /**
- * Created by H1ccup on 09/09/16.
- *
- * This is a non-Async wrapper of Kite Connect.
+ * A wrapper of Kite Connect for making http calls.
  */
 public class KiteRequest {
 

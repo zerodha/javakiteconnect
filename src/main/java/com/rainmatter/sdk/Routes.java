@@ -4,9 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by H1ccup on 04/09/16.
- *
- * Here all the routes are translated into a Java Map.
+ * Generates endpoints for all api calls.
  *
  */
 public class Routes {

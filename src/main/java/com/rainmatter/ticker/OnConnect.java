@@ -1,7 +1,7 @@
 package com.rainmatter.ticker;
 
 /**
- * Created by sujith on 14/10/16.
+ * Callback to listen to ticker websocket connected event.
  */
 public interface OnConnect {
     void onConnected();

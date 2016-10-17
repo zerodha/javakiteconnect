@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by H1ccup on 10/09/16.
+ * Provides all the capabilities of kiteconnect like place order, fetch orderbook, positions, holdings and more.
  */
 public class Kiteconnect {
 

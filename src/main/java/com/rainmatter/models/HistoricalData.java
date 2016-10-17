@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sujith on 13/10/16.
+ * A wrapper for historical data.
  */
 public class HistoricalData {
 

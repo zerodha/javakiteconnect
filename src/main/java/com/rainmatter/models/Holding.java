@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by H1ccup on 04/10/16.
+ * A wrapper for holdings.
  */
 public class Holding {
 

@@ -1,8 +1,6 @@
 package com.rainmatter.kitehttp.exceptions;
 
 /**
- * Created by H1ccup on 04/09/16.
- *
  * This is the base exception class which has a publicly accessible message and code that
  * is received from Kite Connect api.
  */

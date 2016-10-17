@@ -3,7 +3,7 @@ package com.rainmatter.utils;
 import java.util.HashMap;
 
 /**
- * Created by H1ccup on 04/10/16.
+ * A Wrapper for segment map.
  */
 public class SegmentMap {
     private HashMap<String, String> SEGMENTS_ID_MAP = new HashMap<String, String>();

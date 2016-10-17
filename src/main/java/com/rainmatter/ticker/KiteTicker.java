@@ -1,9 +1,5 @@
 package com.rainmatter.ticker;
 
-/**
- * Created by H1ccup on 10/09/16.
- */
-
 import com.neovisionaries.ws.client.*;
 import com.rainmatter.models.Depth;
 import com.rainmatter.models.Tick;
@@ -19,8 +15,7 @@ import java.nio.ByteOrder;
 import java.util.*;
 
 /**
- * Ticker provider sends tokens to com.com.rainmatter.ticker server and get ticks from com.com.rainmatter.ticker server. Ticker server sends data in bytes. This Class
- * gets ticks and converts into readable format which includes our own business logic.
+ * Provides capability to establish a websocket connection to get live quotes.
  */
 public class KiteTicker {
 
@@ -32,7 +27,6 @@ public class KiteTicker {
 
     //private Thread mThread;
     private Kiteconnect _kiteSdk;
-    private KiteTicker tickerProvider;
 
     public final int NseCM = 1,
             NseFO = 2,
