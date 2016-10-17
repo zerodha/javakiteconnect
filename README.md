@@ -10,20 +10,25 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 
 ## API usage
 ```java
-Initialize Kiteconnect using apiKey
+//Initialize Kiteconnect using apiKey.
+
 Kiteconnect kiteSdk = new Kiteconnect("xxxx");
 
-Set userId
+//Set userId.
+
 kiteSdk.setUserId("xxxx");
 
-First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteconnect api call.
-Get login url. Use this url in webview to login user, after authenticating user you will get requestToken. Use the same to get accessToken.  
+/*First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteconnect api call.
+Get login url. Use this url in webview to login user, after authenticating user you will get requestToken. Use the same to get accessToken. */
+
 String url = kiteSdk.getLoginUrl();
 
-Get accessToken as follows,
+//Get accessToken as follows,
+
 UserModel userModel =  kiteSdk.requestAccessToken("xxxxx", "xxxxx");
 
-Set request token and public token which are obtained from login process.
+//Set request token and public token which are obtained from login process.
+
 kiteSdk.setAccessToken(userModel.accessToken);
 kiteSdk.setPublicToken(userModel.publicToken);
 
@@ -33,17 +38,19 @@ kiteSdk.registerHook(new SessionExpiryHook() {
     public void sessionExpired() {
     System.out.println("session expired");                    }
 });
+```
 
 #Get margins
+```java
+//Get margins returns margin model, you can pass equity or commodity as arguments to get margins of respective segments.
 
-Get margins returns margin model, you can pass equity or commodity as arguments to get margins of respective segments.
 Margins margins = kiteSdk.getMargins("equity");
 System.out.println(margins.available.cash);
 System.out.println(margins.utilised.debits);
-
+```
 #Place order
-
-Place order method requires a map argument which contains,
+```java
+/*Place order method requires a map argument which contains,
 tradingsymbol, exchange, transaction_type, order_type, quantity, product, price, trigger_price, disclosed_quantity, validity
 squareoff_value, stoploss_value, trailing_stoploss
 and variety  which can be value can be regular, bo, co, amo.
@@ -51,7 +58,7 @@ place order which will return order model which will have only orderId in the or
 
 Following is an example param for SL order,
 if a call fails then KiteException will have error message in it
-Success of this call implies only order has been placed successfully, not order execution.
+Success of this call implies only order has been placed successfully, not order execution.*/
 
 Map<String, Object> param = new HashMap<String, Object>(){
    {
@@ -67,3 +74,4 @@ Map<String, Object> param = new HashMap<String, Object>(){
     }};
 Order order = kiteconnect.placeOrder(param, "regular");
 System.out.println(order.orderId);
+```
