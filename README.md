@@ -106,10 +106,10 @@ It is recommended to use only one websocket connection at any point of time and 
             }
         });
 
-        // connects to ticker server for getting live quotes.
+        //Connects to ticker server for getting live quotes.
         tickerProvider.connect();
 
-        //disconnect from ticker server.
+        //Disconnect from ticker server.
         tickerProvider.disconnect();
 
 ```
