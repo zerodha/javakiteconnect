@@ -73,44 +73,43 @@ For more details, take a look at Examples.java in sample directory.
 
 /** To get live price use KiteTicker websocket connection. 
 It is recommended to use only one websocket connection at any point of time and make sure you stop connection, once user goes out of app.*/
-        ArrayList tokens = new ArrayList<>();
-        tokens.add(53287175);
-        KiteTicker tickerProvider = new KiteTicker(kiteconnect);
-        tickerProvider.setOnConnectedListener(new OnConnect() {
-            @Override
-            public void onConnected() {
-                try {
-                    /** Subscribe ticks for token.
-                     * By default, all tokens are subscribed for modeQuote.
-                     * */
-                    tickerProvider.subscribe(tokens);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (WebSocketException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+ArrayList tokens = new ArrayList<>();
+tokens.add(53287175);
+KiteTicker tickerProvider = new KiteTicker(kiteconnect);
+tickerProvider.setOnConnectedListener(new OnConnect() {
+    @Override
+    public void onConnected() {
+        try {
+            /** Subscribe ticks for token.
+              * By default, all tokens are subscribed for modeQuote.*/
+            tickerProvider.subscribe(tokens);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (WebSocketException e) {
+            e.printStackTrace();
+        }
+    }
+});
 
-        tickerProvider.setOnDisconnectedListener(new OnDisconnect() {
-            @Override
-            public void onDisconnected() {
-                // your code goes here
-            }
-        });
+tickerProvider.setOnDisconnectedListener(new OnDisconnect() {
+    @Override
+    public void onDisconnected() {
+       // your code goes here
+    }
+});
 
-        tickerProvider.setOnTickerArrivalListener(new OnTick() {
-            @Override
-            public void onTick(ArrayList<Tick> ticks) {
-                System.out.println(ticks.size());
-            }
-        });
+tickerProvider.setOnTickerArrivalListener(new OnTick() {
+    @Override
+    public void onTick(ArrayList<Tick> ticks) {
+        System.out.println(ticks.size());
+    }
+});
 
-        //Connects to ticker server for getting live quotes.
-        tickerProvider.connect();
+//Connects to ticker server for getting live quotes.
+tickerProvider.connect();
 
-        //Disconnect from ticker server.
-        tickerProvider.disconnect();
+//Disconnect from ticker server.
+tickerProvider.disconnect();
 
 ```
 For more details about different mode of quotes and subscribing for them, take a look at Examples in sample directory.
