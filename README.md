@@ -14,29 +14,23 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 ## API usage
 ```java
 //Initialize Kiteconnect using apiKey.
-
 Kiteconnect kiteSdk = new Kiteconnect("xxxx");
 
 //Set userId.
-
 kiteSdk.setUserId("xxxx");
 
 /*First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteconnect api call.
 Get login url. Use this url in webview to login user, after authenticating user you will get requestToken. Use the same to get accessToken. */
-
 String url = kiteSdk.getLoginUrl();
 
 //Get accessToken as follows,
-
 UserModel userModel =  kiteSdk.requestAccessToken("xxxxx", "xxxxx");
 
 //Set request token and public token which are obtained from login process.
-
 kiteSdk.setAccessToken(userModel.accessToken);
 kiteSdk.setPublicToken(userModel.publicToken);
 
 //Set session expiry callback.
-
 kiteSdk.registerHook(new SessionExpiryHook() {
     @Override
     public void sessionExpired() {
@@ -44,7 +38,6 @@ kiteSdk.registerHook(new SessionExpiryHook() {
 });
 
 //Get margins returns margin model, you can pass equity or commodity as arguments to get margins of respective segments.
-
 Margins margins = kiteSdk.getMargins("equity");
 System.out.println(margins.available.cash);
 System.out.println(margins.utilised.debits);
@@ -58,7 +51,6 @@ place order which will return order model which will have only orderId in the or
 Following is an example param for SL order,
 if a call fails then KiteException will have error message in it
 Success of this call implies only order has been placed successfully, not order execution.*/
-
 Map<String, Object> param = new HashMap<String, Object>(){
    {
         put("quantity", "1");
