@@ -32,7 +32,8 @@ UserModel userModel =  kiteSdk.requestAccessToken("xxxxx", "xxxxx");
 kiteSdk.setAccessToken(userModel.accessToken);
 kiteSdk.setPublicToken(userModel.publicToken);
 
-Set session expiry callback.
+//Set session expiry callback.
+
 kiteSdk.registerHook(new SessionExpiryHook() {
     @Override
     public void sessionExpired() {
@@ -40,7 +41,7 @@ kiteSdk.registerHook(new SessionExpiryHook() {
 });
 ```
 
-#Get margins
+##Get margins
 ```java
 //Get margins returns margin model, you can pass equity or commodity as arguments to get margins of respective segments.
 
@@ -48,7 +49,7 @@ Margins margins = kiteSdk.getMargins("equity");
 System.out.println(margins.available.cash);
 System.out.println(margins.utilised.debits);
 ```
-#Place order
+##Place order
 ```java
 /*Place order method requires a map argument which contains,
 tradingsymbol, exchange, transaction_type, order_type, quantity, product, price, trigger_price, disclosed_quantity, validity
