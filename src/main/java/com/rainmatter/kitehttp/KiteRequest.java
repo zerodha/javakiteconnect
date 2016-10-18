@@ -23,10 +23,7 @@ public class KiteRequest {
     }
 
     /**
-     * POST request using UniRest library
-     *
-     * @param url
-     * @param params
+     * POST request using UniRest library.
      */
 
     public JSONObject postRequest(String url, Map<String, Object> params) throws KiteException, JSONException {
@@ -52,11 +49,7 @@ public class KiteRequest {
     }
 
     /**
-     * GET request using UniRest library
-     *
-     * @param url
-     * @param params
-     * @return
+     * GET request using UniRest library.
      */
     public JSONObject getRequest(String url, Map<String, Object> params) throws KiteException, JSONException {
 
@@ -98,10 +91,7 @@ public class KiteRequest {
 
 
     /**
-     * GET request using UniRest library without params
-     *
-     * @param url
-     * @return
+     * GET request using UniRest library without params.
      */
     public JSONObject getRequest(String url) throws KiteException, JSONException {
 
@@ -127,9 +117,7 @@ public class KiteRequest {
 
 
     /**
-     * PUT request
-     * @param url
-     * @param params
+     * PUT request.
      */
     public JSONObject putRequest(String url, Map<String, Object> params) throws KiteException, JSONException {
 
@@ -154,9 +142,7 @@ public class KiteRequest {
     }
 
     /**
-     * DELETE request
-     * @param url
-     * @param params
+     * DELETE request.
      */
     public JSONObject deleteRequest(String url, Map<String, Object> params) throws KiteException, JSONException {
 
@@ -181,8 +167,7 @@ public class KiteRequest {
 
 
     /**
-     * Used to get csv response for instruments
-     * @param url
+     * Used to get csv response for instruments.
      */
     public String getCsvRequest(String url) throws KiteException{
         String resp;
@@ -203,11 +188,7 @@ public class KiteRequest {
     }
 
     /**
-     * Deals with all kite exceptions
-     *
-     * @param jsonObject
-     * @param errorCode
-     * @return
+     * Deals with all kite exceptions.
      */
     public KiteException dealWithKiteException(JsonNode jsonObject, int errorCode) throws JSONException {
 
