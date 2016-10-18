@@ -7,42 +7,43 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 
 ##Documentation
 - [Kite Connect HTTP API documentation](https://kite.trade/docs/connect/v1)
+- [Java library documentation](https://kite.trade/docs/javakiteconnect)
 
 ##Usage
 - [Download jar file](https://github.com/rainmattertech/kiteconnectjava/raw/master/dist/kiteconnectjava.jar) and include it in your build path.
 
 ## API usage
 ```java
-//Initialize Kiteconnect using apiKey.
+// Initialize Kiteconnect using apiKey.
 Kiteconnect kiteSdk = new Kiteconnect("xxxx");
 
-//Set userId.
+// Set userId.
 kiteSdk.setUserId("xxxx");
 
-/*First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteconnect api call.
+/* First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteconnect api call.
 Get login url. Use this url in webview to login user, after authenticating user you will get requestToken. Use the same to get accessToken. */
 String url = kiteSdk.getLoginUrl();
 
-//Get accessToken as follows,
+// Get accessToken as follows,
 UserModel userModel =  kiteSdk.requestAccessToken("xxxxx", "xxxxx");
 
-//Set request token and public token which are obtained from login process.
+// Set request token and public token which are obtained from login process.
 kiteSdk.setAccessToken(userModel.accessToken);
 kiteSdk.setPublicToken(userModel.publicToken);
 
-//Set session expiry callback.
+// Set session expiry callback.
 kiteSdk.registerHook(new SessionExpiryHook() {
     @Override
     public void sessionExpired() {
     System.out.println("session expired");                    }
 });
 
-//Get margins returns margin model, you can pass equity or commodity as arguments to get margins of respective segments.
+// Get margins returns margin model, you can pass equity or commodity as arguments to get margins of respective segments.
 Margins margins = kiteSdk.getMargins("equity");
 System.out.println(margins.available.cash);
 System.out.println(margins.utilised.debits);
 
-/*Place order method requires a map argument which contains,
+/* Place order method requires a map argument which contains,
 tradingsymbol, exchange, transaction_type, order_type, quantity, product, price, trigger_price, disclosed_quantity, validity
 squareoff_value, stoploss_value, trailing_stoploss
 and variety  which can be value can be regular, bo, co, amo.
@@ -68,7 +69,7 @@ System.out.println(order.orderId);
 ```
 For more details, take a look at Examples.java in sample directory.
 
-##Live streaming data
+##WebSocket live streaming data
 ```java
 
 /** To get live price use KiteTicker websocket connection. 
@@ -105,10 +106,10 @@ tickerProvider.setOnTickerArrivalListener(new OnTick() {
     }
 });
 
-//Connects to ticker server for getting live quotes.
+// Connects to ticker server for getting live quotes.
 tickerProvider.connect();
 
-//Disconnect from ticker server.
+// Disconnect from ticker server.
 tickerProvider.disconnect();
 
 ```
