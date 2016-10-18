@@ -12,6 +12,8 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 ##Usage
 - [Download jar file](https://github.com/rainmattertech/kiteconnectjava/raw/master/dist/kiteconnectjava.jar) and include it in your build path.
 
+- Include com.rainmatter.kiteconnect into build path from maven.
+
 ## API usage
 ```java
 // Initialize Kiteconnect using apiKey.
