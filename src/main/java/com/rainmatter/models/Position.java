@@ -3,16 +3,16 @@ package com.rainmatter.models;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
-import com.rainmatter.utils.SegmentMap;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.rainmatter.utils.SegmentMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * A wrapper for position.
+ * A wrapper for psoition.
  */
 public class Position {
 
@@ -61,10 +61,8 @@ public class Position {
     @SerializedName("overnight_quantity")
     public int overnightQuantity;
 
-
-
-    public List<Position> positions = new ArrayList<>();
-
+    public List<Position> netPositions = new ArrayList<>();
+    public List<Position> dayPositions = new ArrayList<>();
 
     public Position(){
     }
@@ -76,24 +74,11 @@ public class Position {
      * @throws JSONException
      */
     public void parseGetPositionsResponse(JSONObject response) throws JSONException {
-        System.out.println(response);
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         JSONObject allPositions = response.getJSONObject("data");
-        positions =  Arrays.asList(gson.fromJson(String.valueOf(allPositions.get("net")), Position[].class));
-        modifyInstrumentToken(positions);
+        netPositions =  Arrays.asList(gson.fromJson(String.valueOf(allPositions.get("net")), Position[].class));
+        dayPositions = Arrays.asList(gson.fromJson(String.valueOf(allPositions.get("day")), Position[].class));
     }
-
-    /**
-     * Modifies the instrument token by doing left shift and then concatenating Segment_id_map
-     * @param positions
-     */
-    private void modifyInstrumentToken(List<Position> positions){
-        for (int i=0; i< positions.size(); i++){
-            positions.get(i).instrumentToken = ((Integer.valueOf(positions.get(i).instrumentToken) << 8) + Integer.valueOf(new SegmentMap().getMap().get(positions.get(i).exchange)))+"";
-        }
-    }
-
-
 }
 

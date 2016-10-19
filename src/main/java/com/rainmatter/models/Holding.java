@@ -3,9 +3,9 @@ package com.rainmatter.models;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
-import com.rainmatter.utils.SegmentMap;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.rainmatter.utils.SegmentMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,16 +63,5 @@ public class Holding {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         holdings =  Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Holding[].class));
-        modifyInstrumentToken(holdings);
-    }
-
-    /**
-     * Modifies the instrument token by doing left shift and then concatenating Segment_id_map
-     * @param holdings
-     */
-    private void modifyInstrumentToken(List<Holding> holdings){
-        for (int i=0; i< holdings.size(); i++){
-                holdings.get(i).instrumentToken = ((Integer.valueOf(holdings.get(i).instrumentToken) << 8) + Integer.valueOf(new SegmentMap().getMap().get(holdings.get(i).exchange)))+"";
-        }
     }
 }

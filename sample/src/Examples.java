@@ -193,7 +193,7 @@ public class Examples {
                 put("exchange", "NSE");
                 put("tradingsymbol", "RELIANCE");
                 put("transaction_type", "BUY");
-                put("position_type", "Day"); //can also be Overnight
+                put("position_type", "day"); //can also be overnight
                 put("quantity", "1");
                 put("old_product", "MIS");
                 put("new_product", "CNC");
