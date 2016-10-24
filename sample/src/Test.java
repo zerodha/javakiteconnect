@@ -32,6 +32,9 @@ public class Test {
                 // set userId
                 kiteconnect.setUserId("xxxxxx");
 
+                //set proxy is optional, if you want to set proxy.
+                kiteconnect.setProxy(new HttpHost("host_name"))
+
                 // Get login url
                 String url = kiteconnect.getLoginUrl();
 

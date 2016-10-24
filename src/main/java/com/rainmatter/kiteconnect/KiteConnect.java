@@ -5,6 +5,7 @@ import com.rainmatter.kitehttp.SessionExpiryHook;
 import com.rainmatter.kitehttp.exceptions.KiteException;
 import com.rainmatter.models.*;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.http.HttpHost;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.supercsv.cellprocessor.Optional;
@@ -32,6 +33,7 @@ public class KiteConnect {
     private String _accessToken;
     private String _publicToken;
     public static SessionExpiryHook sessionExpiryHook;
+    public static HttpHost httpHost;
 
     private Routes routes = new Routes();
     private String userId;
@@ -48,6 +50,12 @@ public class KiteConnect {
      * */
     public void registerHook(SessionExpiryHook sessionExpiryHook){
         this.sessionExpiryHook = sessionExpiryHook;
+    }
+
+    /*Set proxy
+    * @param httpHost includes remote host name, port and scheme */
+    public void setProxy(HttpHost httpHost){
+        this.httpHost  = httpHost;
     }
 
     /**

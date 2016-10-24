@@ -28,6 +28,9 @@ public class KiteRequest {
 
     public JSONObject postRequest(String url, Map<String, Object> params) throws KiteException, JSONException {
         try {
+            if(KiteConnect.httpHost != null){
+                Unirest.setProxy(KiteConnect.httpHost);
+            }
             HttpResponse<JsonNode> response = Unirest.post(url)
                     .header("accept", "application/json")
                     .fields(params)
@@ -72,6 +75,9 @@ public class KiteRequest {
         url += "?" + builder.toString();
 
         try {
+            if(KiteConnect.httpHost != null){
+                Unirest.setProxy(KiteConnect.httpHost);
+            }
             HttpResponse<JsonNode> response = Unirest.get(url)
                     .header("accept", "application/json")
                     .asJson();
@@ -96,6 +102,9 @@ public class KiteRequest {
     public JSONObject getRequest(String url) throws KiteException, JSONException {
 
         try {
+            if(KiteConnect.httpHost != null){
+                Unirest.setProxy(KiteConnect.httpHost);
+            }
             HttpResponse<JsonNode> response = Unirest.get(url)
                     .header("accept", "application/json")
                     .asJson();
@@ -122,6 +131,9 @@ public class KiteRequest {
     public JSONObject putRequest(String url, Map<String, Object> params) throws KiteException, JSONException {
 
         try {
+            if(KiteConnect.httpHost != null){
+                Unirest.setProxy(KiteConnect.httpHost);
+            }
             HttpResponse<JsonNode> response = Unirest.put(url).queryString(params)
                     .header("accept", "application/json")
                     .asJson();
@@ -147,6 +159,9 @@ public class KiteRequest {
     public JSONObject deleteRequest(String url, Map<String, Object> params) throws KiteException, JSONException {
 
         try {
+            if(KiteConnect.httpHost != null){
+                Unirest.setProxy(KiteConnect.httpHost);
+            }
             HttpResponse<JsonNode> response = Unirest.delete(url).queryString(params)
                     .header("accept", "application/json")
                     .asJson();
@@ -172,6 +187,9 @@ public class KiteRequest {
     public String getCsvRequest(String url) throws KiteException{
         String resp;
         try {
+            if(KiteConnect.httpHost != null){
+                Unirest.setProxy(KiteConnect.httpHost);
+            }
             HttpResponse<String> response = Unirest.get(url).asString();
             if(response.getStatus() == 200) {
                 resp = response.getBody();

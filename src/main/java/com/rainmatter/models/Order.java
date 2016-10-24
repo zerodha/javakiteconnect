@@ -63,6 +63,10 @@ public class Order {
     public String filledQuantity;
     @SerializedName("quantity")
     public String quantity;
+    @SerializedName("parent_order_id")
+    public String parentOrderId;
+    @SerializedName("tag")
+    public String tag;
 
 
     public Order (){}

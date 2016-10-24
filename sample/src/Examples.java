@@ -49,6 +49,7 @@ public class Examples {
                 put("validity", "DAY");
                 put("price", "158.0");
                 put("trigger_price", "157.5");
+                put("tag", "myTag");   //tag is optional and it cannot be more than 8 characters and only alphanumeric is allowed
             }
         };
         Order order = kiteconnect.placeOrder(param, "regular");
