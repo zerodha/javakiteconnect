@@ -130,6 +130,15 @@ public class Examples {
         System.out.println("list of orders size is "+order1.orders.size());
     }
 
+     /** Get order details*/
+    public void getOrder(Kiteconnect kiteconnect) throws KiteException {
+        Order order = kiteconnect.getOrder("161028000217306");
+        for(int i = 0; i< order.orders.size(); i++){
+            System.out.println(order.orders.get(i).orderId+" "+order.orders.get(i).status);
+        }
+        System.out.println("list size is "+order.orders.size());
+    }
+
     /** Get tradebook*/
     public void getTrades(KiteConnect kiteconnect) throws KiteException {
         // Returns tradebook.

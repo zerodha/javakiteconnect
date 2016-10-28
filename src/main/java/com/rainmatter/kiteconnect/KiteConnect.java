@@ -266,6 +266,19 @@ public class KiteConnect {
         return order;
     }
 
+    /** Returns list of different stages an order has gone through.
+     * @return Order object contains orders which is list of multiple stages an order has gone through.
+     * */
+    public Order getOrder(String orderId) throws KiteException {
+        String url = routes.get("order").replace(":order_id", orderId);
+        Map<String, Object> params = new HashMap<>();
+
+        JSONObject jsonObject = new KiteRequest().getRequest(url, authorize(params));
+        Order order = new Order();
+        order.parseListOrdersResponse(jsonObject);
+        return order;
+    }
+
     /**
      * Retreives list of trades executed.
      * @return Trade object contains trades which is list of trades.
