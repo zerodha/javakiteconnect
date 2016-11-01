@@ -50,6 +50,7 @@ public class Routes {
             put("user.margins", "/user/margins/:segment");
 
             put("orders", "/orders");
+            put("order", "/orders/:order_id");
             put("trades", "/trades");
             put("orders.info", "/orders/:order_id");
             put("orders.place", "/orders/:variety");
