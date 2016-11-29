@@ -253,6 +253,23 @@ public class KiteConnect {
         return order;
     }
 
+    /**
+     * Cancels special orders like BO, CO
+     * @param params is map that contains parent_order_id
+     * @param orderId order id of the order to be cancelled.
+     * @param variety [variety="regular"]. Order variety can be bo, co, amo, regular.
+     * @return Order object contains only orderId
+     * */
+    public Order cancelOrder(Map<String, Object> params, String orderId, String variety) throws KiteException {
+        String url = routes.get("orders.cancel").replace(":variety", variety).replace(":order_id", orderId);
+        params = authorize(params);
+
+        JSONObject jsonObject = new KiteRequest().deleteRequest(url, params);
+        Order order =  new Order();
+        order.parseOrderPlacedResponse(jsonObject);
+        return order;
+    }
+
     /**Gets collection of orders from the orderbook..
      * @return Order object contains orders which is list of orders.
      * */
@@ -397,6 +414,19 @@ public class KiteConnect {
         Map<String, Object> params = new HashMap<String, Object>();
         KiteRequest kiteRequest = new KiteRequest();
         return new Quote().parseResponse(kiteRequest.getRequest(routes.get("market.quote").replace(":exchange", exchange).replace(":tradingsymbol", tradingSymbol), authorize(params)));
+    }
+
+    /**
+     * Retrieves quote for an index
+     *
+     * @param exchange  Exchange in which instrument is listed. exchange can be NSE, BSE.
+     * @param tradingSymbol Tradingsymbol of the instrument (ex. NIFTY 50).
+     * @return Quote object.
+     */
+    public Quote getQuoteIndices(String exchange, String tradingSymbol) throws KiteException, JSONException {
+        Map<String, Object> params = new HashMap<String, Object>();
+        KiteRequest kiteRequest = new KiteRequest();
+        return new Quote().parseIndicesResponse(kiteRequest.getRequest(routes.get("market.quote").replace(":exchange", exchange).replace(":tradingsymbol", tradingSymbol), authorize(params)));
     }
 
     /**

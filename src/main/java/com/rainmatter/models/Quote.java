@@ -73,4 +73,11 @@ public class Quote {
 
         return quote;
     }
+
+    public Quote parseIndicesResponse(JSONObject response) throws JSONException{
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        Quote quote = gson.fromJson(String.valueOf(response.get("data")), Quote.class);
+        return quote;
+    }
 }
