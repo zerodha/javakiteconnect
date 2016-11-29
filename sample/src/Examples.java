@@ -181,6 +181,13 @@ public class Examples {
         System.out.println(order2.orderId);
     }
 
+    public void exitBracketOrder(Kiteconnect kiteconnect) throws KiteException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("parent_order_id", "161129000165203");
+        Order order = kiteconnect.cancelOrder(params, "161129000221590", "bo");
+        System.out.println(order.orderId);
+    }
+
     /** Get all positions.*/
     public void getPositions(KiteConnect kiteconnect) throws KiteException {
         // Get positions returns position model which contains list of positions.
@@ -232,6 +239,13 @@ public class Examples {
     public void getQuote(KiteConnect kiteconnect) throws KiteException {
         // Get quotes returns quote for desired tradingsymbol.
         Quote quote = kiteconnect.getQuote("NSE", "RELIANCE");
+    }
+
+    /** Get quote for a scrip.*/
+    public void getQuoteIndices(Kiteconnect kiteconnect) throws KiteException {
+        // Get quotes returns quote for desired tradingsymbol.
+        Quote quote = kiteconnect.getQuoteIndices("NSE", "NIFTY 50");
+        System.out.println(quote.lastPrice);
     }
 
     /** Get historical data for an instrument.*/
