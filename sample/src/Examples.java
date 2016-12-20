@@ -173,6 +173,48 @@ public class Examples {
         System.out.println(order21.orderId);
     }
 
+    /** Modify second leg SL-M order of bracket order*/
+    public void modifySecondLegBoSLM(Kiteconnect kiteconnect) throws KiteException {
+        Map<String, Object> params = new HashMap<String, Object>(){
+            {
+                put("order_id", "161220000183239");
+                put("parent_order_id", "161220000178120");
+                put("tradingsymbol", "ASHOKLEY");
+                put("exchange", "NSE");
+                put("quantity", "1");
+                put("product","MIS");
+                put("validity", "DAY");
+                put("trigger_price", "72.45");
+                put("price", "0");
+                put("order_type", "SL-M");
+                put("transaction_type", "SELL");
+            }
+        };
+        Order order = kiteconnect.modifyOrder("161220000183239", params, "bo");
+        System.out.println(order.orderId);
+    }
+
+    /** Modify second leg LIMIT order of bracket order*/
+    public void modifySecondLegBoLIMIT(Kiteconnect kiteconnect) throws KiteException {
+        Map<String, Object> params = new HashMap<String, Object>(){
+            {
+                put("order_id", "161220000183238");
+                put("parent_order_id", "161220000178120");
+                put("tradingsymbol", "ASHOKLEY");
+                put("exchange", "NSE");
+                put("quantity", "1");
+                put("product","MIS");
+                put("validity", "DAY");
+                put("price", "82.45");
+                put("trigger_price", "0");
+                put("order_type", "LIMIT");
+                put("transaction_type", "SELL");
+            }
+        };
+        Order order = kiteconnect.modifyOrder("161220000183238", params, "bo");
+        System.out.println(order.orderId);
+    }
+
     /** Cancel an order*/
     public void cancelOrder(KiteConnect kiteconnect) throws KiteException {
         // Order modify request will return order model which will contain only order_id.
