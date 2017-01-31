@@ -27,10 +27,10 @@ public class Test {
         try {
                 // First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteconnect api call.
                 // Initialize KiteSdk with your apiKey.
-                KiteConnect kiteconnect = new KiteConnect("your apiKey");
+                KiteConnect kiteconnect = new KiteConnect("your_apiKey");
 
                 // set userId
-                kiteconnect.setUserId("your userId");
+                kiteconnect.setUserId("your_userId");
 
                 //set proxy is optional, if you want to set proxy.
                 kiteconnect.setProxy(new HttpHost("host_name"))
@@ -47,7 +47,7 @@ public class Test {
                 });
 
                 // Set request token and public token which are obtained from login process.
-                UserModel userModel =  kiteconnect.requestAccessToken("your apiKey", "your apiSecret");
+                UserModel userModel =  kiteconnect.requestAccessToken("your_apiKey", "your_apiSecret");
 
                 kiteconnect.setAccessToken(userModel.accessToken);
                 kiteconnect.setPublicToken(userModel.publicToken);
