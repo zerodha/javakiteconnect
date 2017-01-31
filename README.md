@@ -17,17 +17,17 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 ## API usage
 ```java
 // Initialize Kiteconnect using apiKey.
-Kiteconnect kiteSdk = new Kiteconnect("xxxx");
+Kiteconnect kiteSdk = new Kiteconnect("your apiKey");
 
 // Set userId.
-kiteSdk.setUserId("xxxx");
+kiteSdk.setUserId("your userId");
 
 /* First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteconnect api call.
 Get login url. Use this url in webview to login user, after authenticating user you will get requestToken. Use the same to get accessToken. */
 String url = kiteSdk.getLoginUrl();
 
 // Get accessToken as follows,
-UserModel userModel =  kiteSdk.requestAccessToken("xxxxx", "xxxxx");
+UserModel userModel =  kiteSdk.requestAccessToken("your apiKey", "your apiSecret");
 
 // Set request token and public token which are obtained from login process.
 kiteSdk.setAccessToken(userModel.accessToken);
