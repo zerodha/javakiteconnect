@@ -277,7 +277,8 @@ public class Examples {
         System.out.println(nseInstruments.size());
     }
 
-    /** Get quote for a scrip.*/
+    /** Get quote for a scrip.
+     * For indices use getQuoteIndices.*/
     public void getQuote(KiteConnect kiteconnect) throws KiteException {
         // Get quotes returns quote for desired tradingsymbol.
         Quote quote = kiteconnect.getQuote("NSE", "RELIANCE");

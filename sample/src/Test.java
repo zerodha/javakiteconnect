@@ -47,7 +47,7 @@ public class Test {
                 });
 
                 // Set request token and public token which are obtained from login process.
-                UserModel userModel =  kiteconnect.requestAccessToken("your_apiKey", "your_apiSecret");
+                UserModel userModel =  kiteconnect.requestAccessToken("request_token", "your_apiSecret");
 
                 kiteconnect.setAccessToken(userModel.accessToken);
                 kiteconnect.setPublicToken(userModel.publicToken);
