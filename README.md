@@ -27,7 +27,7 @@ Get login url. Use this url in webview to login user, after authenticating user 
 String url = kiteSdk.getLoginUrl();
 
 // Get accessToken as follows,
-UserModel userModel =  kiteSdk.requestAccessToken("your_apiKey", "your_apiSecret");
+UserModel userModel =  kiteSdk.requestAccessToken("request_token", "your_apiSecret");
 
 // Set request token and public token which are obtained from login process.
 kiteSdk.setAccessToken(userModel.accessToken);
@@ -37,7 +37,8 @@ kiteSdk.setPublicToken(userModel.publicToken);
 kiteSdk.registerHook(new SessionExpiryHook() {
     @Override
     public void sessionExpired() {
-    System.out.println("session expired");                    }
+        System.out.println("session expired");                    
+    }
 });
 
 // Get margins returns margin model, you can pass equity or commodity as arguments to get margins of respective segments.
