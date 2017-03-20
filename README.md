@@ -37,7 +37,8 @@ kiteSdk.setPublicToken(userModel.publicToken);
 kiteSdk.registerHook(new SessionExpiryHook() {
     @Override
     public void sessionExpired() {
-    System.out.println("session expired");                    }
+        System.out.println("session expired");                    
+    }
 });
 
 // Get margins returns margin model, you can pass equity or commodity as arguments to get margins of respective segments.
