@@ -289,16 +289,24 @@ public class KiteTicker {
     private Tick getNseIndeciesData(byte[] bin, int x){
         int dec = 100;
         Tick tick = new Tick();
-        tick.setMode(modeFull);
-        tick.setTradable(false);
-        tick.setToken(x);
-        tick.setLastTradedPrice(convertToDouble(getBytes(bin, 4, 8)) / dec);
-        tick.setHighPrice(convertToDouble(getBytes(bin, 8, 12)) / dec);
-        tick.setLowPrice(convertToDouble(getBytes(bin, 12, 16)) / dec);
-        tick.setOpenPrice(convertToDouble(getBytes(bin, 16, 20)) / dec);
-        tick.setClosePrice(convertToDouble(getBytes(bin, 20, 24)) / dec);
-        tick.setNetPriceChangeFromClosingPrice(convertToDouble(getBytes(bin, 24, 28)) / dec);
-        return tick;
+        if(bin.length > 8) {
+            tick.setMode(modeFull);
+            tick.setTradable(false);
+            tick.setToken(x);
+            tick.setLastTradedPrice(convertToDouble(getBytes(bin, 4, 8)) / dec);
+            tick.setHighPrice(convertToDouble(getBytes(bin, 8, 12)) / dec);
+            tick.setLowPrice(convertToDouble(getBytes(bin, 12, 16)) / dec);
+            tick.setOpenPrice(convertToDouble(getBytes(bin, 16, 20)) / dec);
+            tick.setClosePrice(convertToDouble(getBytes(bin, 20, 24)) / dec);
+            tick.setNetPriceChangeFromClosingPrice(convertToDouble(getBytes(bin, 24, 28)) / dec);
+            return tick;
+        }else {
+            tick.setMode(modeLTP);
+            tick.setTradable(false);
+            tick.setToken(x);
+            tick.setLastTradedPrice(convertToDouble(getBytes(bin, 4, 8)) / dec);
+            return tick;
+        }
     }
 
     private Tick getLtpQuote(byte[] bin, int x, int dec1){
