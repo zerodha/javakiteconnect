@@ -350,6 +350,16 @@ public class Examples {
             }
         });
 
+        
+        /** for reconnection of ticker when there is abrupt network disconnection, use the following code
+            by default tryReconnection is set to false */
+        tickerProvider.setTryReconnection(true);
+        //minimum value must be 5 for time interval for reconnection
+        tickerProvider.setTimeIntervalForReconnection(5);
+        //set number to times ticker can try reconnection, for infinite retries use -1
+        tickerProvider.setMaxRetries(10);
+
+        
         /** connects to com.rainmatter.ticker server for getting live quotes*/
         tickerProvider.connect();
 
