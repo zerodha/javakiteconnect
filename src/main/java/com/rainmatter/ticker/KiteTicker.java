@@ -1,10 +1,15 @@
 package com.rainmatter.ticker;
 
+/**
+ * Created by H1ccup on 10/09/16.
+ */
+
 import com.neovisionaries.ws.client.*;
-import com.rainmatter.models.Depth;
-import com.rainmatter.models.Tick;
 import com.rainmatter.kiteconnect.KiteConnect;
 import com.rainmatter.kiteconnect.Routes;
+import com.rainmatter.kitehttp.exceptions.KiteException;
+import com.rainmatter.models.Depth;
+import com.rainmatter.models.Tick;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +20,8 @@ import java.nio.ByteOrder;
 import java.util.*;
 
 /**
- * Provides capability to establish a websocket connection to get live quotes.
+ * Ticker provider sends tokens to com.rainmatter.ticker server and get ticks from com.rainmatter.ticker server. Ticker server sends data in bytes. This Class
+ * gets ticks and converts into readable format which includes our own business logic.
  */
 public class KiteTicker {
 
@@ -25,8 +31,8 @@ public class KiteTicker {
     private OnDisconnect onDisconnectedListener;
     private WebSocket ws;
 
-    //private Thread mThread;
     private KiteConnect _kiteSdk;
+    private KiteTicker tickerProvider;
 
     public final int NseCM = 1,
             NseFO = 2,
@@ -42,11 +48,59 @@ public class KiteTicker {
             mUnSubscribe = "unsubscribe",
             mSetMode = "mode";
 
-
-    private boolean connection = false;
     public static String modeFull  = "full", // Full quote inluding market depth. 172 bytes.
             modeQuote = "quote", // Quote excluding market depth. 52 bytes.
             modeLTP   = "ltp"; // Only LTP. 4 bytes.;
+
+    private long lastTickArrivedAt = 0;
+    private long timeIntervalForReconnection = 5;
+    private Set<Long> subscribedTokens = new HashSet<>();
+    private int maxRetries = 50;
+    private int count = 0;
+    private Timer timer = null;
+    private boolean tryReconnection = false;
+    
+    /** Returns task which performs check every second for reconnection*/
+    private TimerTask getTask(){
+        TimerTask checkForRestartTask = new TimerTask() {
+            @Override
+            public void run() {
+                Date currentDate = new Date();
+                long timeInterval = (currentDate.getTime() - lastTickArrivedAt)/1000;
+                if(lastTickArrivedAt > 0) {
+                    if (timeInterval >= timeIntervalForReconnection) {
+                        if(maxRetries == -1 || count <= maxRetries) {
+                            reconnect(new ArrayList<>(subscribedTokens));
+                            count++;
+                        }else if(maxRetries != -1 && count > maxRetries){
+                            if(timer != null){
+                                timer.cancel();
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        return checkForRestartTask;
+    }
+
+    /** Set tryReconnection, to instruct KiteTicker that it has to reconnect, if ticker is disconnected*/
+    public void setTryReconnection(boolean retry){
+        tryReconnection = retry;
+    }
+
+    /** Set minimum time interval after which ticker has to restart in seconds*/
+    public void setTimeIntervalForReconnection(int interval) throws KiteException {
+        if(interval >= 5) {
+            timeIntervalForReconnection = interval;
+        }else
+            throw new KiteException("reconnection interval can't be less than five seconds", 00);
+    }
+
+    /** Set max number of retries for reconnection, for infinite retries set value as -1 */
+    public void setMaxRetries(int maxRetries){
+        this.maxRetries = maxRetries;
+    }
 
     public KiteTicker(KiteConnect kiteSdk){
         _kiteSdk = kiteSdk;
@@ -86,9 +140,8 @@ public class KiteTicker {
     /** Establishes a web socket connection.*/
     public void connect() throws WebSocketException, IOException {
 
-        if(connection){
-            disconnect();
-            connection = false;
+        if(isConnectionOpen()){
+            return;
         }
 
         if(wsuri == null){
@@ -99,9 +152,17 @@ public class KiteTicker {
 
             @Override
             public void onConnected(WebSocket websocket, Map<String, List<String>> headers) {
-                connection = true;
+                //connection = true;
                 if(onConnectedListener != null) {
                     onConnectedListener.onConnected();
+                }
+                if(tryReconnection) {
+                    if (timer != null) {
+                        timer.cancel();
+                    }
+                    timer = new Timer();
+                    timer.scheduleAtFixedRate(getTask(), 0, 1000);
+
                 }
             }
 
@@ -118,6 +179,9 @@ public class KiteTicker {
                  if (onTickerArrivalListener != null) {
                       onTickerArrivalListener.onTick(tickerData);
                  }
+
+                 Date date = new Date();
+                 lastTickArrivedAt = date.getTime();
             }
 
             /**
@@ -133,22 +197,33 @@ public class KiteTicker {
                 if(onDisconnectedListener != null){
                     onDisconnectedListener.onDisconnected();
                 }
-                    return;
+                //connection = false;
+                return;
              }
 
              @Override
              public void onError(WebSocket websocket, WebSocketException cause) {
                     super.onError(websocket, cause);
-                }
+             }
+
         });
             ws.connect();
     }
 
     /** Disconnects websocket connection.*/
     public void disconnect(){
+        if(timer != null){
+            timer.cancel();
+        }
         if (ws != null && ws.isOpen()) {
             ws.disconnect();
+            subscribedTokens = new HashSet<>();
         }
+    }
+
+    /** Disconnects websocket connection only for internal use*/
+    private void nonUserDisconnect(){
+       ws.disconnect();
     }
 
     /** Returns true if websocket connection is open.
@@ -192,16 +267,17 @@ public class KiteTicker {
 
     /** Subscribes for list of tokens.
      * @param tokens is list of tokens to be subscribed for.*/
-    public void subscribe(ArrayList<Long> tokens) throws IOException, WebSocketException {
+    public void subscribe(ArrayList<Long> tokens) throws IOException, WebSocketException, KiteException {
         if(ws != null) {
             if (ws.isOpen()) {
                 createTickerJsonObject(tokens, mSubscribe);
                 ws.sendText(createTickerJsonObject(tokens, mSubscribe).toString());
                 setMode(tokens, modeQuote);
             }else
-                connect();
+                throw new KiteException("ticker is not connected", 504);
         }else
-            connect();
+            throw new KiteException("ticker is not connected", 504);
+        subscribedTokens.addAll(tokens);
     }
 
     private JSONObject createTickerJsonObject(ArrayList<Long> tokens, String action) {
@@ -225,6 +301,7 @@ public class KiteTicker {
         if(ws != null) {
             if (ws.isOpen()) {
                 ws.sendText(createTickerJsonObject(tokens, mUnSubscribe).toString());
+                subscribedTokens.removeAll(tokens);
             }
         }
     }
@@ -299,14 +376,13 @@ public class KiteTicker {
             tick.setOpenPrice(convertToDouble(getBytes(bin, 16, 20)) / dec);
             tick.setClosePrice(convertToDouble(getBytes(bin, 20, 24)) / dec);
             tick.setNetPriceChangeFromClosingPrice(convertToDouble(getBytes(bin, 24, 28)) / dec);
-            return tick;
         }else {
             tick.setMode(modeLTP);
             tick.setTradable(false);
             tick.setToken(x);
             tick.setLastTradedPrice(convertToDouble(getBytes(bin, 4, 8)) / dec);
-            return tick;
         }
+        return tick;
     }
 
     private Tick getLtpQuote(byte[] bin, int x, int dec1){
@@ -410,6 +486,35 @@ public class KiteTicker {
         ByteBuffer bb = ByteBuffer.wrap(bin);
         bb.order(ByteOrder.BIG_ENDIAN);
         return bb.getShort();
+    }
+
+    /** Disconnects and reconnects ticker*/
+    private void reconnect(final ArrayList<Long> tokens) {
+        try {
+            nonUserDisconnect();
+            connect();
+            lastTickArrivedAt = 0;
+            final OnConnect onUsersConnectedListener = this.onConnectedListener;
+            setOnConnectedListener(new OnConnect() {
+                @Override
+                public void onConnected() {
+                    try {
+                        subscribe(tokens);
+                        onConnectedListener = onUsersConnectedListener;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (WebSocketException e) {
+                        e.printStackTrace();
+                    } catch (KiteException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }catch (WebSocketException we){
+            we.printStackTrace();
+        }catch (IOException ie){
+            ie.printStackTrace();
+        }
     }
 
 }

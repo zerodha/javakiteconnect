@@ -421,12 +421,12 @@ public class KiteConnect {
      *
      * @param exchange  Exchange in which instrument is listed. exchange can be NSE, BSE.
      * @param tradingSymbol Tradingsymbol of the instrument (ex. NIFTY 50).
-     * @return Quote object.
+     * @return IndicesQuote object.
      */
-    public Quote getQuoteIndices(String exchange, String tradingSymbol) throws KiteException, JSONException {
+    public IndicesQuote getQuoteIndices(String exchange, String tradingSymbol) throws KiteException, JSONException {
         Map<String, Object> params = new HashMap<String, Object>();
         KiteRequest kiteRequest = new KiteRequest();
-        return new Quote().parseIndicesResponse(kiteRequest.getRequest(routes.get("market.quote").replace(":exchange", exchange).replace(":tradingsymbol", tradingSymbol), authorize(params)));
+        return new IndicesQuote().parseIndicesResponse(kiteRequest.getRequest(routes.get("market.quote").replace(":exchange", exchange).replace(":tradingsymbol", tradingSymbol), authorize(params)));
     }
 
     /**
