@@ -3,7 +3,6 @@ package com.rainmatter.models;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -11,13 +10,13 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by sujith on 8/9/17.
+ * A wrapper for Mutualfunds sip.
  */
 public class MfSip {
     @SerializedName("dividend_type")
     public String dividendType;
     @SerializedName("pending_instalments")
-    public String pendingInstalments;
+    public int pendingInstalments;
     @SerializedName("created")
     public String created;
     @SerializedName("last_instalment")
@@ -27,7 +26,7 @@ public class MfSip {
     @SerializedName("frequency")
     public String frequency;
     @SerializedName("instalment_date")
-    public String instalmentDate;
+    public int instalmentDate;
     @SerializedName("fund")
     public String fund;
     @SerializedName("sip_id")
@@ -37,9 +36,9 @@ public class MfSip {
     @SerializedName("tag")
     public String tag;
     @SerializedName("instalment_amount")
-    public String instalmentAmount;
+    public int instalmentAmount;
     @SerializedName("instalments")
-    public String instalments;
+    public int instalments;
     @SerializedName("status")
     public String status;
     @SerializedName("order_id")

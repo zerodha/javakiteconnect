@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by sujith on 8/9/17.
+ * A wrapper for Mutualfunds order.
  */
 public class MfOrder {
     @SerializedName("status_message")
@@ -23,9 +23,9 @@ public class MfOrder {
     @SerializedName("placed_by")
     public String placedBy;
     @SerializedName("amount")
-    public String amount;
+    public double amount;
     @SerializedName("quantity")
-    public int quantity;
+    public double quantity;
     @SerializedName("settlement_id")
     public String settlementId;
     @SerializedName("order_timestamp")

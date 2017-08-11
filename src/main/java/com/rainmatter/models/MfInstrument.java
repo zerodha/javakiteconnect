@@ -1,7 +1,7 @@
 package com.rainmatter.models;
 
 /**
- * Created by sujith on 8/9/17.
+ * A wrapper for Mutualfunds instrument.
  */
 public class MfInstrument {
     public String tradingsymbol, amc, name;

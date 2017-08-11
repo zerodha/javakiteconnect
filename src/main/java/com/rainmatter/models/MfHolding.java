@@ -10,11 +10,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by sujith on 8/9/17.
+ * A wrapper for Mutualfunds holding.
  */
 public class MfHolding {
     @SerializedName("quantity")
-    public String quantity;
+    public double quantity;
     @SerializedName("fund")
     public String fund;
     @SerializedName("folio")
