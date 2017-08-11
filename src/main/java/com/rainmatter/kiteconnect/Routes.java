@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by H1ccup on 04/09/16.
+ * Generates endpoints for all api calls.
  *
  * Here all the routes are translated into a Java Map.
  *
@@ -71,7 +71,6 @@ public class Routes {
             put("market.trigger_range", "/instruments/:exchange/:tradingsymbol/trigger_range");
 
             put("mutualfunds.orders", "/mf/orders");
-            put("mutualfunds.order", "mf/orders/:order_id");
             put("mutualfunds.orders.place", "/mf/orders");
             put("mutualfunds.cancel_order", "/mf/orders/:order_id");
             put("mutualfunds.order", "/mf/orders/:order_id");

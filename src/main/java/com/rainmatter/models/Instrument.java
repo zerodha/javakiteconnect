@@ -1,7 +1,7 @@
 package com.rainmatter.models;
 
 /**
- * Created by sujith on 5/10/16.
+ * A wrapper for Instrument.
  */
 public class Instrument {
     public long instrument_token,exchange_token;

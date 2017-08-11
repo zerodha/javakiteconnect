@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by H1ccup on 10/09/16.
+ * Provides all the capabilities of kiteconnect like place order, fetch orderbook, positions, holdings and more.
  */
 public class KiteConnect {
 
@@ -423,7 +423,7 @@ public class KiteConnect {
      *
      * @param exchange  Exchange in which instrument is listed. exchange can be NSE, BSE.
      * @param tradingSymbol Tradingsymbol of the instrument (ex. NIFTY 50).
-     * @return Quote object.
+     * @return IndicesQuote object.
      */
     public IndicesQuote getQuoteIndices(String exchange, String tradingSymbol) throws KiteException, JSONException {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -571,7 +571,7 @@ public class KiteConnect {
      * @throws KiteException
      */
     public JSONObject logout() throws KiteException {
-        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<String, Object>();
         String url = routes.get("logout");
         return new KiteRequest().deleteRequest(url, authorize(params));
     }

@@ -1,7 +1,7 @@
 package com.rainmatter.models;
 
 /**
- * Created by H1ccup on 11/09/16.
+ * A wrapper for margins.
  */
 
 import com.google.gson.Gson;

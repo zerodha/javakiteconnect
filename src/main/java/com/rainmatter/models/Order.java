@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
+/**
+*   A wrapper for order.
+*/
 public class Order {
 
     @SerializedName("exchange_order_id")

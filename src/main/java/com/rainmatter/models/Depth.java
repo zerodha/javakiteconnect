@@ -3,7 +3,7 @@ package com.rainmatter.models;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by H1ccup on 10/09/16.
+ * A wrapper for market depth.
  */
 public class Depth  {
 

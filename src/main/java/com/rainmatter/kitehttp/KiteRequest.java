@@ -15,7 +15,7 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 /**
- * Created by H1ccup on 09/09/16.
+ * A wrapper of Kite Connect for making http calls.
  *
  * This is a non-Async wrapper of Kite Connect.
  */
@@ -25,7 +25,7 @@ public class KiteRequest {
     }
 
     /**
-     * POST request using UniRest library
+     * POST request using UniRest library.
      *
      * @param url
      * @param params
@@ -57,7 +57,7 @@ public class KiteRequest {
     }
 
     /**
-     * GET request using UniRest library
+     * GET request using UniRest library.
      *
      * @param url
      * @param params
@@ -88,7 +88,7 @@ public class KiteRequest {
 
 
     /**
-     * GET request using UniRest library without params
+     * GET request using UniRest library without params.
      *
      * @param url
      * @return
@@ -120,7 +120,7 @@ public class KiteRequest {
 
 
     /**
-     * PUT request
+     * PUT request.
      * @param url
      * @param params
      */
@@ -152,7 +152,7 @@ public class KiteRequest {
     }
 
     /**
-     * DELETE request
+     * DELETE request.
      * @param url
      * @param params
      */
@@ -182,7 +182,7 @@ public class KiteRequest {
 
 
     /**
-     * Used to get csv response for instruments
+     * Used to get csv response for instruments.
      * @param url
      */
     public String getCsvRequest(String url) throws KiteException{
@@ -244,7 +244,7 @@ public class KiteRequest {
     }
 
     /**
-     * Deals with all kite exceptions
+     * Deals with all kite exceptions.
      *
      * @param jsonObject
      * @param errorCode

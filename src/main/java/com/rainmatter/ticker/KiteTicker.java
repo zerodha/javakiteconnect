@@ -489,12 +489,12 @@ public class KiteTicker {
     }
 
     /** Disconnects and reconnects ticker*/
-    private void reconnect(ArrayList<Long> tokens) {
+    private void reconnect(final ArrayList<Long> tokens) {
         try {
             nonUserDisconnect();
             connect();
             lastTickArrivedAt = 0;
-            OnConnect onUsersConnectedListener = this.onConnectedListener;
+            final OnConnect onUsersConnectedListener = this.onConnectedListener;
             setOnConnectedListener(new OnConnect() {
                 @Override
                 public void onConnected() {

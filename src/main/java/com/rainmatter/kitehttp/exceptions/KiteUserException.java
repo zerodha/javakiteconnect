@@ -1,7 +1,6 @@
 package com.rainmatter.kitehttp.exceptions;
 
 /**
- * Created by H1ccup on 04/09/16.
  * This deals with user exceptions, like
  * user is not allowed to trade in a segment,
  * or invalid username/password.

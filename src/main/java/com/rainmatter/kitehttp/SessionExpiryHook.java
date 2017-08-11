@@ -1,7 +1,7 @@
 package com.rainmatter.kitehttp;
 
 /**
- * Created by H1ccup on 07/10/16.
+ * A callback whenever there is a token expiry.
  *
  * This is implemented as a hook for whenever there is a token expiry
  */

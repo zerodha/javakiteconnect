@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * Created by sujith on 13/10/16.
+ * A wrapper for quote.
  */
 public class Quote {
 
