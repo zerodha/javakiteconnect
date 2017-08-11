@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * A wrapper for quote.
+ * Created by sujith on 13/10/16.
  */
 public class Quote {
 
@@ -74,10 +74,5 @@ public class Quote {
         return quote;
     }
 
-    public Quote parseIndicesResponse(JSONObject response) throws JSONException{
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-        Quote quote = gson.fromJson(String.valueOf(response.get("data")), Quote.class);
-        return quote;
-    }
+
 }

@@ -1,6 +1,7 @@
 package com.rainmatter.kitehttp.exceptions;
 
 /**
+ * Created by H1ccup on 04/09/16.
  * Exceptions raised when invalid data is returned from kite trade.
  */
 

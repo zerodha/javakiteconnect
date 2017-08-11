@@ -15,7 +15,9 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 /**
- * A wrapper of Kite Connect for making http calls.
+ * Created by H1ccup on 09/09/16.
+ *
+ * This is a non-Async wrapper of Kite Connect.
  */
 public class KiteRequest {
 
@@ -23,7 +25,10 @@ public class KiteRequest {
     }
 
     /**
-     * POST request using UniRest library.
+     * POST request using UniRest library
+     *
+     * @param url
+     * @param params
      */
 
     public JSONObject postRequest(String url, Map<String, Object> params) throws KiteException, JSONException {
@@ -52,33 +57,19 @@ public class KiteRequest {
     }
 
     /**
-     * GET request using UniRest library.
+     * GET request using UniRest library
+     *
+     * @param url
+     * @param params
+     * @return
      */
     public JSONObject getRequest(String url, Map<String, Object> params) throws KiteException, JSONException {
-
-        StringBuilder builder = new StringBuilder();
-
-        // create url using string builder.
-        for (String key : params.keySet()) {
-            Object value = params.get(key);
-            if (value != null) {
-                try {
-                    value = URLEncoder.encode(String.valueOf(value), HTTP.UTF_8);
-
-                    if (builder.length() > 0)
-                        builder.append("&");
-                    builder.append(key).append("=").append(value);
-                } catch (UnsupportedEncodingException e) {
-                }
-            }
-        }
-        url += "?" + builder.toString();
 
         try {
             if(KiteConnect.httpHost != null){
                 Unirest.setProxy(KiteConnect.httpHost);
             }
-            HttpResponse<JsonNode> response = Unirest.get(url)
+            HttpResponse<JsonNode> response = Unirest.get(url).queryString(params)
                     .header("accept", "application/json")
                     .asJson();
             JsonNode body = response.getBody();
@@ -97,7 +88,10 @@ public class KiteRequest {
 
 
     /**
-     * GET request using UniRest library without params.
+     * GET request using UniRest library without params
+     *
+     * @param url
+     * @return
      */
     public JSONObject getRequest(String url) throws KiteException, JSONException {
 
@@ -126,7 +120,9 @@ public class KiteRequest {
 
 
     /**
-     * PUT request.
+     * PUT request
+     * @param url
+     * @param params
      */
     public JSONObject putRequest(String url, Map<String, Object> params) throws KiteException, JSONException {
 
@@ -134,11 +130,13 @@ public class KiteRequest {
             if(KiteConnect.httpHost != null){
                 Unirest.setProxy(KiteConnect.httpHost);
             }
-            HttpResponse<JsonNode> response = Unirest.put(url).queryString(params)
+            HttpResponse<JsonNode> response = Unirest.put(url)
                     .header("accept", "application/json")
+                    .fields(params)
                     .asJson();
             JsonNode body = response.getBody();
             JSONObject jsonObject = body.getObject();
+            System.out.println(jsonObject);
             int code = response.getStatus();
 
             if (code == 200)
@@ -154,7 +152,9 @@ public class KiteRequest {
     }
 
     /**
-     * DELETE request.
+     * DELETE request
+     * @param url
+     * @param params
      */
     public JSONObject deleteRequest(String url, Map<String, Object> params) throws KiteException, JSONException {
 
@@ -182,7 +182,8 @@ public class KiteRequest {
 
 
     /**
-     * Used to get csv response for instruments.
+     * Used to get csv response for instruments
+     * @param url
      */
     public String getCsvRequest(String url) throws KiteException{
         String resp;
@@ -205,8 +206,49 @@ public class KiteRequest {
 
     }
 
+    public String getCsvRequest(String url, Map<String, Object> params) throws KiteException{
+        StringBuilder builder = new StringBuilder();
+        String resp;
+
+        // create url using string builder.
+        for (String key : params.keySet()) {
+            Object value = params.get(key);
+            if (value != null) {
+                try {
+                    value = URLEncoder.encode(String.valueOf(value), HTTP.UTF_8);
+
+                    if (builder.length() > 0)
+                        builder.append("&");
+                    builder.append(key).append("=").append(value);
+                } catch (UnsupportedEncodingException e) {
+                }
+            }
+        }
+        url += "?" + builder.toString();
+
+        try {
+            if(KiteConnect.httpHost != null){
+                Unirest.setProxy(KiteConnect.httpHost);
+            }
+            HttpResponse<String> response = Unirest.get(url).asString();
+            if(response.getStatus() == 200) {
+                resp = response.getBody();
+                return resp;
+            }
+            else {
+                throw new KiteGeneralException("Csv fetch failed.", 400);
+            }
+        } catch (UnirestException e) {
+            throw new KiteNoNetworkException("Connection error");
+        }
+    }
+
     /**
-     * Deals with all kite exceptions.
+     * Deals with all kite exceptions
+     *
+     * @param jsonObject
+     * @param errorCode
+     * @return
      */
     public KiteException dealWithKiteException(JsonNode jsonObject, int errorCode) throws JSONException {
 

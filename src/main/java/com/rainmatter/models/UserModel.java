@@ -8,7 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * A wrapper for user and session details.
+ * Created by sujith on 13/10/16.
  */
 public class UserModel {
 

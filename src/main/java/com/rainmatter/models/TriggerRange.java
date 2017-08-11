@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * A wrapper for trigger range.
+ * Created by sujith on 13/10/16.
  */
 public class TriggerRange {
 

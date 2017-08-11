@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Provides all the capabilities of kiteconnect like place order, fetch orderbook, positions, holdings and more.
+ * Created by H1ccup on 10/09/16.
  */
 public class KiteConnect {
 
@@ -413,7 +413,9 @@ public class KiteConnect {
     public Quote getQuote(String exchange, String tradingSymbol) throws KiteException, JSONException {
         Map<String, Object> params = new HashMap<String, Object>();
         KiteRequest kiteRequest = new KiteRequest();
-        return new Quote().parseResponse(kiteRequest.getRequest(routes.get("market.quote").replace(":exchange", exchange).replace(":tradingsymbol", tradingSymbol), authorize(params)));
+        JSONObject jsonObject = kiteRequest.getRequest(routes.get("market.quote").replace(":exchange", exchange).replace(":tradingsymbol", tradingSymbol), authorize(params));
+        System.out.println(jsonObject.toString());
+        return new Quote().parseResponse(jsonObject);
     }
 
     /**
@@ -421,7 +423,7 @@ public class KiteConnect {
      *
      * @param exchange  Exchange in which instrument is listed. exchange can be NSE, BSE.
      * @param tradingSymbol Tradingsymbol of the instrument (ex. NIFTY 50).
-     * @return IndicesQuote object.
+     * @return Quote object.
      */
     public IndicesQuote getQuoteIndices(String exchange, String tradingSymbol) throws KiteException, JSONException {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -453,13 +455,123 @@ public class KiteConnect {
         return historicalData;
     }
 
+    /** Retrieves mutualfunds instruments.
+     * @return returns list of mutual funds instruments.
+     * */
+    public List<MfInstrument> getMfInstruments() throws KiteException, IOException{
+        Map<String, Object> params = new HashMap<String, Object>();
+        KiteRequest kiteRequest = new KiteRequest();
+        return readMfCSV(kiteRequest.getCsvRequest(routes.get("mutualfunds.instruments"), params));
+    }
+
+    /** Place a mutualfunds order.
+     * @param params includes tradingsymbol, transaction_type, amount.
+     * @return MfOrder object contains only orderId. */
+    public MfOrder placeMfOrder(Map<String, Object> params) throws KiteException {
+        params = authorize(params);
+        KiteRequest kiteRequest = new KiteRequest();
+        MfOrder mfOrder = new MfOrder();
+        mfOrder.parseOrderPlaceResponse(kiteRequest.postRequest(routes.get("mutualfunds.orders.place"), params));
+        return mfOrder;
+    }
+
+    /** If cancel is successful then api will respond as 200 and send back true else it will be sent back to user as KiteException.
+     * @return true if api call is successful. */
+    public boolean cancelMfOrder(String orderId) throws KiteException {
+        Map<String, Object> params = new HashMap<>();
+        params = authorize(params);
+        KiteRequest kiteRequest = new KiteRequest();
+        kiteRequest.deleteRequest(routes.get("mutualfunds.cancel_order").replace(":order_id", orderId), params);
+        return true;
+    }
+
+    /** Retrieves all mutualfunds orders.
+     * @return MfOrder object contains mfOrders which is a list of all the mutualfunds orders. */
+    public MfOrder getMfOrders() throws KiteException {
+        Map<String, Object> params = new HashMap<>();
+        params = authorize(params);
+        MfOrder mfOrder = new MfOrder();
+        mfOrder.parseMfOrders(new KiteRequest().getRequest(routes.get("mutualfunds.orders"), params));
+        return mfOrder;
+    }
+
+    /** Retrieves individual mutualfunds order.
+     * @param orderId is the order id of a mutualfunds scrip.
+     * @return returns a single mutualfunds object with all the parameters. */
+    public MfOrder getMfOrder(String orderId) throws KiteException {
+        Map<String, Object> params = new HashMap<>();
+        params = authorize(params);
+        MfOrder mfOrder = new MfOrder();
+        return mfOrder.parseMfOrder(new KiteRequest().getRequest(routes.get("mutualfunds.order").replace(":order_id", orderId), params));
+    }
+
+    /** Place a mutualfunds sip.
+     * @param params contains tradingsymbol, frequency, day, instalments, initial_amount, amount.
+     * @return MfSip object which contains sip id and order id. */
+    public MfSip placeMfSip(Map<String, Object> params) throws KiteException {
+        params = authorize(params);
+        MfSip mfSip = new MfSip();
+        mfSip.parseMfSipPlaceResponse(new KiteRequest().postRequest(routes.get("mutualfunds.sips.place"),params));
+        return mfSip;
+    }
+
+    /** Modify a mutualfunds sip.
+     * @param params contains frequency, instalments, amount, status, day.
+     * @param sipId is the id of the sip.
+     * @return returns true, if modify sip is successful else exception is thrown. */
+    public boolean modifyMfSip(Map<String, Object> params, String sipId) throws KiteException {
+        params = authorize(params);
+        new KiteRequest().putRequest(routes.get("mutualfunds.sips.modify").replace(":sip_id", sipId), params);
+        return true;
+    }
+
+    /** Cancel a mutualfunds sip.
+     * @param sipId is the id of mutualfunds sip.
+     * @return returns true, if cancel sip is successful else exception is thrown. */
+    public boolean cancelMfSip(String sipId) throws KiteException {
+        Map<String, Object> params = new HashMap<>();
+        authorize(params);
+        new KiteRequest().deleteRequest(routes.get("mutualfunds.sip").replace(":sip_id", sipId), params);
+        return true;
+    }
+
+    /** Retrieve all mutualfunds sip.
+     * @return MfSip object will contain mfSips which is a list of sip. */
+    public MfSip getMfSips() throws KiteException {
+        Map<String, Object> params = new HashMap<>();
+        params = authorize(params);
+        MfSip mfSip = new MfSip();
+        mfSip.parseMfSips(new KiteRequest().getRequest(routes.get("mutualfunds.sips"), params));
+        return mfSip;
+    }
+
+    /** Retrieve an individual sip.
+     * @param sipId is the id of a particular sip.
+     * @return MfSip object which contains all the details of the sip. */
+    public MfSip getMfSip(String sipId) throws KiteException {
+        Map<String, Object> params = new HashMap<>();
+        params = authorize(params);
+        MfSip mfSip = new MfSip();
+        return mfSip.parseMfSip(new KiteRequest().getRequest(routes.get("mutualfunds.sip").replace(":sip_id", sipId), params));
+    }
+
+    /** Retrieve all the mutualfunds holdings.
+     * @return MfHolding object which contains mfHoldings which is a list of mutualfunds holdings.*/
+    public MfHolding getMfHoldings() throws KiteException {
+        Map<String, Object> params = new HashMap<>();
+        params = authorize(params);
+        MfHolding mfHolding =  new MfHolding();
+        mfHolding.parseMfHoldings(new KiteRequest().getRequest(routes.get("mutualfunds.holdings"), params));
+        return mfHolding;
+    }
+
     /**
      * Kills the session by invalidating the access token.
      * @return JSONObject which contains status
      * @throws KiteException
      */
     public JSONObject logout() throws KiteException {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         String url = routes.get("logout");
         return new KiteRequest().deleteRequest(url, authorize(params));
     }
@@ -479,8 +591,30 @@ public class KiteConnect {
         String[] header = beanReader.getHeader(true);
         CellProcessor[] processors = getProcessors();
         Instrument instrument;
-        List<Instrument> instruments = new ArrayList<Instrument>();
+        List<Instrument> instruments = new ArrayList<>();
         while((instrument = beanReader.read(Instrument.class, header, processors)) != null ) {
+            instruments.add(instrument);
+        }
+        return instruments;
+    }
+
+    /**This method parses csv and returns instrument list.
+     * @param input is mutualfunds csv string.
+     * @return  returns list of mutualfunds instruments.
+     * */
+    private List<MfInstrument> readMfCSV(String input) throws IOException{
+        ICsvBeanReader beanReader = null;
+        File temp = File.createTempFile("tempfile", ".tmp");
+        BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
+        bw.write(input);
+        bw.close();
+
+        beanReader = new CsvBeanReader(new FileReader(temp), CsvPreference.STANDARD_PREFERENCE);
+        String[] header = beanReader.getHeader(true);
+        CellProcessor[] processors = getMfProcessors();
+        MfInstrument instrument;
+        List<MfInstrument> instruments = new ArrayList<>();
+        while((instrument = beanReader.read(MfInstrument.class, header, processors)) != null ) {
             instruments.add(instrument);
         }
         return instruments;
@@ -503,6 +637,31 @@ public class KiteConnect {
                 new NotNull(),                  //instrument_type
                 new NotNull(),                  //segment
                 new NotNull()                   //exchange
+        };
+        return processors;
+    }
+
+    /** This method returns array of cellprocessor for parsing mutual funds csv.
+     * @return CellProcessor[] array
+     * */
+    private CellProcessor[] getMfProcessors(){
+        CellProcessor[] processors = new CellProcessor[]{
+                new Optional(),                  //tradingsymbol
+                new Optional(),                  //amc
+                new Optional(),                  //name
+                new Optional(new ParseInt()),    //purchase_allowed
+                new Optional(new ParseInt()),    //redemption_allowed
+                new Optional(new ParseDouble()), //minimum_purchase_amount
+                new Optional(new ParseDouble()), //purchase_amount_multiplier
+                new Optional(new ParseDouble()), //minimum_additional_purchase_amount
+                new Optional(new ParseDouble()), //minimum_redemption_quantity
+                new Optional(new ParseDouble()), //redemption_quantity_multiplier
+                new Optional(),                  //dividend_type
+                new Optional(),                  //scheme_type
+                new Optional(),                  //plan
+                new Optional(),                  //settlement_type
+                new Optional(new ParseDouble()), //last_price
+                new Optional()                   //last_price_date
         };
         return processors;
     }

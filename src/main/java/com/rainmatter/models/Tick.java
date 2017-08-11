@@ -1,7 +1,7 @@
 package com.rainmatter.models;
 
 /**
- * A wrapper for tick.
+ * Created by H1ccup on 10/09/16.
  */
 
 import com.google.gson.annotations.SerializedName;

@@ -22,12 +22,6 @@ public class IndicesQuote {
     @SerializedName("open")
     public double open;
 
-    /**
-     * Parses response from quotes api.
-     * @return Quote is POJO sent back to user.
-     * @param response json response from server.
-     * @throws JSONException json parsing error.
-     */
     public IndicesQuote parseIndicesResponse(JSONObject response) throws JSONException {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();

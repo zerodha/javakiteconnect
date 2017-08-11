@@ -1,7 +1,8 @@
 package com.rainmatter.kitehttp.exceptions;
 
 /**
- * Raised when there is a two FA related error.
+ * Created by H1ccup on 04/09/16.
+ *  Raised when there is a two FA related error.
  * Default code is 403.
  */
 public class Kite2faException extends KiteException {

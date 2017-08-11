@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * A wrapper for trade.
+ * Created by Sujith on 19-Jul-16.
  */
 public class Trade {
 	@SerializedName("trade_id")

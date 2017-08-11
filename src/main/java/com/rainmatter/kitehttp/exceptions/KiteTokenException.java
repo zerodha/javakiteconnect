@@ -1,7 +1,7 @@
 package com.rainmatter.kitehttp.exceptions;
 
 /**
- * Denotes session is expired.
+ * Created by H1ccup on 04/09/16.
  */
 public class KiteTokenException extends KiteException {
     public KiteTokenException(String message, int code) {

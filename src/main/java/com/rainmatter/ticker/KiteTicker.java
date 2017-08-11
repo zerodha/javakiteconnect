@@ -5,14 +5,14 @@ package com.rainmatter.ticker;
  */
 
 import com.neovisionaries.ws.client.*;
-import com.rainmatter.kiteconnect.KiteConnect;
-import com.rainmatter.kiteconnect.Routes;
 import com.rainmatter.kitehttp.exceptions.KiteException;
 import com.rainmatter.models.Depth;
 import com.rainmatter.models.Tick;
+import com.rainmatter.kiteconnect.KiteConnect;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.rainmatter.kiteconnect.Routes;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -489,12 +489,12 @@ public class KiteTicker {
     }
 
     /** Disconnects and reconnects ticker*/
-    private void reconnect(final ArrayList<Long> tokens) {
+    private void reconnect(ArrayList<Long> tokens) {
         try {
             nonUserDisconnect();
             connect();
             lastTickArrivedAt = 0;
-            final OnConnect onUsersConnectedListener = this.onConnectedListener;
+            OnConnect onUsersConnectedListener = this.onConnectedListener;
             setOnConnectedListener(new OnConnect() {
                 @Override
                 public void onConnected() {

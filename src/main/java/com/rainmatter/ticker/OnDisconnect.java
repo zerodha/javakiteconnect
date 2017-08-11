@@ -1,7 +1,7 @@
 package com.rainmatter.ticker;
 
 /**
- * Callback to listen to ticker websocket disconnected event.
+ * Created by sujith on 14/10/16.
  */
 public interface OnDisconnect {
     void onDisconnected();

@@ -1,6 +1,7 @@
 package com.rainmatter.kitehttp.exceptions;
 
 /**
+ * Created by H1ccup on 04/09/16.
  * Represents permission denied exceptions for certain calls.
  * Default code is 403
  */

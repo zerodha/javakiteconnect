@@ -1,7 +1,7 @@
 package com.rainmatter.models;
 
 /**
- * A wrapper for margins.
+ * Created by H1ccup on 11/09/16.
  */
 
 import com.google.gson.Gson;
@@ -81,6 +81,7 @@ public class Margins {
      * @throws JSONException
      */
     public Margins parseMarginsResponse(JSONObject response)  throws JSONException {
+        System.out.println(response);
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         return gson.fromJson(String.valueOf(response.get("data")), Margins.class);

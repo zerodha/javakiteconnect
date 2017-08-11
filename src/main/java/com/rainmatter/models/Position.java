@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * A wrapper for psoition.
+ * A wrapper for position.
  */
 public class Position {
 

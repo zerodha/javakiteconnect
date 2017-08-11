@@ -3,7 +3,7 @@ package com.rainmatter.models;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * A wrapper for open, high, low, close.
+ * Created by sujith on 13/10/16.
  */
 public class OHLC {
 
