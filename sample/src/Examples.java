@@ -314,6 +314,83 @@ public class Examples {
         System.out.println(jsonObject10);
     }
 
+    /** retrieve mf instrument dump */
+    public void getMfInstruments(KiteConnect kiteConnect) throws KiteException, IOException {
+        List<MfInstrument> mfList = kiteConnect.getMfInstruments();
+        System.out.println("size of mf instrument list: "+mfList.size());
+    }
+
+    /* get all mutualfunds holdings */
+    public void getMfHoldings(KiteConnect kiteConnect) throws KiteException {
+        MfHolding mfHolding = kiteConnect.getMfHoldings();
+        System.out.println("mf holdings "+mfHolding.mfHoldings.size());
+    }
+
+    /* place a mutualfunds order */
+    public void placeMfOrder(KiteConnect kiteConnect) throws KiteException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("tradingsymbol", "INF174K01LS2");
+        params.put("transaction_type", "BUY");
+        params.put("amount", "20000");
+        System.out.println("place order: "+ kiteConnect.placeMfOrder(params).orderId);
+    }
+
+    /* cancel mutualfunds order */
+    public void cancelMfOrder(KiteConnect kiteConnect) throws KiteException {
+        kiteConnect.cancelMfOrder("380804");
+        System.out.println("cancel order successful");
+    }
+
+    /* retrieve all mutualfunds orders */
+    public void getMfOrders(KiteConnect kiteConnect) throws KiteException {
+        MfOrder mfOrder = kiteConnect.getMfOrders();
+        System.out.println("mf orders: "+mfOrder.mfOrders.size());
+    }
+
+    /* retrieve individual mutualfunds order */
+    public void getMfOrder(KiteConnect kiteConnect) throws KiteException {
+        System.out.println("mf order: "+ kiteConnect.getMfOrder("380804").tradingsymbol);
+    }
+
+    /* place mutualfunds sip */
+    public void placeMfSip(KiteConnect kiteConnect) throws KiteException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("tradingsymbol", "INF174K01LS2");
+        params.put("frequency", "monthly");
+        params.put("day",1);
+        params.put("instalments", -1);
+        params.put("initial_amount", 5000);
+        params.put("amount", 1000);
+        System.out.println("mf place sip: "+ kiteConnect.placeMfSip(params).sipId);
+    }
+
+    /* modify a mutual fund sip */
+    public void modifyMfSip(KiteConnect kiteConnect) throws KiteException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("frequency", "weekly");
+        params.put("instalments", 5);
+        params.put("amount", 1000);
+        params.put("status", "active");
+        params.put("day", 1);
+        kiteConnect.modifyMfSip(params, "62107");
+    }
+
+    /* cancel a mutualfunds sip */
+    public void cancelMfSip(KiteConnect kiteConnect) throws KiteException {
+        kiteConnect.cancelMfSip("56709");
+        System.out.println("cancel sip successful");
+    }
+
+    /* retrieve all mutualfunds sip */
+    public void getMfSips(KiteConnect kiteConnect) throws KiteException {
+        System.out.println("mf sips: "+ kiteConnect.getMfSips().mfSips.get(0).sipId);
+    }
+
+    /* retrieve individual mutualfunds sip */
+    public void getMfSip(KiteConnect kiteConnect) throws KiteException {
+        System.out.println("mf sip: "+ kiteConnect.getMfSip("56709").instalments);
+    }
+
     /** Demonstrates ticker connection, subcribing for instruments, unsubscribing for instruments, set mode of tick data, ticker disconnection*/
     public void tickerUsage(KiteConnect kiteconnect) throws IOException, WebSocketException {
         /** To get live price use com.rainmatter.ticker websocket connection. It is recommended to use only one websocket connection at any point of time and make sure you stop connection, once user goes out of app.*/

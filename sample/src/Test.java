@@ -87,6 +87,30 @@ public class Test {
 
                 examples.getHistoricalData(kiteconnect);
 
+                examples.getMfInstruments(kiteConnect);
+
+                examples.getHoldings(kiteConnect);
+
+                examples.placeMfOrder(kiteConnect);
+
+                examples.cancelMfOrder(kiteConnect);
+
+                examples.getMfOrders(kiteConnect);
+
+                examples.getMfOrder(kiteConnect);
+
+                examples.placeMfSip(kiteConnect);
+
+                examples.modifyMfSip(kiteConnect);
+
+                examples.cancelMfSip(kiteConnect);
+
+                examples.getMfSips(kiteConnect);
+
+                examples.getMfSip(kiteConnect);
+
+                examples.getMfHoldings(kiteConnect);
+
                 examples.logout(kiteconnect);
 
                 examples.tickerUsage(kiteconnect);
