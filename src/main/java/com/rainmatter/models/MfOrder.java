@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
@@ -59,24 +60,31 @@ public class MfOrder {
     public List<MfOrder> mfOrders = new ArrayList<>();
 
     /** Parse mutualfunds orders list response.
-     * @param response contains list of mutualfunds. */
-    public void parseMfOrders(JSONObject response){
+     * @param response contains list of mutualfunds.
+     * @throws JSONException is thrown when there is error while parsing response.
+     * */
+    public void parseMfOrders(JSONObject response) throws JSONException{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         mfOrders = Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), MfOrder[].class));
     }
 
     /** Parse individual mutualfunds order response.
-     * @param response contains JSONObject of individual order details. */
-    public MfOrder parseMfOrder(JSONObject response){
+     * @param response contains JSONObject of individual order details.
+     * @throws JSONException is thrown when there is error while parsing response.
+     * @return MfOrder object which will contains mutualfunds order details.
+     * */
+    public MfOrder parseMfOrder(JSONObject response) throws JSONException{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         return gson.fromJson(response.get("data").toString(), MfOrder.class);
     }
 
     /** Parse place order response.
-     * @param response contains order id. */
-    public void parseOrderPlaceResponse(JSONObject response){
+     * @param response contains order id.
+     * @throws JSONException is thrown when there is error while parsing response.
+     * */
+    public void parseOrderPlaceResponse(JSONObject response) throws JSONException{
         this.orderId = response.getJSONObject("data").getString("order_id");
     }
 }

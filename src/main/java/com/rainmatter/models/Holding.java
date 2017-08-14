@@ -55,9 +55,9 @@ public class Holding {
     public Holding(){}
 
     /**
-     * parses holdings response and create pojo
-     * @param response
-     * @throws JSONException
+     * Parses holdings response and create pojo
+     * @param response is json response from server.
+     * @throws JSONException occurs when there is error while parsing response.
      */
     public void parseHoldingsResponse(JSONObject response) throws JSONException {
         GsonBuilder gsonBuilder = new GsonBuilder();

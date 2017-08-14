@@ -71,12 +71,18 @@ public class Order {
     public Order (){}
     public List<Order> orders = new ArrayList<>();
 
-
+    /** Parses order placed response which will contain only order id.
+     * @param jsonObject is the json response from server.
+     * @throws JSONException is thrown when there is error while parsing response.
+     * */
     public void parseOrderPlacedResponse(JSONObject jsonObject) throws JSONException {
         this.orderId = jsonObject.getJSONObject("data").getString("order_id");
     }
 
-
+    /** Parses order response from sever.
+     * @param response is the json response from server.
+     * @throws JSONException is thrown when there is error while parsing response.
+     * */
     public void parseListOrdersResponse(JSONObject response) throws JSONException {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();

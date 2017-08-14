@@ -3,6 +3,7 @@ package com.rainmatter.models;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -47,24 +48,31 @@ public class MfSip {
     public List<MfSip> mfSips = new ArrayList<>();
 
     /** Parse mutualfunds sip list.
-     * @param response is the JSONObject response which contains array of sip. */
-    public void parseMfSips(JSONObject response){
+     * @param response is the JSONObject response which contains array of sip.
+     * @throws JSONException is thrown when there is error while parsing response.
+     * */
+    public void parseMfSips(JSONObject response) throws JSONException{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         mfSips = Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), MfSip[].class));
     }
 
     /** Parse individual sip response.
-     * @param response is the JSONObject response which contains one sip. */
-    public MfSip parseMfSip(JSONObject response){
+     * @param response is the JSONObject response which contains one sip.
+     * @throws JSONException is thrown when there is error while parsing response.
+     * @return MfSip is the details of the individual Sip.
+     * */
+    public MfSip parseMfSip(JSONObject response) throws JSONException{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         return gson.fromJson(response.get("data").toString(), MfSip.class);
     }
 
     /** Parse sip place response.
-     * @param response is the JSONObject response which contains order id and sip id. */
-    public void parseMfSipPlaceResponse(JSONObject response){
+     * @param response is the JSONObject response which contains order id and sip id.
+     * @throws JSONException is thrown when there is error while parsing response.
+     * */
+    public void parseMfSipPlaceResponse(JSONObject response) throws JSONException{
         this.orderId = response.getJSONObject("data").getString("order_id");
         this.sipId = response.getJSONObject("data").getString("sip_id");
     }

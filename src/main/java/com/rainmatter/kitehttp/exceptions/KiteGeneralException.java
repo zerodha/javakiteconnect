@@ -1,7 +1,6 @@
 package com.rainmatter.kitehttp.exceptions;
 
 /**
- * 
  * An unclassified, general error. Default code is 500
  */
 public class KiteGeneralException extends KiteException {

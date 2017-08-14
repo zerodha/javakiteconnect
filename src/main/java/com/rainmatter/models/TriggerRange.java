@@ -18,6 +18,10 @@ public class TriggerRange {
     @SerializedName("percent")
     public double percent;
 
+    /** Parses trigger range response from server.
+     * @param response is the json response from server.
+     * @return TriggerRange is the trigger range object data.
+     * */
     public TriggerRange parseResponse(JSONObject response) throws JSONException{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();

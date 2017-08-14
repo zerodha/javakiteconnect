@@ -27,8 +27,11 @@ public class KiteRequest {
     /**
      * POST request using UniRest library.
      *
-     * @param url
-     * @param params
+     * @param url is endpoint to which request has to be done.
+     * @param params is data that has to be sent in body.
+     * @return JSONObject returns json response.
+     * @throws KiteException contains error message and error code inside.
+     * @throws JSONException occurs when there is error while parsing data.
      */
 
     public JSONObject postRequest(String url, Map<String, Object> params) throws KiteException, JSONException {
@@ -59,9 +62,11 @@ public class KiteRequest {
     /**
      * GET request using UniRest library.
      *
-     * @param url
-     * @param params
-     * @return
+     * @param url is endpoint to which request has to be done.
+     * @param params is data that has to be sent.
+     * @return JSONObject returns json response.
+     * @throws KiteException contains error message and error code inside.
+     * @throws JSONException occurs when there is error while parsing data.
      */
     public JSONObject getRequest(String url, Map<String, Object> params) throws KiteException, JSONException {
 
@@ -89,9 +94,10 @@ public class KiteRequest {
 
     /**
      * GET request using UniRest library without params.
-     *
-     * @param url
-     * @return
+     * @param url is endpoint to which request has to be done.
+     * @return JSONObject returns json response.
+     * @throws KiteException contains error message and error code inside.
+     * @throws JSONException occurs when there is error while parsing data.
      */
     public JSONObject getRequest(String url) throws KiteException, JSONException {
 
@@ -121,8 +127,11 @@ public class KiteRequest {
 
     /**
      * PUT request.
-     * @param url
-     * @param params
+     * @param url is endpoint to which request has to be done.
+     * @param params is data that has to be sent.
+     * @return JSONObject returns json response.
+     * @throws KiteException contains error message and error code inside.
+     * @throws JSONException occurs when there is error while parsing data.
      */
     public JSONObject putRequest(String url, Map<String, Object> params) throws KiteException, JSONException {
 
@@ -136,7 +145,6 @@ public class KiteRequest {
                     .asJson();
             JsonNode body = response.getBody();
             JSONObject jsonObject = body.getObject();
-            System.out.println(jsonObject);
             int code = response.getStatus();
 
             if (code == 200)
@@ -153,8 +161,11 @@ public class KiteRequest {
 
     /**
      * DELETE request.
-     * @param url
-     * @param params
+     * @param url is endpoint to which request has to be done.
+     * @param params is data that has to be sent.
+     * @return JSONObject returns json response.
+     * @throws KiteException contains error message and error code inside.
+     * @throws JSONException occurs when there is error while parsing data.
      */
     public JSONObject deleteRequest(String url, Map<String, Object> params) throws KiteException, JSONException {
 
@@ -183,7 +194,9 @@ public class KiteRequest {
 
     /**
      * Used to get csv response for instruments.
-     * @param url
+     * @param url is endpoint to which request has to be done.
+     * @return returns String response.
+     * @throws KiteException contains error message and error code inside.
      */
     public String getCsvRequest(String url) throws KiteException{
         String resp;
@@ -206,6 +219,13 @@ public class KiteRequest {
 
     }
 
+    /**
+     * Used to get csv response for mutualfunds instruments.
+     * @param url is endpoint to which request has to be done.
+     * @param params id the data that has to be sent.
+     * @return returns String response.
+     * @throws KiteException contains error message and error code inside.
+     */
     public String getCsvRequest(String url, Map<String, Object> params) throws KiteException{
         StringBuilder builder = new StringBuilder();
         String resp;
@@ -246,9 +266,10 @@ public class KiteRequest {
     /**
      * Deals with all kite exceptions.
      *
-     * @param jsonObject
-     * @param errorCode
-     * @return
+     * @param jsonObject is response from server.
+     * @param errorCode is http error code.
+     * @return returns one of the type of KiteException.
+     * @throws JSONException occurs when there is error while parsing data.
      */
     public KiteException dealWithKiteException(JsonNode jsonObject, int errorCode) throws JSONException {
 

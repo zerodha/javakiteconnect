@@ -36,6 +36,11 @@ public class UserModel {
     @SerializedName("email")
     public String email;
 
+    /** Parses user details response from server.
+     * @param response is the json response from server.
+     * @throws JSONException is thrown when there is error while parsing response.
+     * @return UserModel is the parsed data.
+     * */
     public UserModel parseResponse(JSONObject response) throws JSONException{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
@@ -44,6 +49,11 @@ public class UserModel {
         return userModel;
     }
 
+    /** Parses array details of product, exchange and order_type from json response.
+     *  @param response is the json response from server.
+     *  @param userModel is the object to which data is copied to from json response.
+     *  @return UserModel is the pojo of parsed data.
+     *  */
     public UserModel parseArray(UserModel userModel, JSONObject response) throws JSONException{
         JSONArray productArray = response.getJSONArray("product");
         userModel.product  = new String[productArray.length()];

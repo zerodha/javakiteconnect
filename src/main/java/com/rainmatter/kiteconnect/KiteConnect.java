@@ -371,7 +371,7 @@ public class KiteConnect {
      *		instrument_type: 'EQ',
      *		segment: 'BSE',
      *		exchange: 'BSE' }, ...]
-     * @return List<Instrument> is list of intruments which are available to trade.
+     * @return List of intruments which are available to trade.
      */
     public List<Instrument> getInstruments() throws KiteException, IOException {
         KiteRequest kiteRequest = new KiteRequest();
@@ -396,7 +396,7 @@ public class KiteConnect {
      *		segment: 'BSE',
      *		exchange: 'BSE' }, ...]
      * @param exchange  Filter instruments based on exchange. exchange can be NSE, BSE, NFO, BFO, CDS, MCX.
-     * @return List<Instrument> is list of intruments which are available to trade for an exchange.
+     * @return List of instruments which are available to trade for an exchange.
      */
     public List<Instrument> getInstruments(String exchange) throws KiteException, JSONException, IOException {
         KiteRequest kiteRequest = new KiteRequest();

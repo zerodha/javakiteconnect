@@ -1,7 +1,6 @@
 package com.rainmatter.kitehttp.exceptions;
 
 /**
- *
  * Represents a network issue between Kite and the backend Order Management System (OMS).
  * Default code is 503.
  */

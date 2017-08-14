@@ -69,9 +69,8 @@ public class Position {
 
     /**
      * parses response from positions api
-     * @param response
-     * @return
-     * @throws JSONException
+     * @param response is the json response from server.
+     * @throws JSONException is thrown when there is error while parsing response.
      */
     public void parseGetPositionsResponse(JSONObject response) throws JSONException {
         GsonBuilder gsonBuilder = new GsonBuilder();

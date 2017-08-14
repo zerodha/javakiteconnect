@@ -76,12 +76,11 @@ public class Margins {
     /**
      *
      * Parses response to map with GSON class.
-     * @param response JSONObject response
+     * @param response JSONObject response from server.
      * @return GSON mapped Margins model.
-     * @throws JSONException
+     * @throws JSONException is thrown when there is error while parsing response.
      */
     public Margins parseMarginsResponse(JSONObject response)  throws JSONException {
-        System.out.println(response);
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         return gson.fromJson(String.valueOf(response.get("data")), Margins.class);

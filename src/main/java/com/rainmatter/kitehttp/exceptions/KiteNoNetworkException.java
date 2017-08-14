@@ -1,7 +1,6 @@
 package com.rainmatter.kitehttp.exceptions;
 
 /**
- *
  * This class is a wrapper for exception thrown
  * when user's phone network is off.
  */

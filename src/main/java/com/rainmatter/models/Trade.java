@@ -3,6 +3,7 @@ package com.rainmatter.models;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -41,7 +42,10 @@ public class Trade {
 	public Trade(){}
 	public List<Trade> trades = new ArrayList<>();
 
-	public void parseListTradesResponse(JSONObject response){
+	/*Parses trades list response from server.
+	* @param response is the json response from server.
+	* */
+	public void parseListTradesResponse(JSONObject response) throws JSONException{
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		Gson gson = gsonBuilder.create();
 		trades = Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Trade[].class));

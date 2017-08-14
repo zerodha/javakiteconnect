@@ -3,6 +3,7 @@ package com.rainmatter.models;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -31,8 +32,10 @@ public class MfHolding {
     public List<MfHolding> mfHoldings = new ArrayList<>();
 
     /** Parse mutualfunds holdings response.
-     * @param response constains list of mutualfunds holdings. */
-    public void parseMfHoldings(JSONObject response){
+     *  @param response contains list of mutualfunds holdings.
+     *  @throws JSONException is thrown when there is an error while parsing.
+     * */
+    public void parseMfHoldings(JSONObject response) throws JSONException{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         mfHoldings = Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), MfHolding[].class));

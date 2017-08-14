@@ -36,6 +36,11 @@ public class Quote {
     public OHLC ohlc;
     public Map<String, ArrayList<Depth>> depth;
 
+    /** Parses quote response.
+     * @param response is the json response from the server.
+     * @throws JSONException is thrown when there is error while parsing response.
+     * @return Quote is the parsed data.
+     * */
     public Quote parseResponse(JSONObject response) throws JSONException{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
@@ -44,6 +49,11 @@ public class Quote {
         return quote;
     }
 
+    /** Parses depth data from json response.
+     * @param data is the json response from server.
+     * @param quote is the object in which data is written.
+     * @return Quote is the completely parsed data with depth details.
+     * */
     public Quote parseOtherData(JSONObject data, Quote quote) throws JSONException{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();

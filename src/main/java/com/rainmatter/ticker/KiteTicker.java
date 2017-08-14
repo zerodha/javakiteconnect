@@ -60,7 +60,8 @@ public class KiteTicker {
     private Timer timer = null;
     private boolean tryReconnection = false;
     
-    /** Returns task which performs check every second for reconnection*/
+    /** Returns task which performs check every second for reconnection.
+     * @return TimerTask returns timer task which will be invoked after user defined interval and tries reconnect. */
     private TimerTask getTask(){
         TimerTask checkForRestartTask = new TimerTask() {
             @Override
@@ -84,7 +85,8 @@ public class KiteTicker {
         return checkForRestartTask;
     }
 
-    /** Set tryReconnection, to instruct KiteTicker that it has to reconnect, if ticker is disconnected*/
+    /** Set tryReconnection, to instruct KiteTicker that it has to reconnect, if ticker is disconnected.
+     * @param retry will denote whether reconnection should be tried or not. */
     public void setTryReconnection(boolean retry){
         tryReconnection = retry;
     }
@@ -97,11 +99,14 @@ public class KiteTicker {
             throw new KiteException("reconnection interval can't be less than five seconds", 00);
     }
 
-    /** Set max number of retries for reconnection, for infinite retries set value as -1 */
+    /** Set max number of retries for reconnection, for infinite retries set value as -1.
+     * @param maxRetries denotes maximum number of retries that the ticker can perform. */
     public void setMaxRetries(int maxRetries){
         this.maxRetries = maxRetries;
     }
 
+    /** Initialise Kite Ticker.
+     * @param kiteSdk is the object which contains app specific details. */
     public KiteTicker(KiteConnect kiteSdk){
         _kiteSdk = kiteSdk;
         createUrl();
@@ -137,7 +142,10 @@ public class KiteTicker {
         onDisconnectedListener = listener;
     }
 
-    /** Establishes a web socket connection.*/
+    /** Establishes a web socket connection.
+     * @throws WebSocketException is thrown when there is socket error.
+     * @throws IOException is thrown when there is connection error.
+     * */
     public void connect() throws WebSocketException, IOException {
 
         if(isConnectionOpen()){
@@ -296,7 +304,8 @@ public class KiteTicker {
         return jobj;
     }
 
-    /** Unsubscribes ticks for list of tokens.*/
+    /** Unsubscribes ticks for list of tokens.
+     * @param tokens is the list of tokens that needs to be unsubscribed. */
     public void unsubscribe(ArrayList<Long> tokens){
         if(ws != null) {
             if (ws.isOpen()) {
@@ -308,7 +317,8 @@ public class KiteTicker {
 
     /*
      * This method parses binary data got from kite server to get ticks for each token subscribed.
-     * we have to keep a main Array List which is global and keep deleting element in the list and add new data element in that place and call notify data set changed
+     * we have to keep a main Array List which is global and keep deleting element in the list and add new data element in that place and call notify data set changed.
+     * @return List of parsed ticks.
      */
     private ArrayList<Tick> parseBinary(byte [] binaryPackets) {
         ArrayList<Tick> ticks = new ArrayList<Tick>();
@@ -363,6 +373,8 @@ public class KiteTicker {
         return ticks;
     }
 
+    /** Parses NSE indices data.
+     * @return Tick is the parsed index data. */
     private Tick getNseIndeciesData(byte[] bin, int x){
         int dec = 100;
         Tick tick = new Tick();
@@ -385,6 +397,7 @@ public class KiteTicker {
         return tick;
     }
 
+    /** Parses LTPQuote data.*/
     private Tick getLtpQuote(byte[] bin, int x, int dec1){
         Tick tick1 = new Tick();
         tick1.setMode(modeLTP);
@@ -394,7 +407,7 @@ public class KiteTicker {
         return tick1;
     }
 
-    /**get tick data for MCXFO, NSEFO, NSECM and NSECD*/
+    /** Get tick data for MCXFO, NSEFO, NSECM and NSECD*/
     private Tick getTickData(byte[] bin, int x, int dec1){
         Tick tick2 = new Tick();
         tick2.setMode(modeQuote);
@@ -448,7 +461,7 @@ public class KiteTicker {
         return depthMap;
     }
 
-    /**Each byte stream contains many packets. This method reads first two bits and calculates number of packets in the byte stream and split it.*/
+    /** Each byte stream contains many packets. This method reads first two bits and calculates number of packets in the byte stream and split it. */
     private ArrayList<byte []> splitPackets(byte[] bin){
 
         ArrayList<byte []> packets = new ArrayList<byte []>();
@@ -464,7 +477,7 @@ public class KiteTicker {
         return packets;
     }
 
-    /** Reads values of specified position in byte array*/
+    /** Reads values of specified position in byte array. */
     private byte[] getBytes(byte[] bin, int start, int end){
         return Arrays.copyOfRange(bin, start, end);
     }
@@ -481,14 +494,14 @@ public class KiteTicker {
             return bb.getDouble();
     }
 
-    /** Returns length of packet by reading byte array values*/
+    /** Returns length of packet by reading byte array values. */
     private int getLengthFromByteArray(byte[] bin){
         ByteBuffer bb = ByteBuffer.wrap(bin);
         bb.order(ByteOrder.BIG_ENDIAN);
         return bb.getShort();
     }
 
-    /** Disconnects and reconnects ticker*/
+    /** Disconnects and reconnects ticker. */
     private void reconnect(final ArrayList<Long> tokens) {
         try {
             nonUserDisconnect();
