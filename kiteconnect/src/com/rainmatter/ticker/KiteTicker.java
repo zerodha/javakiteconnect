@@ -91,7 +91,10 @@ public class KiteTicker {
         tryReconnection = retry;
     }
 
-    /** Set minimum time interval after which com.rainmatter.ticker has to restart in seconds*/
+    /** Set minimum time interval after which com.rainmatter.ticker has to restart in seconds.
+     * @param interval is the time interval after which ticker has to try for reconnection.
+     * @throws KiteException is thrown when there is Kite related errors.
+     * */
     public void setTimeIntervalForReconnection(int interval) throws KiteException {
         if(interval >= 5) {
             timeIntervalForReconnection = interval;
@@ -274,7 +277,11 @@ public class KiteTicker {
     }
 
     /** Subscribes for list of tokens.
-     * @param tokens is list of tokens to be subscribed for.*/
+     * @param tokens is list of tokens to be subscribed for.
+     * @throws IOException is thrown when there is connection related errors.
+     * @throws WebSocketException is thrown when there is Websocket exception.
+     * @throws KiteException is thrown when there is Kite related exception.
+     * */
     public void subscribe(ArrayList<Long> tokens) throws IOException, WebSocketException, KiteException {
         if(ws != null) {
             if (ws.isOpen()) {

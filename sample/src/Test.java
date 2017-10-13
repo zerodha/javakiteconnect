@@ -39,7 +39,6 @@ public class Test {
                 UserModel userModel =  kiteConnect.requestAccessToken("xxxxxxxxyyxyyxyyx", "yyyyyyyyyyy");
                 kiteConnect.setAccessToken(userModel.accessToken);
                 kiteConnect.setPublicToken(userModel.publicToken);
-                System.out.println(userModel.accessToken);
 
                 Examples examples = new Examples();
 

@@ -41,7 +41,7 @@ public class KiteConnect {
     private Gson gson;
 
     /** Initializes KiteSDK with the api key provided for your App.
-     * @param apiKey
+     * @param apiKey is the api key provided after creating new Kite Connect App.
      */
     public KiteConnect(String apiKey){
         _apiKey = apiKey;
@@ -50,7 +50,7 @@ public class KiteConnect {
     }
 
     /** Registers callback for session error.
-     * @param sessionExpiryHook
+     * @param sessionExpiryHook can be set to get callback when session is expired.
      * */
     public void registerHook(SessionExpiryHook sessionExpiryHook){
         this.sessionExpiryHook = sessionExpiryHook;
@@ -105,6 +105,7 @@ public class KiteConnect {
 
     /** Returns publicToken.
      * @throws NullPointerException if publicToken is null.
+     * @return String public token is returned.
      * */
     public String getPublicToken() throws NullPointerException{
         if(_publicToken != null){
@@ -131,7 +132,7 @@ public class KiteConnect {
 
     /**
      * Set the accessToken received after a successful authentication.
-     * @param accessToken
+     * @param accessToken is the access token received after sending request token and api secret.
      */
     public void setAccessToken(String accessToken){
         _accessToken = accessToken;
@@ -139,14 +140,14 @@ public class KiteConnect {
 
     /**
      * Set publicToken.
-     * @param publicToken
+     * @param publicToken is the public token received after sending request token and api secret.
      * */
     public void setPublicToken(String publicToken){
         _publicToken = publicToken;
     }
 
     /**Retrives login url
-     * @return String loginUrl */
+     * @return String loginUrl is returned. */
     public String getLoginUrl() throws NullPointerException{
         String baseUrl = routes.getLoginUrl();
         return baseUrl+"?"+"api_key="+_apiKey;
@@ -158,6 +159,8 @@ public class KiteConnect {
      * @param requestToken received from login process.
      * @param apiSecret which is unique for each aap.
      * @return UserModel is usermodel which contains user and session details.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
      */
     public UserModel requestAccessToken(String requestToken, String apiSecret) throws KiteException, JSONException {
 
@@ -179,6 +182,8 @@ public class KiteConnect {
      * Example for segment can be equity or commodity.
      * @param segment can be equity or commodity.
      * @return Margins object.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
      */
     public Margins getMargins(String segment) throws KiteException, JSONException {
        Map<String, Object> params = new HashMap<String, Object>();
@@ -206,6 +211,8 @@ public class KiteConnect {
      *
      * @param variety variety="regular". Order variety can be bo, co, amo, regular.
      * @return Order contains only orderId.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
      */
     public Order placeOrder(Map<String, Object> params, String variety) throws KiteException, JSONException {
         String url = routes.get("orders.place").replace(":variety", variety);
@@ -232,7 +239,9 @@ public class KiteConnect {
      *               params.trigger_price - Trigger price
      * @param variety variety="regular". Order variety can be bo, co, amo, regular.
      * @param orderId order id of the order being modified.
-     * @return Order object contains only orderId
+     * @return Order object contains only orderId.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
      */
     public Order modifyOrder(String orderId, Map<String, Object> params, String variety) throws KiteException, JSONException {
         String url = routes.get("orders.modify").replace(":variety", variety).replace(":order_id", orderId);
@@ -246,7 +255,9 @@ public class KiteConnect {
      * Cancels an order.
      * @param orderId order id of the order to be cancelled.
      * @param variety [variety="regular"]. Order variety can be bo, co, amo, regular.
-     * @return Order object contains only orderId
+     * @return Order object contains only orderId.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
      */
     public Order cancelOrder(String orderId, String variety) throws KiteException, JSONException {
         String url = routes.get("orders.cancel").replace(":variety", variety).replace(":order_id", orderId);
@@ -263,7 +274,8 @@ public class KiteConnect {
      * @param params is map that contains parent_order_id
      * @param orderId order id of the order to be cancelled.
      * @param variety [variety="regular"]. Order variety can be bo, co, amo, regular.
-     * @return Order object contains only orderId
+     * @return Order object contains only orderId.
+     * @throws KiteException is thrown for all Kite trade related errors.
      * */
     public Order cancelOrder(Map<String, Object> params, String orderId, String variety) throws KiteException {
         String url = routes.get("orders.cancel").replace(":variety", variety).replace(":order_id", orderId);
@@ -276,7 +288,9 @@ public class KiteConnect {
     }
 
     /**Gets collection of orders from the orderbook..
-     * @return Order object contains orders which is list of orders.
+     * @return List of orders.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
      * */
     public List<Order> getOrders() throws KiteException, JSONException {
         String url = routes.get("orders");
@@ -287,7 +301,9 @@ public class KiteConnect {
     }
 
     /** Returns list of different stages an order has gone through.
-     * @return Order object contains orders which is list of multiple stages an order has gone through.
+     * @return List of multiple stages an order has gone through in the system.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @param orderId is the order id which is obtained from orderbook.
      * */
     public List<Order> getOrder(String orderId) throws KiteException {
         String url = routes.get("order").replace(":order_id", orderId);
@@ -298,7 +314,9 @@ public class KiteConnect {
 
     /**
      * Retreives list of trades executed.
-     * @return Trade object contains trades which is list of trades.
+     * @return List of trades.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
      */
     public List<Trade> getTrades() throws KiteException, JSONException {
         Map<String, Object> params = new HashMap<>();
@@ -309,7 +327,9 @@ public class KiteConnect {
     /**
      * Retreives list of trades executed of an order.
      * @param orderId order if of the order whose trades are fetched.
-     * @return Trade object contains trades list for the given order
+     * @return List of trades for the given order.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
      */
     public List<Trade> getTrades(String orderId) throws KiteException, JSONException {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -319,7 +339,9 @@ public class KiteConnect {
 
     /**
      * Retrieves the list of holdings.
-     * @return Holding object contains holdings which is list of holdings.
+     * @return List of holdings.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
      */
     public List<Holding> getHoldings() throws KiteException, JSONException {
         Map<String, Object> params = new HashMap<>();
@@ -329,7 +351,9 @@ public class KiteConnect {
 
     /**
      * Retrieves the list of positions.
-     * @return Position object contains positions which is list of positions
+     * @return List of positions.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
      */
     public Map<String, List<Position>> getPositions() throws KiteException, JSONException {
         Map<String, Object> params = new HashMap<>();
@@ -346,6 +370,8 @@ public class KiteConnect {
      * Modifies an open position's product type.
      * @param params include tradingsymbol, exchange, transaction_type, position_type, old_product, new_product, quantity
      * @return JSONObject  which will have status.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
      */
     public JSONObject modifyProduct(Map<String, Object> params) throws KiteException, JSONException {
         KiteRequest kiteRequest = new KiteRequest();
@@ -370,6 +396,8 @@ public class KiteConnect {
      *		segment: 'BSE',
      *		exchange: 'BSE' }, ...]
      * @return List of intruments which are available to trade.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection related errors.
      */
     public List<Instrument> getInstruments() throws KiteException, IOException {
         KiteRequest kiteRequest = new KiteRequest();
@@ -395,6 +423,9 @@ public class KiteConnect {
      *		exchange: 'BSE' }, ...]
      * @param exchange  Filter instruments based on exchange. exchange can be NSE, BSE, NFO, BFO, CDS, MCX.
      * @return List of instruments which are available to trade for an exchange.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there connection related error.
      */
     public List<Instrument> getInstruments(String exchange) throws KiteException, JSONException, IOException {
         KiteRequest kiteRequest = new KiteRequest();
@@ -407,6 +438,8 @@ public class KiteConnect {
      * @param exchange  Exchange in which instrument is listed. exchange can be NSE, BSE, NFO, BFO, CDS, MCX.
      * @param tradingSymbol Tradingsymbol of the instrument (ex. RELIANCE, INFY).
      * @return Quote object.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
      */
     public Quote getQuote(String exchange, String tradingSymbol) throws KiteException, JSONException {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -421,6 +454,8 @@ public class KiteConnect {
      * @param exchange  Exchange in which instrument is listed. exchange can be NSE, BSE.
      * @param tradingSymbol Tradingsymbol of the instrument (ex. NIFTY 50).
      * @return IndicesQuote object.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
      */
     public IndicesQuote getQuoteIndices(String exchange, String tradingSymbol) throws KiteException, JSONException {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -431,9 +466,12 @@ public class KiteConnect {
 
     /**
      * Retrieves buy or sell trigger range for Cover Orders.
-     * @param exchange
-     * @param tradingSymbol
-     * @param params must have transaction_type as "BUY or "SELL"
+     * @param exchange can be NSE, BSE, MCX
+     * @param tradingSymbol is the instrument name.
+     * @param params must have transaction_type as "BUY or "SELL".
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * @return TriggerRange object is returned.
      */
     public TriggerRange getTriggerRange(String exchange, String tradingSymbol, Map<String, Object> params) throws KiteException, JSONException {
         String url = routes.get("market.trigger_range").replace(":exchange", exchange).replace(":tradingsymbol", tradingSymbol);
@@ -448,6 +486,7 @@ public class KiteConnect {
      * @param interval can be minute, day, 3minute, 5minute, 10minute, 15minute, 30minute, 60minute.
      * @param token is instruments token.
      * @return HistoricalData object which contains list of historical data termed as dataArrayList.
+     * @throws KiteException is thrown for all Kite trade related errors.
      * */
     public HistoricalData getHistoricalData(Map<String, Object> params, String token, String interval) throws KiteException {
         String url = routes.get("market.historical").replace(":instrument_token", token).replace(":interval", interval);
@@ -458,6 +497,8 @@ public class KiteConnect {
 
     /** Retrieves mutualfunds instruments.
      * @return returns list of mutual funds instruments.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection related errors.
      * */
     public List<MfInstrument> getMfInstruments() throws KiteException, IOException{
         Map<String, Object> params = new HashMap<String, Object>();
@@ -467,7 +508,9 @@ public class KiteConnect {
 
     /** Place a mutualfunds order.
      * @param params includes tradingsymbol, transaction_type, amount.
-     * @return MfOrder object contains only orderId. */
+     * @return MfOrder object contains only orderId.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * */
     public MfOrder placeMfOrder(Map<String, Object> params) throws KiteException {
         params = authorize(params);
         JSONObject response = new KiteRequest().postRequest(routes.get("mutualfunds.orders.place"), params);
@@ -477,7 +520,10 @@ public class KiteConnect {
     }
 
     /** If cancel is successful then api will respond as 200 and send back true else it will be sent back to user as KiteException.
-     * @return true if api call is successful. */
+     * @return true if api call is successful.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @param orderId is the order id of the mutualfunds order.
+     * */
     public boolean cancelMfOrder(String orderId) throws KiteException {
         Map<String, Object> params = new HashMap<>();
         params = authorize(params);
@@ -487,7 +533,9 @@ public class KiteConnect {
     }
 
     /** Retrieves all mutualfunds orders.
-     * @return MfOrder object contains mfOrders which is a list of all the mutualfunds orders. */
+     * @return List of all the mutualfunds orders.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * */
     public List<MfOrder> getMfOrders() throws KiteException {
         Map<String, Object> params = new HashMap<>();
         params = authorize(params);
@@ -497,7 +545,9 @@ public class KiteConnect {
 
     /** Retrieves individual mutualfunds order.
      * @param orderId is the order id of a mutualfunds scrip.
-     * @return returns a single mutualfunds object with all the parameters. */
+     * @return returns a single mutualfunds object with all the parameters.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * */
     public MfOrder getMfOrder(String orderId) throws KiteException {
         Map<String, Object> params = new HashMap<>();
         params = authorize(params);
@@ -507,7 +557,9 @@ public class KiteConnect {
 
     /** Place a mutualfunds sip.
      * @param params contains tradingsymbol, frequency, day, instalments, initial_amount, amount.
-     * @return MfSip object which contains sip id and order id. */
+     * @return MfSip object which contains sip id and order id.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * */
     public MfSip placeMfSip(Map<String, Object> params) throws KiteException {
         params = authorize(params);
         MfSip mfSip = new MfSip();
@@ -520,7 +572,9 @@ public class KiteConnect {
     /** Modify a mutualfunds sip.
      * @param params contains frequency, instalments, amount, status, day.
      * @param sipId is the id of the sip.
-     * @return returns true, if modify sip is successful else exception is thrown. */
+     * @return returns true, if modify sip is successful else exception is thrown.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * */
     public boolean modifyMfSip(Map<String, Object> params, String sipId) throws KiteException {
         params = authorize(params);
         new KiteRequest().putRequest(routes.get("mutualfunds.sips.modify").replace(":sip_id", sipId), params);
@@ -529,7 +583,9 @@ public class KiteConnect {
 
     /** Cancel a mutualfunds sip.
      * @param sipId is the id of mutualfunds sip.
-     * @return returns true, if cancel sip is successful else exception is thrown. */
+     * @return returns true, if cancel sip is successful else exception is thrown.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * */
     public boolean cancelMfSip(String sipId) throws KiteException {
         Map<String, Object> params = new HashMap<>();
         authorize(params);
@@ -538,7 +594,9 @@ public class KiteConnect {
     }
 
     /** Retrieve all mutualfunds sip.
-     * @return MfSip object will contain mfSips which is a list of sip. */
+     * @return List of sips.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * */
     public List<MfSip> getMfSips() throws KiteException {
         Map<String, Object> params = new HashMap<>();
         params = authorize(params);
@@ -548,7 +606,9 @@ public class KiteConnect {
 
     /** Retrieve an individual sip.
      * @param sipId is the id of a particular sip.
-     * @return MfSip object which contains all the details of the sip. */
+     * @return MfSip object which contains all the details of the sip.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * */
     public MfSip getMfSip(String sipId) throws KiteException {
         Map<String, Object> params = new HashMap<>();
         params = authorize(params);
@@ -557,7 +617,9 @@ public class KiteConnect {
     }
 
     /** Retrieve all the mutualfunds holdings.
-     * @return MfHolding object which contains mfHoldings which is a list of mutualfunds holdings.*/
+     * @return List of mutualfunds holdings.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * */
     public List<MfHolding> getMfHoldings() throws KiteException {
         Map<String, Object> params = new HashMap<>();
         params = authorize(params);
@@ -567,7 +629,10 @@ public class KiteConnect {
 
     /** Retrieves ohlc and last price.
      * User can either pass exchange with tradingsymbol or instrument token only. For example {NSE:NIFTY 50, BSE:SENSEX} or {256265, 265}
-     * @return Map<String, OHLCQuote> which contains key value pair of user input data as key and data as value.*/
+     * @return Map which contains key value pair of user input data as key and data as value.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @param instruments is the array of tradingsymbol and exchange or instruments token.
+     * */
     public Map<String, OHLCQuote> getOHLC(String [] instruments) throws KiteException {
         Map<String, Object> params = new HashMap<>();
         params = authorize(params);
@@ -578,7 +643,10 @@ public class KiteConnect {
 
     /** Retrieves last price.
      * User can either pass exchange with tradingsymbol or instrument token only. For example {NSE:NIFTY 50, BSE:SENSEX} or {256265, 265}.
-     * @return Map<String, LTPQuote> which contains key value pair of user input data as key and data as value.*/
+     * @return Map which contains key value pair of user input data as key and data as value.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @param instruments is the array of tradingsymbol and exchange or instruments token.
+     * */
     public Map<String, LTPQuote> getLTP(String[] instruments) throws KiteException {
         Map<String, Object> params = new HashMap<>();
         params = authorize(params);
@@ -590,7 +658,7 @@ public class KiteConnect {
     /**
      * Kills the session by invalidating the access token.
      * @return JSONObject which contains status
-     * @throws KiteException
+     * @throws KiteException is thrown for all Kite trade related errors.
      */
     public JSONObject logout() throws KiteException {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -601,6 +669,7 @@ public class KiteConnect {
     /**This method parses csv and returns instrument list.
      * @param input is csv string.
      * @return  returns list of instruments.
+     * @throws IOException is thrown when there is connection related error.
      * */
     private List<Instrument> readCSV(String input) throws IOException {
         ICsvBeanReader beanReader = null;
@@ -623,6 +692,7 @@ public class KiteConnect {
     /**This method parses csv and returns instrument list.
      * @param input is mutualfunds csv string.
      * @return  returns list of mutualfunds instruments.
+     * @throws IOException is thrown when there is connection related error.
      * */
     private List<MfInstrument> readMfCSV(String input) throws IOException{
         ICsvBeanReader beanReader = null;
