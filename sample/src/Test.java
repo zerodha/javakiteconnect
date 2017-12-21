@@ -1,7 +1,7 @@
 import com.neovisionaries.ws.client.WebSocketException;
 import com.rainmatter.kiteconnect.KiteConnect;
-import com.rainmatter.kitehttp.SessionExpiryHook;
-import com.rainmatter.kitehttp.exceptions.KiteException;
+import com.rainmatter.kiteconnect.kitehttp.SessionExpiryHook;
+import com.rainmatter.kiteconnect.kitehttp.exceptions.KiteException;
 import com.rainmatter.models.UserModel;
 import org.json.JSONException;
 
@@ -28,7 +28,7 @@ public class Test {
                 //String url = kiteConnect.getLoginUrl();
 
                 // Set session expiry callback.
-                kiteConnect.registerHook(new SessionExpiryHook() {
+                kiteConnect.setSessionExpiryHook(new SessionExpiryHook() {
                     @Override
                     public void sessionExpired() {
                         System.out.println("session expired");

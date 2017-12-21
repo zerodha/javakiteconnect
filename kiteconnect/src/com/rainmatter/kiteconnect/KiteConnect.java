@@ -618,7 +618,7 @@ public class KiteConnect {
      * @return returns true, if cancel sip is successful else exception is thrown.
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
-    public boolean cancelMFSip(String sipId) throws KiteException, IOException {
+    public boolean cancelMFSIP(String sipId) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<>();
         authorize(params);
         new KiteRequestHandler(proxy).deleteRequest(routes.get("mutualfunds.sip").replace(":sip_id", sipId), params);
