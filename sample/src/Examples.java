@@ -1,6 +1,6 @@
 import com.neovisionaries.ws.client.WebSocketException;
 import com.rainmatter.kiteconnect.KiteConnect;
-import com.rainmatter.kitehttp.exceptions.KiteException;
+import com.rainmatter.kiteconnect.kitehttp.exceptions.KiteException;
 import com.rainmatter.models.*;
 import com.rainmatter.ticker.KiteTicker;
 import com.rainmatter.ticker.OnConnect;
