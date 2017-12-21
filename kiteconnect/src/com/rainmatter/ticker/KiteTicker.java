@@ -340,41 +340,23 @@ public class KiteTicker {
             //int token = x >> 8;
             int segment = x & 0xff;
 
-            switch (segment) {
-                case NseIndices:
-                    Tick tick = getNseIndeciesData(bin, x);
-                    ticks.add(tick);
-                    break;
+            int dec1 = (segment == NseCD) ? 10000000 : 100;
 
-                case McxFO:
-                case NseCM:
-                case NseFO:
-                case NseCD:
-                case BseCM:
-                case BseCD:
-                case BseFO:
-
-                    /** decimal precision*/
-                    int dec1 = (segment == NseCD) ? 10000000 : 100;
-                    /** ltp only quote*/
-                    if (bin.length == 8) {
-                        Tick tick1 = getLtpQuote(bin, x, dec1);
-
-                        ticks.add(tick1);
-                        continue;
-                    }
-
-                    Tick tick2 = getTickData(bin, x, dec1);
-                    // full quote including depth
-                    if (bin.length > 60) {
-                        tick2.setMode(modeFull);
-                        Map<String, ArrayList<Depth>> depthMap = getDepthData(bin, dec1);
-                        tick2.setMarketDepth(depthMap);
-                    }else {
-                        //Log.e("Ticker", "market depth bytes not available");
-                    }
-                    ticks.add(tick2);
-                    break;
+            if(bin.length == 8) {
+                Tick tick = getLtpQuote(bin, x, dec1);
+                ticks.add(tick);
+            }else if(bin.length == 28) {
+                Tick tick = getNseIndeciesData(bin, x);
+                ticks.add(tick);
+            }else if(bin.length == 44) {
+                Tick tick = getTickData(bin, x, dec1);
+                ticks.add(tick);
+            } else if(bin.length == 164) {
+                Tick tick = getTickData(bin, x, dec1);
+                tick.setMode(modeFull);
+                Map<String, ArrayList<Depth>> depthMap = getDepthData(bin, dec1);
+                tick.setMarketDepth(depthMap);
+                ticks.add(tick);
             }
         }
         return ticks;
