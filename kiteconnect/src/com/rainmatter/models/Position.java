@@ -9,10 +9,6 @@ public class Position {
 
     @SerializedName("product")
     public String product;
-    @SerializedName("symbol_code")
-    public String symbolCode;
-    @SerializedName("name")
-    public String name;
     @SerializedName("exchange")
     public String exchange;
     @SerializedName("sell_value")
@@ -51,5 +47,25 @@ public class Position {
     public Double pnl;
     @SerializedName("overnight_quantity")
     public int overnightQuantity;
+    @SerializedName("buy_m2m_value")
+    public double buym2mValue;
+    @SerializedName("sell_m2m_value")
+    public double sellm2mValue;
+    @SerializedName("day_buy_quantity")
+    public double dayBuyQuantity;
+    @SerializedName("day_sell_quantity")
+    public double daySellQuantity;
+    @SerializedName("day_buy_price")
+    public double dayBuyPrice;
+    @SerializedName("day_sell_price")
+    public double daySellPrice;
+    @SerializedName("day_buy_value")
+    public double dayBuyValue;
+    @SerializedName("day_sell_value")
+    public double daySellValue;
+    @SerializedName("value")
+    public double value;
+    @SerializedName("token")
+    public String token;
 }
 

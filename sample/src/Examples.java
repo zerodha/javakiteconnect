@@ -68,10 +68,10 @@ public class Examples {
                 put("transaction_type", "BUY");
                 put("tradingsymbol", "SBIN");
                 put("trailing_stoploss", "1");
-                put("stoploss_value", "2");
+                put("stoploss", "2");
                 put("exchange", "NSE");
                 put("validity", "DAY");
-                put("squareoff_value", "3");
+                put("squareoff", "3");
                 put("product", "MIS");
                 put("tag", "myTag");
             }

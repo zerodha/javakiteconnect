@@ -19,10 +19,10 @@ public class Test {
         try {
                 // First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteConnect api call.
                 // Initialize KiteSdk with your apiKey.
-                KiteConnect kiteConnect = new KiteConnect("xxxxxxxxxx");
+                KiteConnect kiteConnect = new KiteConnect("xxxxxxxxxxxx");
 
                 // Set userId
-                kiteConnect.setUserId("xxxxxx");
+                kiteConnect.setUserId("xxxxx");
 
                 //Enable logs for debugging purpose. This will log request and response.
                 kiteConnect.setEnableLogging(true);
