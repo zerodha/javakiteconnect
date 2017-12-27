@@ -7,6 +7,7 @@ package com.rainmatter.models;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 public class Tick {
@@ -39,9 +40,59 @@ public class Tick {
     private double totalBuyQuantity;
     @SerializedName("totalSellQuantity")
     private double totalSellQuantity;
+    @SerializedName("lastTradedTime")
+    private Date lastTradedTime;
+    @SerializedName("openInterest")
+    private double openInterest;
+    @SerializedName("dayHighOpenInterest")
+    private double dayHighOpenInterest;
+    @SerializedName("dayLowOpenInterest")
+    private double dayLowOpenInterest;
+    @SerializedName("tickTimestamp")
+    private Date tickTimestamp;
 
     @SerializedName("depth")
     private Map<String, ArrayList<Depth>> depth;
+
+    public Date getLastTradedTime() {
+        return lastTradedTime;
+    }
+
+    public void setLastTradedTime(Date lastTradedTime) {
+        this.lastTradedTime = lastTradedTime;
+    }
+
+    public double getOpenInterest() {
+        return openInterest;
+    }
+
+    public void setOpenInterest(double openInterest) {
+        this.openInterest = openInterest;
+    }
+
+    public double getDayHighOpenInterest() {
+        return dayHighOpenInterest;
+    }
+
+    public void setDayHighOpenInterest(double dayHighOpenInterest) {
+        this.dayHighOpenInterest = dayHighOpenInterest;
+    }
+
+    public double getDayLowOpenInterest() {
+        return dayLowOpenInterest;
+    }
+
+    public void setDayLowOpenInterest(double dayLowOpenInterest) {
+        this.dayLowOpenInterest = dayLowOpenInterest;
+    }
+
+    public Date getTickTimestamp() {
+        return tickTimestamp;
+    }
+
+    public void setTickTimestamp(Date tickTimestamp) {
+        this.tickTimestamp = tickTimestamp;
+    }
 
     public String getMode() {
         return mode;

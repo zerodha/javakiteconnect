@@ -2,18 +2,14 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.rainmatter.kiteconnect.KiteConnect;
 import com.rainmatter.kiteconnect.kitehttp.exceptions.KiteException;
 import com.rainmatter.models.*;
-import com.rainmatter.ticker.KiteTicker;
-import com.rainmatter.ticker.OnConnect;
-import com.rainmatter.ticker.OnDisconnect;
-import com.rainmatter.ticker.OnTick;
+import com.rainmatter.ticker.*;
 import org.json.JSONObject;
 import  com.rainmatter.models.Margin;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.*;
 
 /**
  * Created by sujith on 15/10/16.
@@ -50,7 +46,7 @@ public class Examples {
                 put("exchange", "NSE");
                 put("transaction_type", "BUY");
                 put("validity", "DAY");
-                put("price", "118.50");
+                put("price", "116.50");
                 put("trigger_price", "0");
                 put("tag", "myTag");   //tag is optional and it cannot be more than 8 characters and only alphanumeric is allowed
             }
@@ -68,7 +64,7 @@ public class Examples {
             {
                 put("quantity", "1");
                 put("order_type", "LIMIT");
-                put("price", "245.5");
+                put("price", "317.5");
                 put("transaction_type", "BUY");
                 put("tradingsymbol", "SBIN");
                 put("trailing_stoploss", "1");
@@ -106,7 +102,7 @@ public class Examples {
                 put("tradingsymbol", "ASHOKLEY");
                 put("exchange", "NSE");
                 put("validity", "DAY");
-                put("trigger_price", "124.2");
+                put("trigger_price", "117.5");
                 put("order_type", "MARKET");
                 put("product", "MIS");
             }
@@ -136,7 +132,7 @@ public class Examples {
 
     /** Get order details*/
     public void getOrder(KiteConnect kiteConnect) throws KiteException, IOException {
-        List<Order> orders = kiteConnect.getOrder("171012000784757");
+        List<Order> orders = kiteConnect.getOrder("171227000516358");
         for(int i = 0; i< orders.size(); i++){
             System.out.println(orders.get(i).orderId+" "+orders.get(i).status);
         }
@@ -153,7 +149,7 @@ public class Examples {
     /** Get trades for an order.*/
     public void getTradesWithOrderId(KiteConnect kiteConnect) throws KiteException, IOException {
         // Returns trades for the given order.
-        List<Trade> trades = kiteConnect.getTrades("171012000784757");
+        List<Trade> trades = kiteConnect.getTrades("171227000516358");
         System.out.println(trades.size());
     }
 
@@ -183,7 +179,7 @@ public class Examples {
             {
                 put("quantity", "1");
                 put("order_type", "LIMIT");
-                put("price", "245");
+                put("price", "318");
                 put("transaction_type", "BUY");
                 put("tradingsymbol", "SBIN");
                 put("trailing_stoploss", "1");
@@ -194,47 +190,47 @@ public class Examples {
                 put("trigger_price", "0");
             }
         };
-        Order order = kiteConnect.modifyOrder("171012000716530", params, "bo");
+        Order order = kiteConnect.modifyOrder("171227000490831", params, "bo");
         System.out.println(order.orderId);
     }
 
     public void modifySecondLegBoSLM(KiteConnect kiteConnect) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<String, Object>(){
             {
-                put("order_id", "171012000751660");
-                put("parent_order_id", "171012000716530");
+                put("order_id", "171227000533464");
+                put("parent_order_id", "171227000490831");
                 put("tradingsymbol", "SBIN");
                 put("exchange", "NSE");
                 put("quantity", "1");
                 put("product","MIS");
                 put("validity", "DAY");
-                put("trigger_price", "247.40");
+                put("trigger_price", "316.7");
                 put("price", "0");
                 put("order_type", "SL-M");
                 put("transaction_type", "SELL");
             }
         };
-        Order order = kiteConnect.modifyOrder("171012000751660", params, "bo");
+        Order order = kiteConnect.modifyOrder("171227000533464", params, "bo");
         System.out.println(order.orderId);
     }
 
     public void modifySecondLegBoLIMIT(KiteConnect kiteConnect) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<String, Object>(){
             {
-                put("order_id", "171012000751659");
-                put("parent_order_id", "171012000716530");
+                put("order_id", "171227000533463");
+                put("parent_order_id", "171227000490831");
                 put("tradingsymbol", "SBIN");
                 put("exchange", "NSE");
                 put("quantity", "1");
                 put("product","MIS");
                 put("validity", "DAY");
-                put("price", "252.40");
+                put("price", "321.7");
                 put("trigger_price", "0");
                 put("order_type", "LIMIT");
                 put("transaction_type", "SELL");
             }
         };
-        Order order = kiteConnect.modifyOrder("171012000751659", params, "bo");
+        Order order = kiteConnect.modifyOrder("171227000533463", params, "bo");
         System.out.println(order.orderId);
     }
 
@@ -242,14 +238,14 @@ public class Examples {
     public void cancelOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         // Order modify request will return order model which will contain only order_id.
         // Cancel order will return order model which will only have orderId.
-        Order order2 = kiteConnect.cancelOrder("161007000088484", "regular");
+        Order order2 = kiteConnect.cancelOrder("171227000469646", "regular");
         System.out.println(order2.orderId);
     }
 
     public void exitBracketOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<>();
-        params.put("parent_order_id", "171012000716530");
-        Order order = kiteConnect.cancelOrder(params, "171012000751660", "bo");
+        params.put("parent_order_id", "171227000490831");
+        Order order = kiteConnect.cancelOrder(params, "171227000533463", "bo");
         System.out.println(order.orderId);
     }
 
@@ -269,17 +265,17 @@ public class Examples {
     }
 
     /** Converts position*/
-    public void modifyProduct(KiteConnect kiteConnect) throws KiteException, IOException {
+    public void converPosition(KiteConnect kiteConnect) throws KiteException, IOException {
         //Modify product can be used to change MIS to NRML(CNC) or NRML(CNC) to MIS.
         Map<String, Object> param6 = new HashMap<String, Object>(){
             {
-                put("exchange", "NFO");
-                put("tradingsymbol", "NIFTY16OCT10000CE");
-                put("transaction_type", "SELL");
-                put("position_type", "overnight"); //can also be day
-                put("quantity", "150");
-                put("old_product", "MIS");
-                put("new_product", "NRML");
+                put("exchange", "NSE");
+                put("tradingsymbol", "SOUTHBANK");
+                put("transaction_type", "BUY");
+                put("position_type", "day"); //can also be day
+                put("quantity", "1");
+                put("old_product", "CNC");
+                put("new_product", "MIS");
             }
         };
         JSONObject jsonObject6 = kiteConnect.convertPosition(param6);
@@ -297,7 +293,7 @@ public class Examples {
     /** Get instruments for the desired exchange.*/
     public void getInstrumentsForExchange(KiteConnect kiteConnect) throws KiteException, IOException {
         // Get instruments for an exchange.
-        List<Instrument> nseInstruments = kiteConnect.getInstruments("NSE");
+        List<Instrument> nseInstruments = kiteConnect.getInstruments("CDS");
         System.out.println(nseInstruments.size());
     }
 
@@ -353,19 +349,19 @@ public class Examples {
     }
 
     /** Retrieve mf instrument dump */
-    public void getMfInstruments(KiteConnect kiteConnect) throws KiteException, IOException {
+    public void getMFInstruments(KiteConnect kiteConnect) throws KiteException, IOException {
         List<MfInstrument> mfList = kiteConnect.getMFInstruments();
         System.out.println("size of mf instrument list: "+mfList.size());
     }
 
     /* Get all mutualfunds holdings */
-    public void getMfHoldings(KiteConnect kiteConnect) throws KiteException, IOException {
+    public void getMFHoldings(KiteConnect kiteConnect) throws KiteException, IOException {
         List<MfHolding> mfHoldings = kiteConnect.getMFHoldings();
         System.out.println("mf holdings "+mfHoldings.size());
     }
 
     /* Place a mutualfunds order */
-    public void placeMfOrder(KiteConnect kiteConnect) throws KiteException, IOException {
+    public void placeMFOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<>();
         params.put("tradingsymbol", "INF174K01LS2");
         params.put("transaction_type", "BUY");
@@ -374,24 +370,24 @@ public class Examples {
     }
 
     /* cancel mutualfunds order */
-    public void cancelMfOrder(KiteConnect kiteConnect) throws KiteException, IOException {
-        kiteConnect.cancelMFOrder("505743018174976");
+    public void cancelMFOrder(KiteConnect kiteConnect) throws KiteException, IOException {
+        kiteConnect.cancelMFOrder("106580291331583");
         System.out.println("cancel order successful");
     }
 
     /* retrieve all mutualfunds orders */
-    public void getMfOrders(KiteConnect kiteConnect) throws KiteException, IOException {
+    public void getMFOrders(KiteConnect kiteConnect) throws KiteException, IOException {
         List<MfOrder> mfOrders = kiteConnect.getMFOrders();
         System.out.println("mf orders: "+mfOrders.get(0).orderId+ " "+mfOrders.get(0).tradingsymbol);
     }
 
     /* retrieve individual mutualfunds order */
-    public void getMfOrder(KiteConnect kiteConnect) throws KiteException, IOException {
-        System.out.println("mf order: "+ kiteConnect.getMFOrder("505743018174976").tradingsymbol);
+    public void getMFOrder(KiteConnect kiteConnect) throws KiteException, IOException {
+        System.out.println("mf order: "+ kiteConnect.getMFOrder("106580291331583").tradingsymbol);
     }
 
     /* place mutualfunds sip */
-    public void placeMfSip(KiteConnect kiteConnect) throws KiteException, IOException {
+    public void placeMFSIP(KiteConnect kiteConnect) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<>();
         params.put("tradingsymbol", "INF174K01LS2");
         params.put("frequency", "monthly");
@@ -403,36 +399,37 @@ public class Examples {
     }
 
     /* modify a mutual fund sip */
-    public void modifyMfSip(KiteConnect kiteConnect) throws KiteException, IOException {
+    public void modifyMFSIP(KiteConnect kiteConnect) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<>();
         params.put("frequency", "weekly");
         params.put("instalments", 5);
         params.put("amount", 1000);
         params.put("status", "active");
         params.put("day", 1);
-        kiteConnect.modifyMFSIP(params, "941595644814392");
+        kiteConnect.modifyMFSIP(params, "291156521960679");
     }
 
     /* cancel a mutualfunds sip */
-    public void cancelMfSip(KiteConnect kiteConnect) throws KiteException, IOException {
-        kiteConnect.cancelMFSIP("941595644814392");
+    public void cancelMFSIP(KiteConnect kiteConnect) throws KiteException, IOException {
+        kiteConnect.cancelMFSIP("291156521960679");
         System.out.println("cancel sip successful");
     }
 
     /* retrieve all mutualfunds sip */
-    public void getMfSips(KiteConnect kiteConnect) throws KiteException, IOException {
+    public void getMFSIPS(KiteConnect kiteConnect) throws KiteException, IOException {
         System.out.println("mf sips: "+ kiteConnect.getMFSIPs().size());
     }
 
     /* retrieve individual mutualfunds sip */
-    public void getMfSip(KiteConnect kiteConnect) throws KiteException, IOException {
-        System.out.println("mf sip: "+ kiteConnect.getMFSIP("941595644814392").instalments);
+    public void getMFSIP(KiteConnect kiteConnect) throws KiteException, IOException {
+        System.out.println("mf sip: "+ kiteConnect.getMFSIP("291156521960679").instalments);
     }
 
     /** Demonstrates com.rainmatter.ticker connection, subcribing for instruments, unsubscribing for instruments, set mode of tick data, com.rainmatter.ticker disconnection*/
     public void tickerUsage(KiteConnect kiteConnect, ArrayList<Long> tokens) throws IOException, WebSocketException, KiteException {
         /** To get live price use com.rainmatter.com.rainmatter.ticker websocket connection. It is recommended to use only one websocket connection at any point of time and make sure you stop connection, once user goes out of app.*/
-        KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.getPublicToken(), kiteConnect.getApiKey());
+        KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.getAccessToken(), kiteConnect.getApiKey(), "wss://websocket.kite.trade/v3");
+
         tickerProvider.setOnConnectedListener(new OnConnect() {
             @Override
             public void onConnected() {
@@ -440,7 +437,7 @@ public class Examples {
                  * By default, all tokens are subscribed for modeQuote.
                  * */
                 tickerProvider.subscribe(tokens);
-                tickerProvider.setMode(tokens, KiteTicker.modeLTP);
+                tickerProvider.setMode(tokens, KiteTicker.modeFull);
             }
         });
 
@@ -451,17 +448,36 @@ public class Examples {
             }
         });
 
+        /** Set listener to get order updates.*/
+        tickerProvider.setOnOrderUpdateListener(new OnOrderUpdate() {
+            @Override
+            public void onOrderUpdate(Order order) {
+                System.out.println("order update "+order.orderId);
+            }
+        });
+
         tickerProvider.setOnTickerArrivalListener(new OnTick() {
             @Override
             public void onTick(ArrayList<Tick> ticks) {
-                System.out.println(ticks.size());
+                NumberFormat formatter = new DecimalFormat();
+                System.out.println("ticks size "+ticks.size());
+                if(ticks.size() > 0) {
+                    System.out.println("last price "+ticks.get(0).getLastTradedPrice());
+                    System.out.println("open interest "+formatter.format(ticks.get(0).getOpenInterest()));
+                    System.out.println("day high OI "+formatter.format(ticks.get(0).getDayHighOpenInterest()));
+                    System.out.println("day low OI "+formatter.format(ticks.get(0).getDayLowOpenInterest()));
+                    System.out.println("tick timestamp "+ticks.get(0).getTickTimestamp());
+                    System.out.println("tick timestamp date "+ticks.get(0).getTickTimestamp());
+                    System.out.println("last traded time "+ticks.get(0).getLastTradedTime());
+                    System.out.println(ticks.get(0).getMarketDepth().get("buy").size());
+                }
             }
         });
 
         tickerProvider.setTryReconnection(true);
         //maximum retries and should be greater than 0
         tickerProvider.setMaximumRetries(50);
-        //set maximum retry interval
+        //set maximum retry interval in seconds
         tickerProvider.setMaximumRetryInterval(30);
 
         /** connects to com.rainmatter.com.rainmatter.ticker server for getting live quotes*/

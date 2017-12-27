@@ -4,11 +4,14 @@ package com.rainmatter.ticker;
  * Created by H1ccup on 10/09/16.
  */
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.neovisionaries.ws.client.*;
 import com.rainmatter.kiteconnect.KiteConnect;
 import com.rainmatter.kiteconnect.Routes;
 import com.rainmatter.kiteconnect.kitehttp.exceptions.KiteException;
 import com.rainmatter.models.Depth;
+import com.rainmatter.models.Order;
 import com.rainmatter.models.Tick;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,8 +34,7 @@ public class KiteTicker {
     private OnDisconnect onDisconnectedListener;
     private OnError onErrorListener;
     private WebSocket ws;
-
-    private KiteConnect _kiteSdk;
+    private OnOrderUpdate orderUpdateListener;
 
     public final int NseCM = 1,
             NseFO = 2,
@@ -48,9 +50,9 @@ public class KiteTicker {
             mUnSubscribe = "unsubscribe",
             mSetMode = "mode";
 
-    public static String modeFull  = "full", // Full quote inluding market depth. 172 bytes.
-            modeQuote = "quote", // Quote excluding market depth. 52 bytes.
-            modeLTP   = "ltp"; // Only LTP. 4 bytes.;
+    public static String modeFull  = "full", // Full quote inludes Quote items, market depth, OI, day high OI, day low OI, last traded time, tick timestamp.
+            modeQuote = "quote", // Quote includes last traded price, last traded quantity, average traded price, volume, total bid(buy quantity), total ask(sell quantity), open, high, low, close.
+            modeLTP   = "ltp"; // Only LTP.
 
     private long lastPongAt = 0;
     private Set<Long> subscribedTokens = new HashSet<>();
@@ -63,11 +65,29 @@ public class KiteTicker {
     private int nextReconnectInterval = 0;
     private int maxRetryInterval = 30000;
     private Map<Long, String> modeMap;
+    private String customRootUrl = null;
 
-    public KiteTicker(String userId, String publicToken, String apiKey) {
+    public KiteTicker(String userId, String accessToken, String apiKey, String customUrl) {
+        customRootUrl = customUrl;
 
         if (wsuri == null) {
-            createUrl(userId, publicToken, apiKey);
+            createUrl(userId, accessToken, apiKey);
+        }
+
+        try {
+            ws = new WebSocketFactory().createSocket(wsuri);
+        } catch (IOException e) {
+            onErrorListener.onError(e);
+            return;
+        }
+        ws.addListener(getWebscoketAdapter());
+        modeMap = new HashMap<>();
+    }
+
+    public KiteTicker(String userId, String accessToken, String apiKey) {
+
+        if (wsuri == null) {
+            createUrl(userId, accessToken, apiKey);
         }
 
         try {
@@ -154,8 +174,12 @@ public class KiteTicker {
     }
 
     /** Creates url for websocket connection.*/
-    private void createUrl(String userId, String publicToken, String apiKey){
-        wsuri = new Routes().getWsuri().replace(":user_id", userId).replace(":public_token", publicToken).replace(":api_key", apiKey);
+    private void createUrl(String userId, String accessToken, String apiKey){
+        if(customRootUrl == null) {
+            wsuri = new Routes().getWsuri().replace(":user_id", userId).replace(":access_token", accessToken).replace(":api_key", apiKey);
+        }else {
+            wsuri = customRootUrl+"?user_id="+userId+"&access_token="+accessToken+"&api_key="+apiKey;
+        }
     }
     /** Set listener for listening to ticks.
      * @param onTickerArrivalListener is listener which listens for each tick.*/
@@ -173,6 +197,12 @@ public class KiteTicker {
      * @param listener is used to listen to onDisconnected event.*/
     public void setOnDisconnectedListener(OnDisconnect listener){
         onDisconnectedListener = listener;
+    }
+
+    /** Set listener for order updates.
+     * @param listener is used to listen to order updates.*/
+    public void setOnOrderUpdateListener(OnOrderUpdate listener) {
+        orderUpdateListener = listener;
     }
 
     /** Establishes a web socket connection.
@@ -214,6 +244,7 @@ public class KiteTicker {
 
             @Override
             public void onTextMessage(WebSocket websocket, String message) {
+                parseTextMessage(message);
             }
 
             @Override
@@ -400,9 +431,7 @@ public class KiteTicker {
      */
     private ArrayList<Tick> parseBinary(byte [] binaryPackets) {
         ArrayList<Tick> ticks = new ArrayList<Tick>();
-
         ArrayList<byte[]> packets = splitPackets(binaryPackets);
-
         for (int i = 0; i < packets.size(); i++) {
             byte[] bin = packets.get(i);
             byte[] t = Arrays.copyOfRange(bin, 0, 4);
@@ -416,18 +445,16 @@ public class KiteTicker {
             if(bin.length == 8) {
                 Tick tick = getLtpQuote(bin, x, dec1);
                 ticks.add(tick);
-            }else if(bin.length == 28) {
-                Tick tick = getNseIndeciesData(bin, x);
+            }else if(bin.length == 28 || bin.length == 32) {
+                Tick tick = getIndeciesData(bin, x);
                 ticks.add(tick);
             }else if(bin.length == 44) {
-                Tick tick = getTickData(bin, x, dec1);
+                Tick tick = getQuoteData(bin, x, dec1);
                 ticks.add(tick);
-            } else if(bin.length == 164) {
-                Tick tick = getTickData(bin, x, dec1);
+            } else if(bin.length == 184) {
+                Tick tick = getQuoteData(bin, x, dec1);
                 tick.setMode(modeFull);
-                Map<String, ArrayList<Depth>> depthMap = getDepthData(bin, dec1);
-                tick.setMarketDepth(depthMap);
-                ticks.add(tick);
+                ticks.add(getFullData(bin, dec1, tick));
             }
         }
         return ticks;
@@ -435,29 +462,30 @@ public class KiteTicker {
 
     /** Parses NSE indices data.
      * @return Tick is the parsed index data. */
-    private Tick getNseIndeciesData(byte[] bin, int x){
+    private Tick getIndeciesData(byte[] bin, int x){
         int dec = 100;
         Tick tick = new Tick();
-        if(bin.length > 8) {
-            tick.setMode(modeFull);
-            tick.setTradable(false);
-            tick.setToken(x);
-            tick.setLastTradedPrice(convertToDouble(getBytes(bin, 4, 8)) / dec);
-            tick.setHighPrice(convertToDouble(getBytes(bin, 8, 12)) / dec);
-            tick.setLowPrice(convertToDouble(getBytes(bin, 12, 16)) / dec);
-            tick.setOpenPrice(convertToDouble(getBytes(bin, 16, 20)) / dec);
-            tick.setClosePrice(convertToDouble(getBytes(bin, 20, 24)) / dec);
-            tick.setNetPriceChangeFromClosingPrice(convertToDouble(getBytes(bin, 24, 28)) / dec);
-        }else {
-            tick.setMode(modeLTP);
-            tick.setTradable(false);
-            tick.setToken(x);
-            tick.setLastTradedPrice(convertToDouble(getBytes(bin, 4, 8)) / dec);
+        tick.setMode(modeFull);
+        tick.setTradable(false);
+        tick.setToken(x);
+        tick.setLastTradedPrice(convertToDouble(getBytes(bin, 4, 8)) / dec);
+        tick.setHighPrice(convertToDouble(getBytes(bin, 8, 12)) / dec);
+        tick.setLowPrice(convertToDouble(getBytes(bin, 12, 16)) / dec);
+        tick.setOpenPrice(convertToDouble(getBytes(bin, 16, 20)) / dec);
+        tick.setClosePrice(convertToDouble(getBytes(bin, 20, 24)) / dec);
+        tick.setNetPriceChangeFromClosingPrice(convertToDouble(getBytes(bin, 24, 28)) / dec);
+        if(bin.length > 28) {
+            long tickTimeStamp = convertToLong(getBytes(bin, 28, 32)) * 1000;
+            if(isValidDate(tickTimeStamp)) {
+                tick.setTickTimestamp(new Date(tickTimeStamp));
+            } else {
+                tick.setTickTimestamp(null);
+            }
         }
         return tick;
     }
 
-    /** Parses LTPQuote data.*/
+    /** Parses LTP data.*/
     private Tick getLtpQuote(byte[] bin, int x, int dec1){
         Tick tick1 = new Tick();
         tick1.setMode(modeLTP);
@@ -467,8 +495,8 @@ public class KiteTicker {
         return tick1;
     }
 
-    /** Get tick data for MCXFO, NSEFO, NSECM and NSECD*/
-    private Tick getTickData(byte[] bin, int x, int dec1){
+    /** Get quote data (last traded price, last traded quantity, average traded price, volume, total bid(buy quantity), total ask(sell quantity), open, high, low, close.) */
+    private Tick getQuoteData(byte[] bin, int x, int dec1){
         Tick tick2 = new Tick();
         tick2.setMode(modeQuote);
         tick2.setToken(x);
@@ -496,9 +524,29 @@ public class KiteTicker {
 
     }
 
+    private Tick getFullData(byte[] bin, int dec, Tick tick){
+        long lastTradedtime = convertToLong(getBytes(bin, 44, 48)) * 1000;
+        if(isValidDate(lastTradedtime)) {
+            tick.setLastTradedTime(new Date(lastTradedtime));
+        }else {
+            tick.setLastTradedTime(null);
+        }
+        tick.setOpenInterest(convertToDouble(getBytes(bin, 48, 52)));
+        tick.setDayHighOpenInterest(convertToDouble(getBytes(bin, 52, 56)));
+        tick.setDayLowOpenInterest(convertToDouble(getBytes(bin, 56, 60)));
+        long tickTimeStamp = convertToLong(getBytes(bin, 60, 64)) * 1000;
+        if(isValidDate(tickTimeStamp)) {
+            tick.setTickTimestamp(new Date(tickTimeStamp));
+        } else {
+            tick.setTickTimestamp(null);
+        }
+        tick.setMarketDepth(getDepthData(bin, dec, 64, 184));
+        return  tick;
+    }
+
     /** Reads all bytes and returns map of depth values for offer and bid*/
-    private Map<String, ArrayList<Depth>> getDepthData(byte[] bin, int dec){
-        byte[] depthBytes = getBytes(bin, 44, 164);
+    private Map<String, ArrayList<Depth>> getDepthData(byte[] bin, int dec, int start, int end){
+        byte[] depthBytes = getBytes(bin, start, end);
         int s = 0;
         ArrayList<Depth> buy = new ArrayList<Depth>();
         ArrayList<Depth> sell = new ArrayList<Depth>();
@@ -554,6 +602,13 @@ public class KiteTicker {
             return bb.getDouble();
     }
 
+    /* Convert binary data to long datatype*/
+    private long convertToLong(byte[] bin){
+        ByteBuffer bb = ByteBuffer.wrap(bin);
+        bb.order(ByteOrder.BIG_ENDIAN);
+        return bb.getInt();
+    }
+
     /** Returns length of packet by reading byte array values. */
     private int getLengthFromByteArray(byte[] bin){
         ByteBuffer bb = ByteBuffer.wrap(bin);
@@ -601,6 +656,43 @@ public class KiteTicker {
                 onConnectedListener = onUsersConnectedListener;
                 }
             });
+    }
+
+    private boolean isValidDate(long date) {
+        if(date <= 0){
+            return false;
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setLenient(false);
+        calendar.setTimeInMillis(date);
+        try {
+            calendar.getTime();
+            return  true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private void parseTextMessage(String message) {
+        JSONObject data;
+        try {
+            data = new JSONObject(message);
+            if(!data.has("type")){
+                return;
+            }
+
+            String type = data.getString("type");
+            if(type.equals("order")) {
+                if(orderUpdateListener != null) {
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    Gson gson = gsonBuilder.create();
+                    orderUpdateListener.onOrderUpdate(gson.fromJson(String.valueOf(data.get("data")), Order.class));
+                }
+            }
+
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }

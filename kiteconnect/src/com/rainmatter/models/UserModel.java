@@ -12,11 +12,7 @@ import org.json.JSONObject;
  */
 public class UserModel {
 
-    @SerializedName("member_id")
-    public String memberId;
-    public String[] product;
-    @SerializedName("password_reset")
-    public boolean passwordReset;
+    public String[] products;
     @SerializedName("user_name")
     public String userName;
     @SerializedName("broker")
@@ -31,8 +27,10 @@ public class UserModel {
     public String userId;
     @SerializedName("login_time")
     public String loginTime;
-    public String[] exchange;
-    public String[] orderType;
+    @SerializedName("api_key")
+    public String apiKey;
+    public String[] exchanges;
+    public String[] orderTypes;
     @SerializedName("email")
     public String email;
 
@@ -55,22 +53,22 @@ public class UserModel {
      *  @return UserModel is the pojo of parsed data.
      *  */
     public UserModel parseArray(UserModel userModel, JSONObject response) throws JSONException {
-        JSONArray productArray = response.getJSONArray("product");
-        userModel.product  = new String[productArray.length()];
+        JSONArray productArray = response.getJSONArray("products");
+        userModel.products  = new String[productArray.length()];
         for(int i = 0; i < productArray.length(); i++) {
-            userModel.product[i] = productArray.getString(i);
+            userModel.products[i] = productArray.getString(i);
         }
 
-        JSONArray exchangesArray = response.getJSONArray("exchange");
-        userModel.exchange = new String[exchangesArray.length()];
+        JSONArray exchangesArray = response.getJSONArray("exchanges");
+        userModel.exchanges = new String[exchangesArray.length()];
         for (int j = 0; j < exchangesArray.length(); j++){
-            userModel.exchange[j] = exchangesArray.getString(j);
+            userModel.exchanges[j] = exchangesArray.getString(j);
         }
 
-        JSONArray orderTypeArray = response.getJSONArray("order_type");
-        userModel.orderType = new String[orderTypeArray.length()];
+        JSONArray orderTypeArray = response.getJSONArray("order_types");
+        userModel.orderTypes = new String[orderTypeArray.length()];
         for(int k = 0; k < orderTypeArray.length(); k++){
-            userModel.orderType[k] = orderTypeArray.getString(k);
+            userModel.orderTypes[k] = orderTypeArray.getString(k);
         }
 
         return userModel;
