@@ -169,7 +169,7 @@ public class KiteConnect {
 
         // Create the checksum needed for authentication.
         String hashableText = this._apiKey + requestToken + apiSecret;
-        String sha256hex = DigestUtils.sha256Hex(hashableText);
+        String sha256hex = sha256Hex(hashableText);
 
         // Create JSON params object needed to be sent to api.
         Map<String, Object> params = new HashMap<String, Object>();
@@ -177,6 +177,15 @@ public class KiteConnect {
         params.put("checksum", sha256hex);
 
         return  new UserModel().parseResponse(new KiteRequestHandler(proxy).postRequest(routes.get("api.validate"), authorize(params)));
+    }
+
+    /** Hex encodes sha256 ouput for android support.*/
+    public String sha256Hex(String str) {
+        byte[] a = DigestUtils.sha256(str);
+        StringBuilder sb = new StringBuilder(a.length * 2);
+        for(byte b: a)
+            sb.append(String.format("%02x", b));
+        return sb.toString();
     }
 
     /**
