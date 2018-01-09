@@ -175,7 +175,6 @@ For more details about different mode of quotes and subscribing for them, take a
     7. Added day_buy_value(dayBuyValue)
     8. Added day_sell_value(daySellValue)
     9. Added value(value)
-    10. Added token(token)
 
 * **getMfOrders** is now **getMFOrders**
 
@@ -192,3 +191,13 @@ For more details about different mode of quotes and subscribing for them, take a
 * **getMfInstruments** is now **getMFInstruments**
 
 * **modifyProduct** is now **convertPosition**
+
+* Kite Ticker(websockets) is now authenticated using access token.
+
+* Kite Ticker will now stream open interest, market depth, tick timestamp, last traded time, average price, day high open interest, day low open interest in full mode.
+
+* The OnTick listener for ticks is renamed to OnTicks.
+
+* The Quote call will return a map now. The new fields added are open interest, market depth, tick timestamp, last traded time, average price, day high open interest, day low open interest.
+
+* Users can now receive order updates via websockets.

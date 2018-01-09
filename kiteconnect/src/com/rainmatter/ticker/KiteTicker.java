@@ -7,7 +7,6 @@ package com.rainmatter.ticker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.neovisionaries.ws.client.*;
-import com.rainmatter.kiteconnect.KiteConnect;
 import com.rainmatter.kiteconnect.Routes;
 import com.rainmatter.kiteconnect.kitehttp.exceptions.KiteException;
 import com.rainmatter.models.Depth;
@@ -29,7 +28,7 @@ import java.util.*;
 public class KiteTicker {
 
     private String wsuri ;
-    private OnTick onTickerArrivalListener;
+    private OnTicks onTickerArrivalListener;
     private OnConnect onConnectedListener;
     private OnDisconnect onDisconnectedListener;
     private OnError onErrorListener;
@@ -183,7 +182,7 @@ public class KiteTicker {
     }
     /** Set listener for listening to ticks.
      * @param onTickerArrivalListener is listener which listens for each tick.*/
-    public void setOnTickerArrivalListener(OnTick onTickerArrivalListener){
+    public void setOnTickerArrivalListener(OnTicks onTickerArrivalListener){
         this.onTickerArrivalListener = onTickerArrivalListener;
     }
 
@@ -259,7 +258,7 @@ public class KiteTicker {
                 ArrayList<Tick> tickerData = parseBinary(binary);
 
                 if (onTickerArrivalListener != null) {
-                    onTickerArrivalListener.onTick(tickerData);
+                    onTickerArrivalListener.onTicks(tickerData);
                 }
             }
 

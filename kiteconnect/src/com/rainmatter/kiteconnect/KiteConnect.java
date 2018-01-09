@@ -51,7 +51,6 @@ public class KiteConnect {
             @Override
             public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
                 try {
-                    System.out.println(jsonElement);
                     return format.parse(jsonElement.getAsString());
                 } catch (ParseException e) {
                     return null;

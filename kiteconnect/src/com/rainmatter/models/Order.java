@@ -11,8 +11,6 @@ public class Order {
     public String exchangeOrderId;
     @SerializedName("disclosed_quantity")
     public String disclosedQuantity;
-    @SerializedName("market_production")
-    public String marketProduction;
     @SerializedName("validity")
     public String validity;
     @SerializedName("tradingsymbol")

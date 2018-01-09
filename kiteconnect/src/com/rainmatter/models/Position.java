@@ -65,7 +65,5 @@ public class Position {
     public double daySellValue;
     @SerializedName("value")
     public double value;
-    @SerializedName("token")
-    public String token;
 }
 

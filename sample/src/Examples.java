@@ -425,7 +425,9 @@ public class Examples {
 
     /** Demonstrates com.rainmatter.ticker connection, subcribing for instruments, unsubscribing for instruments, set mode of tick data, com.rainmatter.ticker disconnection*/
     public void tickerUsage(KiteConnect kiteConnect, ArrayList<Long> tokens) throws IOException, WebSocketException, KiteException {
-        /** To get live price use com.rainmatter.com.rainmatter.ticker websocket connection. It is recommended to use only one websocket connection at any point of time and make sure you stop connection, once user goes out of app.*/
+        /** To get live price use websocket connection.
+         * It is recommended to use only one websocket connection at any point of time and make sure you stop connection, once user goes out of app.
+         * custom url points to new endpoint which can be used till complete Kite Connect 3 migration is done. */
         KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.getAccessToken(), kiteConnect.getApiKey(), "wss://websocket.kite.trade/v3");
 
         tickerProvider.setOnConnectedListener(new OnConnect() {
@@ -454,9 +456,9 @@ public class Examples {
             }
         });
 
-        tickerProvider.setOnTickerArrivalListener(new OnTick() {
+        tickerProvider.setOnTickerArrivalListener(new OnTicks() {
             @Override
-            public void onTick(ArrayList<Tick> ticks) {
+            public void onTicks(ArrayList<Tick> ticks) {
                 NumberFormat formatter = new DecimalFormat();
                 System.out.println("ticks size "+ticks.size());
                 if(ticks.size() > 0) {
