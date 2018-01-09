@@ -1,7 +1,6 @@
 package com.rainmatter.kiteconnect;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.rainmatter.kiteconnect.kitehttp.KiteRequestHandler;
 import com.rainmatter.kiteconnect.kitehttp.SessionExpiryHook;
@@ -20,6 +19,8 @@ import org.supercsv.prefs.CsvPreference;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.Proxy;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -44,7 +45,20 @@ public class KiteConnect {
     public KiteConnect(String apiKey){
         _apiKey = apiKey;
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gson = gsonBuilder.create();
+        gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            @Override
+            public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+                try {
+                    System.out.println(jsonElement);
+                    return format.parse(jsonElement.getAsString());
+                } catch (ParseException e) {
+                    return null;
+                }
+            }
+        });
+        gson = gsonBuilder.setDateFormat("yyyy-MM-dd HH:mm:ss").create();
     }
 
     /** Registers callback for session error.
@@ -475,33 +489,47 @@ public class KiteConnect {
     /**
      * Retrieves quote and market depth for an instrument
      *
-     * @param exchange  Exchange in which instrument is listed. exchange can be NSE, BSE, NFO, BFO, CDS, MCX.
-     * @param tradingSymbol Tradingsymbol of the instrument (ex. RELIANCE, INFY).
+     * @param instruments is the array of tradingsymbol and exchange or instrument token. For example {NSE:NIFTY 50, BSE:SENSEX} or {256265, 265}
+     *
      * @return Quote object.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
      */
-    public Quote getQuote(String exchange, String tradingSymbol) throws KiteException, JSONException, IOException {
+    public Map<String, Quote> getQuote(String [] instruments) throws KiteException, JSONException, IOException {
         Map<String, Object> params = new HashMap<String, Object>();
+        params = authorize(params);
         KiteRequestHandler kiteRequestHandler = new KiteRequestHandler(proxy);
-        JSONObject jsonObject = kiteRequestHandler.getRequest(routes.get("market.quote").replace(":exchange", exchange).replace(":tradingsymbol", tradingSymbol), authorize(params));
-        return new Quote().parseResponse(jsonObject);
+        JSONObject jsonObject = kiteRequestHandler.getRequest(routes.get("market.quote"), params, "i", instruments);
+        Type type = new TypeToken<Map<String, Quote>>(){}.getType();
+        return gson.fromJson(String.valueOf(jsonObject.get("data")), type);
     }
 
-    /**
-     * Retrieves quote for an index
-     *
-     * @param exchange  Exchange in which instrument is listed. exchange can be NSE, BSE.
-     * @param tradingSymbol Tradingsymbol of the instrument (ex. NIFTY 50).
-     * @return IndicesQuote object.
+    /** Retrieves ohlc and last price.
+     * User can either pass exchange with tradingsymbol or instrument token only. For example {NSE:NIFTY 50, BSE:SENSEX} or {256265, 265}
+     * @return Map which contains key value pair of user input data as key and data as value.
      * @throws KiteException is thrown for all Kite trade related errors.
-     * @throws JSONException is thrown when there is exception while parsing response.
-     */
-    public IndicesQuote getQuoteIndices(String exchange, String tradingSymbol) throws KiteException, JSONException, IOException {
-        Map<String, Object> params = new HashMap<String, Object>();
-        KiteRequestHandler kiteRequestHandler = new KiteRequestHandler(proxy);
-        JSONObject response = kiteRequestHandler.getRequest(routes.get("market.quote").replace(":exchange", exchange).replace(":tradingsymbol", tradingSymbol), authorize(params));
-        return gson.fromJson(String.valueOf(response.get("data")), IndicesQuote.class);
+     * @param instruments is the array of tradingsymbol and exchange or instruments token.
+     * */
+    public Map<String, OHLCQuote> getOHLC(String [] instruments) throws KiteException, IOException {
+        Map<String, Object> params = new HashMap<>();
+        params = authorize(params);
+        JSONObject resp = new KiteRequestHandler(proxy).getRequest(routes.get("quote.ohlc"), params, "i", instruments);
+        Type type = new TypeToken<Map<String, OHLCQuote>>(){}.getType();
+        return gson.fromJson(String.valueOf(resp.get("data")), type);
+    }
+
+    /** Retrieves last price.
+     * User can either pass exchange with tradingsymbol or instrument token only. For example {NSE:NIFTY 50, BSE:SENSEX} or {256265, 265}.
+     * @return Map which contains key value pair of user input data as key and data as value.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @param instruments is the array of tradingsymbol and exchange or instruments token.
+     * */
+    public Map<String, LTPQuote> getLTP(String[] instruments) throws KiteException, IOException {
+        Map<String, Object> params = new HashMap<>();
+        params = authorize(params);
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("quote.ltp"), params, "i", instruments);
+        Type type = new TypeToken<Map<String, LTPQuote>>(){}.getType();
+        return gson.fromJson(String.valueOf(response.get("data")), type);
     }
 
     /**
@@ -666,35 +694,6 @@ public class KiteConnect {
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.holdings"), params);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), MfHolding[].class));
     }
-
-    /** Retrieves ohlc and last price.
-     * User can either pass exchange with tradingsymbol or instrument token only. For example {NSE:NIFTY 50, BSE:SENSEX} or {256265, 265}
-     * @return Map which contains key value pair of user input data as key and data as value.
-     * @throws KiteException is thrown for all Kite trade related errors.
-     * @param instruments is the array of tradingsymbol and exchange or instruments token.
-     * */
-    public Map<String, OHLCQuote> getOHLC(String [] instruments) throws KiteException, IOException {
-        Map<String, Object> params = new HashMap<>();
-        params = authorize(params);
-        JSONObject resp = new KiteRequestHandler(proxy).getRequest(routes.get("quote.ohlc"), params, "i", instruments);
-        Type type = new TypeToken<Map<String, OHLCQuote>>(){}.getType();
-        return gson.fromJson(String.valueOf(resp.get("data")), type);
-    }
-
-    /** Retrieves last price.
-     * User can either pass exchange with tradingsymbol or instrument token only. For example {NSE:NIFTY 50, BSE:SENSEX} or {256265, 265}.
-     * @return Map which contains key value pair of user input data as key and data as value.
-     * @throws KiteException is thrown for all Kite trade related errors.
-     * @param instruments is the array of tradingsymbol and exchange or instruments token.
-     * */
-    public Map<String, LTPQuote> getLTP(String[] instruments) throws KiteException, IOException {
-        Map<String, Object> params = new HashMap<>();
-        params = authorize(params);
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("quote.ltp"), params, "i", instruments);
-        Type type = new TypeToken<Map<String, LTPQuote>>(){}.getType();
-        return gson.fromJson(String.valueOf(response.get("data")), type);
-    }
-
     /**
      * Logs out user by invalidating the access token.
      * @return JSONObject which contains status

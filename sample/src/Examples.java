@@ -197,20 +197,19 @@ public class Examples {
     public void modifySecondLegBoSLM(KiteConnect kiteConnect) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<String, Object>(){
             {
-                put("order_id", "171227000533464");
-                put("parent_order_id", "171227000490831");
-                put("tradingsymbol", "SBIN");
+                put("order_id", "180104000513605");
+                put("parent_order_id", "180104000506306");
+                put("tradingsymbol", "SOUTHBANK");
                 put("exchange", "NSE");
-                put("quantity", "1");
                 put("product","MIS");
                 put("validity", "DAY");
-                put("trigger_price", "316.7");
+                put("trigger_price", "28.3");
                 put("price", "0");
                 put("order_type", "SL-M");
                 put("transaction_type", "SELL");
             }
         };
-        Order order = kiteConnect.modifyOrder("171227000533464", params, "bo");
+        Order order = kiteConnect.modifyOrder("180104000513605", params, "bo");
         System.out.println(order.orderId);
     }
 
@@ -300,34 +299,16 @@ public class Examples {
     /** Get quote for a scrip.*/
     public void getQuote(KiteConnect kiteConnect) throws KiteException, IOException {
         // Get quotes returns quote for desired tradingsymbol.
-        Quote quote = kiteConnect.getQuote("NSE", "INFY");
-        System.out.println(quote.lastPrice);
-    }
-
-    public void getQuoteIndices(KiteConnect kiteConnect) throws KiteException, IOException {
-        IndicesQuote quote1 = kiteConnect.getQuoteIndices("NSE", "NIFTY BANK");
-        System.out.println(quote1.lastPrice);
-    }
-
-    /** Get historical data for an instrument.*/
-    public void getHistoricalData(KiteConnect kiteConnect) throws KiteException, IOException {
-        /** Get historical data dump, requires from and to date, intrument token, interval
-         * returns historical data object which will have list of historical data inside the object*/
-        Map<String, Object> param8 = new HashMap<String, Object>(){
-            {
-                put("continuous", 0);
-                put("from", "2017-10-09 15:00:00");
-                put("to", "2017-10-09 15:30:00");
-            }
-        };
-        HistoricalData historicalData = kiteConnect.getHistoricalData(param8, "256265", "10minute");
-        System.out.println(historicalData.dataArrayList.size());
-        System.out.println(historicalData.dataArrayList.get(0).volume);
-        System.out.println(historicalData.dataArrayList.get(historicalData.dataArrayList.size() - 1).volume);
+        String[] instruments = {"256265","BSE:INFY", "NSE:APOLLOTYRE", "NSE:NIFTY 50"};
+        Map<String, Quote> quotes = kiteConnect.getQuote(instruments);
+        System.out.println(quotes.get("NSE:APOLLOTYRE").instrumentToken+"");
+        System.out.println(quotes.get("NSE:APOLLOTYRE").openInterest+"");
+        System.out.println(quotes.get("NSE:APOLLOTYRE").depth.buy.get(4).getPrice());
+        System.out.println(quotes.get("NSE:APOLLOTYRE").timestamp);
     }
 
     /* Get ohlc and lastprice for multiple instruments at once.
-    * Users can either pass exchange with tradingsymbol or instrument token only. For example {NSE:NIFTY 50, BSE:SENSEX} or {256265, 265}*/
+     * Users can either pass exchange with tradingsymbol or instrument token only. For example {NSE:NIFTY 50, BSE:SENSEX} or {256265, 265}*/
     public void getOHLC(KiteConnect kiteConnect) throws KiteException, IOException {
         String[] instruments = {"256265","BSE:INFY", "NSE:INFY", "NSE:NIFTY 50"};
         System.out.println(kiteConnect.getOHLC(instruments).get("256265").lastPrice);
@@ -339,6 +320,23 @@ public class Examples {
     public void getLTP(KiteConnect kiteConnect) throws KiteException, IOException {
         String[] instruments = {"256265","BSE:INFY", "NSE:INFY", "NSE:NIFTY 50"};
         System.out.println(kiteConnect.getLTP(instruments).get("256265").lastPrice);
+    }
+
+    /** Get historical data for an instrument.*/
+    public void getHistoricalData(KiteConnect kiteConnect) throws KiteException, IOException {
+        /** Get historical data dump, requires from and to date, intrument token, interval
+         * returns historical data object which will have list of historical data inside the object*/
+        Map<String, Object> param8 = new HashMap<String, Object>(){
+            {
+                put("continuous", 0);
+                put("from", "2018-01-03 12:00:00");
+                put("to", "2018-01-03 22:49:12");
+            }
+        };
+        HistoricalData historicalData = kiteConnect.getHistoricalData(param8, "11946498", "15minute");
+        System.out.println(historicalData.dataArrayList.size());
+        System.out.println(historicalData.dataArrayList.get(0).volume);
+        System.out.println(historicalData.dataArrayList.get(historicalData.dataArrayList.size() - 1).volume);
     }
 
     /** Logout user.*/
