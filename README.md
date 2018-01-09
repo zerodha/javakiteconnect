@@ -160,7 +160,7 @@ For more details about different mode of quotes and subscribing for them, take a
 * Changes in UserModel(requestAccessToken API),
     1. product is now products    
     2. exchange is now exchanges
-    3. order_types(orderType) is now order_types(orderTypes)
+    3. order_type(orderType) is now order_types(orderTypes)
     4. password_reset is removed
     5. member_id is removed
     6. api_key(apiKey) is added
@@ -198,6 +198,12 @@ For more details about different mode of quotes and subscribing for them, take a
 
 * The OnTick listener for ticks is renamed to OnTicks.
 
+* Kite Ticker: removed setTimeIntervalForReconnection, added setMaximumRetryInterval.
+
 * The Quote call will return a map now. The new fields added are open interest, market depth, tick timestamp, last traded time, average price, day high open interest, day low open interest.
 
 * Users can now receive order updates via websockets.
+
+* **getOrder** is now **getOrderHistory**.
+
+* **getTrades(order_id)** is now **getOrderTrades(order_id)**.

@@ -356,7 +356,7 @@ public class KiteConnect {
      * @throws KiteException is thrown for all Kite trade related errors.
      * @param orderId is the order id which is obtained from orderbook.
      * */
-    public List<Order> getOrder(String orderId) throws KiteException, IOException {
+    public List<Order> getOrderHistory(String orderId) throws KiteException, IOException {
         String url = routes.get("order").replace(":order_id", orderId);
         Map<String, Object> params = new HashMap<>();
         JSONObject response = new KiteRequestHandler(proxy).getRequest(url, authorize(params));
@@ -382,7 +382,7 @@ public class KiteConnect {
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
      */
-    public List<Trade> getTrades(String orderId) throws KiteException, JSONException, IOException {
+    public List<Trade> getOrderTrades(String orderId) throws KiteException, JSONException, IOException {
         Map<String, Object> params = new HashMap<String, Object>();
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("orders.trades").replace(":order_id", orderId), authorize(params));
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Trade[].class));

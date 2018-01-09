@@ -132,7 +132,7 @@ public class Examples {
 
     /** Get order details*/
     public void getOrder(KiteConnect kiteConnect) throws KiteException, IOException {
-        List<Order> orders = kiteConnect.getOrder("171227000516358");
+        List<Order> orders = kiteConnect.getOrderHistory("171227000516358");
         for(int i = 0; i< orders.size(); i++){
             System.out.println(orders.get(i).orderId+" "+orders.get(i).status);
         }
@@ -149,7 +149,7 @@ public class Examples {
     /** Get trades for an order.*/
     public void getTradesWithOrderId(KiteConnect kiteConnect) throws KiteException, IOException {
         // Returns trades for the given order.
-        List<Trade> trades = kiteConnect.getTrades("171227000516358");
+        List<Trade> trades = kiteConnect.getOrderTrades("171227000516358");
         System.out.println(trades.size());
     }
 
