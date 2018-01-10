@@ -107,13 +107,20 @@ KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.
             }
         });
 
-        tickerProvider.setOnTickerArrivalListener(new OnTick() {
+        tickerProvider.setOnTickerArrivalListener(new OnTicks() {
             @Override
-            public void onTick(ArrayList<Tick> ticks) {
+            public void onTicks(ArrayList<Tick> ticks) {
                 NumberFormat formatter = new DecimalFormat();
                 System.out.println("ticks size "+ticks.size());
                 if(ticks.size() > 0) {
                     System.out.println("last price "+ticks.get(0).getLastTradedPrice());
+                    System.out.println("open interest "+formatter.format(ticks.get(0).getOpenInterest()));
+                    System.out.println("day high OI "+formatter.format(ticks.get(0).getDayHighOpenInterest()));
+                    System.out.println("day low OI "+formatter.format(ticks.get(0).getDayLowOpenInterest()));
+                    System.out.println("tick timestamp "+ticks.get(0).getTickTimestamp());
+                    System.out.println("tick timestamp date "+ticks.get(0).getTickTimestamp());
+                    System.out.println("last traded time "+ticks.get(0).getLastTradedTime());
+                    System.out.println(ticks.get(0).getMarketDepth().get("buy").size());
                 }
             }
         });
@@ -147,9 +154,9 @@ KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.
 ```
 For more details about different mode of quotes and subscribing for them, take a look at Examples in sample directory.
 
-## Breaking changes
+## Breaking changes from version 2 to version 3
 
-#### Place order (bracket order)
+#### Place order (bracket order) parameters
 
 | version 2 | version 3 |
 | :---: | :---:|
@@ -167,6 +174,9 @@ For more details about different mode of quotes and subscribing for them, take a
  
  | version 2 | version 3 |
  | :---: | :---: |
+ | modifyProduct | convertPosition |
+ | getOrder | getOrderHistory |
+ | getTrades(order_id) | getOrderTrades(order_id) |
  | getMfOrders | getMFOrders |
  | getMfOrder | getMFOrder |
  | getMfSips | getMFSIPs |
@@ -174,11 +184,8 @@ For more details about different mode of quotes and subscribing for them, take a
  | modifySip | modifySIP |
  | cancelSip | cancelSIP |
  | getMfInstruments | getMFInstruments |
- | modifyProduct | convertPosition |
- | getOrder | getOrderHistory |
- | getTrades(order_id) | getOrderTrades(order_id) |
  
- #### Funds 
+ #### Funds (model)
  
  | version 2 | version 3 |
  | :---: | :---: |
@@ -195,23 +202,46 @@ For more details about different mode of quotes and subscribing for them, take a
   | **NA** | apiKey |
   
  #### Position (model)
-  | version 2 | version 3 |
-  | :---: | :---: |
-  | **NA** | buym2mValue |
-  | **NA** | sellm2mValue |
-  | **NA** | dayBuyQuantity |
-  | **NA** | daySellQuantity |
-  | **NA** | dayBuyPrice |  
-  | **NA** | daySellPrice |
-  | **NA** | dayBuyValue |
-  | **NA** | daySellValue |
-  | **NA** | value |
+ 
+ Added new fields 
+ 
+  | version 3 |
+  | :---: |
+  | buym2mValue |
+  | sellm2mValue |
+  | dayBuyQuantity |
+  | daySellQuantity |
+  | dayBuyPrice |  
+  | daySellPrice |
+  | dayBuyValue |
+  | daySellValue |
+  | value |
   
   #### Kite Ticker (Websockets)
   
-  1. Kite Ticker is now authenticated using access token.
-  2. Full mode will now stream open interest, tick timestamp, last traded time, day high OI, day low OI.
-  3. Order postbacks are now streamed on Kite Ticker.
+  * Kite Ticker is now authenticated using access_token and not public_token.
+  
+  Version 2: 
+  ```java
+  Kiteconnect kiteSdk = new Kiteconnect("your_apiKey");
+  ```
+  Version 3:
+  ```java
+  KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.getAccessToken(), kiteConnect.getApiKey(), "wss://websocket.kite.trade/v3");
+  ```  
+  * Order postbacks are now streamed on Kite Ticker.
+   
+  * Added new fields in full mode.
+  
+  | version 3 |
+  | :---: |
+  | lastTradedTime |
+  | openInterest |
+  | dayHighOpenInterest |
+  | dayLowOpenInterest |
+  | tickTimestamp |
+  
+  * Changes:
   
   | version 2 | version 3 |
   | :---: | :---: |
@@ -221,8 +251,27 @@ For more details about different mode of quotes and subscribing for them, take a
   
   #### Quote 
   
-  1. Added new fields open interest, tick timestamp, last traded time, average price, day high OI, day low OI.
-  2. Quote will accept multiple params and returns a map of Quote model.
+  * Quote will accept multiple params and returns a map of Quote model.
+  * Added new fields open interest, tick timestamp, last traded time, average price, day high OI, day low OI.
+  
+  | version 3 |
+  | :---: |
+  | instrumentToken |
+  | timestamp |
+  | averagePrice |
+  | dayHighOI |
+  | dayLowOI |
+  
+  * Changes:
+  
+  | version 2 | version 3 |
+  | :---: | :---: |
+  | lastTime(String) | lastTradedTime(Date) |
+  | changePercent | **NA** |
+  | depth(Map<String, ArrayList<Depth>>) | depth(MarketDepth type) |
+  
+  
+  * Removed: 
    
   | version 2 | version 3 |
   | :---: | :---: |
