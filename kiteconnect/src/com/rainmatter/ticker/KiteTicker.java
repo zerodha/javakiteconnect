@@ -466,7 +466,7 @@ public class KiteTicker {
         Tick tick = new Tick();
         tick.setMode(modeFull);
         tick.setTradable(false);
-        tick.setToken(x);
+        tick.setInstrumentToken(x);
         tick.setLastTradedPrice(convertToDouble(getBytes(bin, 4, 8)) / dec);
         tick.setHighPrice(convertToDouble(getBytes(bin, 8, 12)) / dec);
         tick.setLowPrice(convertToDouble(getBytes(bin, 12, 16)) / dec);
@@ -489,7 +489,7 @@ public class KiteTicker {
         Tick tick1 = new Tick();
         tick1.setMode(modeLTP);
         tick1.setTradable(true);
-        tick1.setToken(x);
+        tick1.setInstrumentToken(x);
         tick1.setLastTradedPrice(convertToDouble(getBytes(bin, 4, 8)) / dec1);
         return tick1;
     }
@@ -498,7 +498,7 @@ public class KiteTicker {
     private Tick getQuoteData(byte[] bin, int x, int dec1){
         Tick tick2 = new Tick();
         tick2.setMode(modeQuote);
-        tick2.setToken(x);
+        tick2.setInstrumentToken(x);
         double lastTradedPrice = convertToDouble(getBytes(bin, 4, 8)) / dec1;
         tick2.setLastTradedPrice(lastTradedPrice);
         tick2.setLastTradedQuantity(convertToDouble(getBytes(bin, 8, 12)));

@@ -17,7 +17,7 @@ public class Tick {
     @SerializedName("tradable")
     private boolean tradable;
     @SerializedName("token")
-    private int token;
+    private long instrumentToken;
     @SerializedName("lastTradedPrice")
     private double lastTradedPrice;
     @SerializedName("highPrice")
@@ -45,9 +45,9 @@ public class Tick {
     @SerializedName("openInterest")
     private double openInterest;
     @SerializedName("dayHighOpenInterest")
-    private double dayHighOpenInterest;
+    private double dayHighOI;
     @SerializedName("dayLowOpenInterest")
-    private double dayLowOpenInterest;
+    private double dayLowOI;
     @SerializedName("tickTimestamp")
     private Date tickTimestamp;
 
@@ -71,19 +71,19 @@ public class Tick {
     }
 
     public double getDayHighOpenInterest() {
-        return dayHighOpenInterest;
+        return dayHighOI;
     }
 
     public void setDayHighOpenInterest(double dayHighOpenInterest) {
-        this.dayHighOpenInterest = dayHighOpenInterest;
+        this.dayHighOI = dayHighOpenInterest;
     }
 
     public double getDayLowOpenInterest() {
-        return dayLowOpenInterest;
+        return dayLowOI;
     }
 
     public void setDayLowOpenInterest(double dayLowOpenInterest) {
-        this.dayLowOpenInterest = dayLowOpenInterest;
+        this.dayLowOI = dayLowOpenInterest;
     }
 
     public Date getTickTimestamp() {
@@ -110,12 +110,12 @@ public class Tick {
         this.tradable = tradable;
     }
 
-    public long getToken() {
-        return token;
+    public long getInstrumentToken() {
+        return instrumentToken;
     }
 
-    public void setToken(int token) {
-        this.token = token;
+    public void setInstrumentToken(long token) {
+        this.instrumentToken = token;
     }
 
     public double getLastTradedPrice() {

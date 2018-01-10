@@ -17,9 +17,9 @@ import java.util.Map;
 public class Quote {
 
     @SerializedName("volume")
-    public String volume;
+    public double volumeTradedToday;
     @SerializedName("last_quantity")
-    public String lastQuantity;
+    public double lastTradedQuantity;
     @SerializedName("last_trade_time")
     public Date lastTradedTime;
     @SerializedName("net_change")
@@ -29,7 +29,7 @@ public class Quote {
     @SerializedName("sell_quantity")
     public double sellQuantity;
     @SerializedName("last_price")
-    public double lastPrice;
+    public double lastTradedPrice;
     @SerializedName("buy_quantity")
     public double buyQuantity;
     @SerializedName("ohlc")
