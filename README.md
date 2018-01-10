@@ -149,61 +149,81 @@ For more details about different mode of quotes and subscribing for them, take a
 
 ## Breaking changes
 
-* For placing bracket orders, use squareoff instead of squareoff_value and stoploss instead of stoploss_value.
+#### Place order (bracket order)
 
-* Changes in package name:
-    1. **com.rainmatter.kitehttp** is now **com.rainmatter.kiteconnect.kitehttp**
-    2. **com.rainmatter.utils** is now **com.rainmatter.kiteconnect.utils**
+| version 2 | version 3 |
+| :---: | :---:|
+| squareoff_value | squareoff |
+| stoploss_value | stoploss |
 
-* Margins model is now Margin.
-
-* Changes in UserModel(requestAccessToken API),
-    1. product is now products    
-    2. exchange is now exchanges
-    3. order_type(orderType) is now order_types(orderTypes)
-    4. password_reset is removed
-    5. member_id is removed
-    6. api_key(apiKey) is added
-
-* Changes in positions model
-    1. Added buy_m2m_value(buym2mValue)
-    2. Added sell_m2m_value(sellm2mValue)
-    3. Added day_buy_quantity(dayBuyQuantity)
-    4. Added day_sell_quantity(daySellQuantity)
-    5. Added day_buy_price(dayBuyPrice)
-    6. Added day_sell_price(daySellPrice)
-    7. Added day_buy_value(dayBuyValue)
-    8. Added day_sell_value(daySellValue)
-    9. Added value(value)
-
-* **getMfOrders** is now **getMFOrders**
-
-* **getMfOrder** is now **getMFOrder**      
-
-* **getMfSips** is now **getMFSIPs**
-
-* **getMfSip** is now **getMFSIP**
-
-* **modifySip** is now **modifySIP**
-
-* **cancelSip** is now **cancelSIP**
-
-* **getMfInstruments** is now **getMFInstruments**
-
-* **modifyProduct** is now **convertPosition**
-
-* Kite Ticker(websockets) is now authenticated using access token.
-
-* Kite Ticker will now stream open interest, market depth, tick timestamp, last traded time, average price, day high open interest, day low open interest in full mode.
-
-* The OnTick listener for ticks is renamed to OnTicks.
-
-* Kite Ticker: removed setTimeIntervalForReconnection, added setMaximumRetryInterval.
-
-* The Quote call will return a map now. The new fields added are open interest, market depth, tick timestamp, last traded time, average price, day high open interest, day low open interest.
-
-* Users can now receive order updates via websockets.
-
-* **getOrder** is now **getOrderHistory**.
-
-* **getTrades(order_id)** is now **getOrderTrades(order_id)**.
+ #### Package name changes
+ 
+ | version 2 | version 3 |
+ | :---: | :---: |
+ |com.rainmatter.kitehttp|com.rainmatter.kiteconnect.kitehttp|
+ |com.rainmatter.utils|com.rainmatter.kiteconnect.utils|
+ 
+ #### Method name changes
+ 
+ | version 2 | version 3 |
+ | :---: | :---: |
+ | getMfOrders | getMFOrders |
+ | getMfOrder | getMFOrder |
+ | getMfSips | getMFSIPs |
+ | getMfSip | getMFSIP |
+ | modifySip | modifySIP |
+ | cancelSip | cancelSIP |
+ | getMfInstruments | getMFInstruments |
+ | modifyProduct | convertPosition |
+ | getOrder | getOrderHistory |
+ | getTrades(order_id) | getOrderTrades(order_id) |
+ 
+ #### Funds 
+ 
+ | version 2 | version 3 |
+ | :---: | :---: |
+ | Margins | Margin |
+  
+ #### UserModel
+  | version 2 | version 3 |
+  | :---: | :---: |
+  | product | products |
+  | exchange | exchanges |
+  | orderType | orderTypes |
+  | passwordReset | **NA** |
+  | memberId | **NA** |
+  | **NA** | apiKey |
+  
+ #### Position (model)
+  | version 2 | version 3 |
+  | :---: | :---: |
+  | **NA** | buym2mValue |
+  | **NA** | sellm2mValue |
+  | **NA** | dayBuyQuantity |
+  | **NA** | daySellQuantity |
+  | **NA** | dayBuyPrice |  
+  | **NA** | daySellPrice |
+  | **NA** | dayBuyValue |
+  | **NA** | daySellValue |
+  | **NA** | value |
+  
+  #### Kite Ticker (Websockets)
+  
+  1. Kite Ticker is now authenticated using access token.
+  2. Full mode will now stream open interest, tick timestamp, last traded time, day high OI, day low OI.
+  3. Order postbacks are now streamed on Kite Ticker.
+  
+  | version 2 | version 3 |
+  | :---: | :---: |
+  | OnTick | OnTicks |
+  | setTimeIntervalForReconnection | **NA** |
+  | **NA** | setMaximumRetryInterval |
+  
+  #### Quote 
+  
+  1. Added new fields open interest, tick timestamp, last traded time, average price, day high OI, day low OI.
+  2. Quote will accept multiple params and returns a map of Quote model.
+   
+  | version 2 | version 3 |
+  | :---: | :---: |
+  | IndicesQuote | **NA** |
