@@ -2,7 +2,7 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.rainmatter.kiteconnect.KiteConnect;
 import com.rainmatter.kiteconnect.kitehttp.SessionExpiryHook;
 import com.rainmatter.kiteconnect.kitehttp.exceptions.KiteException;
-import com.rainmatter.models.UserModel;
+import com.rainmatter.models.User;
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -42,9 +42,9 @@ public class Test {
                    A request token is valid for only a couple of minutes and can be used only once. An access token is valid for one whole day. Don't call this method for every app run.
                    Once an access token is received it should be stored in preferences or database for further usage.
                  */
-                UserModel userModel =  kiteConnect.requestAccessToken("xxxxxxxx", "xxxxxxxx");
-                kiteConnect.setAccessToken(userModel.accessToken);
-                kiteConnect.setPublicToken(userModel.publicToken);
+                User user =  kiteConnect.requestAccessToken("xxxxxxxx", "xxxxxxxx");
+                kiteConnect.setAccessToken(user.accessToken);
+                kiteConnect.setPublicToken(user.publicToken);
 
                 Examples examples = new Examples();
 

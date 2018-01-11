@@ -1,16 +1,15 @@
 package com.rainmatter.kiteconnect.kitehttp;
 
 import com.rainmatter.kiteconnect.KiteConnect;
-import com.rainmatter.kiteconnect.kitehttp.exceptions.GeneralException;
 import com.rainmatter.kiteconnect.kitehttp.exceptions.KiteException;
 import okhttp3.*;
+import okhttp3.logging.HttpLoggingInterceptor;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.Proxy;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,151 +30,115 @@ public class KiteRequestHandler {
         if(proxy != null) {
             builder.proxy(proxy);
         }
-        client = builder.build();
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        if(KiteConnect.ENABLE_LOGGING) {
+            client = builder.addInterceptor(logging).build();
+        }else {
+            client = builder.build();
+        }
     }
 
-    public JSONObject getRequest(String url, Map<String, Object> params) throws IOException, KiteException, JSONException {
-        logRequest(url, params, GET);
-        Request request = createGetRequest(url, params);
+    public JSONObject getRequest(String url, String apiKey, String accessToken) throws IOException, KiteException, JSONException {
+        Request request = createGetRequest(url, apiKey, accessToken);
         Response response = client.newCall(request).execute();
         String body = response.body().string();
-        logResponse(response, body, true);
         return new KiteResponseHandler().handle(response, body);
     }
 
-    public JSONObject postRequest(String url, Map<String, Object> params) throws IOException, KiteException, JSONException {
-        logRequest(url, params, POST);
-        Request request = createPostRequest(url, params);
+    public JSONObject getRequest(String url, Map<String, Object> params, String apiKey, String accessToken) throws IOException, KiteException {
+        Request request = createGetRequest(url, params, apiKey, accessToken);
         Response response = client.newCall(request).execute();
         String body = response.body().string();
-        logResponse(response, body, true);
         return new KiteResponseHandler().handle(response, body);
     }
 
-    public JSONObject putRequest(String url, Map<String, Object> params) throws IOException, KiteException, JSONException {
-        logRequest(url, params, PUT);
-        Request request = createPutRequest(url, params);
+    public JSONObject postRequest(String url, Map<String, Object> params, String apiKey, String accessToken) throws IOException, KiteException, JSONException {
+        Request request = createPostRequest(url, params, apiKey, accessToken);
         Response response = client.newCall(request).execute();
         String body = response.body().string();
-        logResponse(response, body, true);
         return new KiteResponseHandler().handle(response, body);
     }
 
-    public JSONObject deleteRequest(String url, Map<String, Object> params) throws IOException, KiteException, JSONException {
-        logRequest(url, params, DELETE);
-        Request request = createDeleteRequest(url, params);
+    public JSONObject putRequest(String url, Map<String, Object> params, String apiKey, String accessToken) throws IOException, KiteException, JSONException {
+        Request request = createPutRequest(url, params, apiKey, accessToken);
         Response response = client.newCall(request).execute();
         String body = response.body().string();
-        logResponse(response, body, true);
         return new KiteResponseHandler().handle(response, body);
     }
 
-    public JSONObject getRequest(String url, Map<String, Object> params, String commonKey, String[] values) throws IOException, KiteException, JSONException {
-        logRequest(url, params, commonKey, values, GET);
-        Request request = createGetRequest(url, params, commonKey, values);
+    public JSONObject deleteRequest(String url, Map<String, Object> params, String apiKey, String accessToken) throws IOException, KiteException, JSONException {
+        Request request = createDeleteRequest(url, params, apiKey, accessToken);
         Response response = client.newCall(request).execute();
         String body = response.body().string();
-        logResponse(response, body, true);
         return new KiteResponseHandler().handle(response, body);
     }
 
-    public String getCSVRequest(String url, Map<String, Object> params) throws IOException, KiteException {
-        logRequest(url, params, GET);
-        Request request = new Request.Builder().url(url).build();
+    public JSONObject getRequest(String url, String commonKey, String[] values, String apiKey, String accessToken) throws IOException, KiteException, JSONException {
+        Request request = createGetRequest(url, commonKey, values, apiKey, accessToken);
         Response response = client.newCall(request).execute();
         String body = response.body().string();
-        logResponse(response, body, false);
+        return new KiteResponseHandler().handle(response, body);
+    }
+
+    public String getCSVRequest(String url, String apiKey, String accessToken) throws IOException, KiteException {
+        Request request = new Request.Builder().url(url).header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").header("Authorization", "token "+apiKey+":"+accessToken).build();
+        Response response = client.newCall(request).execute();
+        String body = response.body().string();
         return new KiteResponseHandler().handle(response, body, "csv");
     }
 
     /*Creates get request */
-    public Request createGetRequest(String url, Map<String, Object> params) {
+    public Request createGetRequest(String url, String apiKey, String accessToken) {
         HttpUrl.Builder httpBuilder = HttpUrl.parse(url).newBuilder();
-        for(Map.Entry<String, Object> entry: params.entrySet()){
-            httpBuilder.addQueryParameter(entry.getKey(), entry.getValue().toString());
-        }
-        return new Request.Builder().url(httpBuilder.build()).header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").build();
+        return new Request.Builder().url(httpBuilder.build()).header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").header("Authorization", "token "+apiKey+":"+accessToken).build();
     }
 
-    public Request createGetRequest(String url, Map<String, Object> params, String commonKey, String[] values) {
+    public Request createGetRequest(String url, Map<String, Object> params, String apiKey, String accessToken) {
         HttpUrl.Builder httpBuilder = HttpUrl.parse(url).newBuilder();
         for(Map.Entry<String, Object> entry: params.entrySet()){
             httpBuilder.addQueryParameter(entry.getKey(), entry.getValue().toString());
         }
+        return new Request.Builder().url(httpBuilder.build()).header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").header("Authorization", "token "+apiKey+":"+accessToken).build();
+    }
+
+    public Request createGetRequest(String url, String commonKey, String[] values, String apiKey, String accessToken) {
+        HttpUrl.Builder httpBuilder = HttpUrl.parse(url).newBuilder();
         for(int i = 0; i < values.length; i++) {
             httpBuilder.addQueryParameter(commonKey, values[i]);
         }
-        return new Request.Builder().url(httpBuilder.build()).header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").build();
+        return new Request.Builder().url(httpBuilder.build()).header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").header("Authorization", "token "+apiKey+":"+accessToken).build();
     }
 
-    public Request createPostRequest(String url, Map<String, Object> params) {
+    public Request createPostRequest(String url, Map<String, Object> params, String apiKey, String accessToken) {
         FormBody.Builder builder = new FormBody.Builder();
         for(Map.Entry<String, Object> entry: params.entrySet()){
             builder.add(entry.getKey(), entry.getValue().toString());
         }
 
         RequestBody requestBody = builder.build();
-        Request request = new Request.Builder().url(url).post(requestBody).header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").build();
+        Request request = new Request.Builder().url(url).post(requestBody).header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").header("Authorization", "token "+apiKey+":"+accessToken).build();
         return request;
     }
 
-    public Request createPutRequest(String url, Map<String, Object> params){
+    public Request createPutRequest(String url, Map<String, Object> params, String apiKey, String accessToken){
         FormBody.Builder builder = new FormBody.Builder();
         for(Map.Entry<String, Object> entry: params.entrySet()){
             builder.add(entry.getKey(), entry.getValue().toString());
         }
         RequestBody requestBody = builder.build();
-        Request request = new Request.Builder().url(url).put(requestBody).header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").build();
+        Request request = new Request.Builder().url(url).put(requestBody).header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").header("Authorization", "token "+apiKey+":"+accessToken).build();
         return request;
     }
 
-    public Request createDeleteRequest(String url, Map<String, Object> params){
-        FormBody.Builder builder = new FormBody.Builder();
+    public Request createDeleteRequest(String url, Map<String, Object> params, String apiKey, String accessToken){
+        HttpUrl.Builder httpBuilder = HttpUrl.parse(url).newBuilder();
         for(Map.Entry<String, Object> entry: params.entrySet()){
-            builder.add(entry.getKey(), entry.getValue().toString());
+            httpBuilder.addQueryParameter(entry.getKey(), entry.getValue().toString());
         }
-        RequestBody body = builder.build();
-        Request request = new Request.Builder().url(url).delete(body).header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").build();
+
+        Request request = new Request.Builder().url(httpBuilder.build()).delete().header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").header("Authorization", "token "+apiKey+":"+accessToken).build();
         return request;
-    }
-
-    public void logRequest(String url, Map<String, Object> params, String type){
-        if(KiteConnect.ENABLE_LOGGING) {
-            System.out.println(url);
-            System.out.println(type);
-            if(params != null) {
-                for (Map.Entry<String, Object> entry : params.entrySet()) {
-                    System.out.println(entry.getKey() + " " + entry.getValue().toString());
-                }
-            }
-        }
-    }
-
-    public void logRequest(String url, Map<String, Object> params, String commonKey, String[] values, String type) {
-        if(KiteConnect.ENABLE_LOGGING) {
-            System.out.println(url);
-            System.out.println(type);
-            if(params != null) {
-                for (Map.Entry<String, Object> entry : params.entrySet()) {
-                    System.out.println(entry.getKey() + " " + entry.getValue().toString());
-                }
-            }
-            for(int i = 0; i < values.length; i++) {
-                System.out.println(commonKey + " " + values[i]);
-            }
-        }
-    }
-
-    public void logResponse(Response response, String body, boolean enabled){
-        if(KiteConnect.ENABLE_LOGGING) {
-            System.out.println(response.code());
-            /*Set<String> headerKeys = response.headers().names();
-               for(String headerItem: headerKeys){
-                   System.out.println(headerItem);
-               }*/
-            if(enabled) {
-                System.out.println(body);
-            }
-        }
     }
 }

@@ -10,7 +10,7 @@ import org.json.JSONObject;
 /**
  * A wrapper for user and session details.
  */
-public class UserModel {
+public class User {
 
     public String[] products;
     @SerializedName("user_name")
@@ -37,40 +37,40 @@ public class UserModel {
     /** Parses user details response from server.
      * @param response is the json response from server.
      * @throws JSONException is thrown when there is error while parsing response.
-     * @return UserModel is the parsed data.
+     * @return User is the parsed data.
      * */
-    public UserModel parseResponse(JSONObject response) throws JSONException {
+    public User parseResponse(JSONObject response) throws JSONException {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
-        UserModel userModel = gson.fromJson(String.valueOf(response.get("data")), UserModel.class);
-        userModel = parseArray(userModel, response.getJSONObject("data"));
-        return userModel;
+        User user = gson.fromJson(String.valueOf(response.get("data")), User.class);
+        user = parseArray(user, response.getJSONObject("data"));
+        return user;
     }
 
     /** Parses array details of product, exchange and order_type from json response.
      *  @param response is the json response from server.
-     *  @param userModel is the object to which data is copied to from json response.
-     *  @return UserModel is the pojo of parsed data.
+     *  @param user is the object to which data is copied to from json response.
+     *  @return User is the pojo of parsed data.
      *  */
-    public UserModel parseArray(UserModel userModel, JSONObject response) throws JSONException {
+    public User parseArray(User user, JSONObject response) throws JSONException {
         JSONArray productArray = response.getJSONArray("products");
-        userModel.products  = new String[productArray.length()];
+        user.products  = new String[productArray.length()];
         for(int i = 0; i < productArray.length(); i++) {
-            userModel.products[i] = productArray.getString(i);
+            user.products[i] = productArray.getString(i);
         }
 
         JSONArray exchangesArray = response.getJSONArray("exchanges");
-        userModel.exchanges = new String[exchangesArray.length()];
+        user.exchanges = new String[exchangesArray.length()];
         for (int j = 0; j < exchangesArray.length(); j++){
-            userModel.exchanges[j] = exchangesArray.getString(j);
+            user.exchanges[j] = exchangesArray.getString(j);
         }
 
         JSONArray orderTypeArray = response.getJSONArray("order_types");
-        userModel.orderTypes = new String[orderTypeArray.length()];
+        user.orderTypes = new String[orderTypeArray.length()];
         for(int k = 0; k < orderTypeArray.length(); k++){
-            userModel.orderTypes[k] = orderTypeArray.getString(k);
+            user.orderTypes[k] = orderTypeArray.getString(k);
         }
 
-        return userModel;
+        return user;
     }
 }

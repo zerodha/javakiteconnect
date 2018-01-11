@@ -31,9 +31,9 @@ public class KiteConnect {
     public static SessionExpiryHook sessionExpiryHook = null;
     public static boolean ENABLE_LOGGING = false;
     private Proxy proxy = null;
-    private String _apiKey;
-    private String _accessToken;
-    private String _publicToken;
+    private String apiKey;
+    private String accessToken;
+    private String publicToken;
     private Routes routes = new Routes();
     private String userId;
     private Gson gson;
@@ -43,7 +43,7 @@ public class KiteConnect {
      * @param apiKey is the api key provided after creating new Kite Connect App.
      */
     public KiteConnect(String apiKey){
-        _apiKey = apiKey;
+        this.apiKey = apiKey;
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -84,8 +84,8 @@ public class KiteConnect {
      * @throws NullPointerException if _apiKey is not found.
      */
     public String getApiKey() throws NullPointerException{
-        if (_apiKey != null)
-            return _apiKey;
+        if (apiKey != null)
+            return apiKey;
         else
             throw new NullPointerException();
     }
@@ -96,8 +96,8 @@ public class KiteConnect {
      * @throws NullPointerException if accessToken is null.
      */
     public String getAccessToken() throws NullPointerException{
-        if(_accessToken != null)
-            return _accessToken;
+        if(accessToken != null)
+            return accessToken;
         else
             throw new NullPointerException();
     }
@@ -124,26 +124,11 @@ public class KiteConnect {
      * @return String public token is returned.
      * */
     public String getPublicToken() throws NullPointerException{
-        if(_publicToken != null){
-            return _publicToken;
+        if(publicToken != null){
+            return publicToken;
         }else {
             throw new NullPointerException();
         }
-    }
-
-    /**
-     * Adds apiKey and accessToken to the outgoing request.
-     * @param params is map arguments which is sent for each request.
-     * @return Map params with accessToken and apiKey.
-     */
-    private Map<String, Object> authorize(Map<String, Object> params){
-        if (_apiKey != null)
-            params.put("api_key", this._apiKey);
-
-        if(_accessToken != null)
-            params.put("access_token", _accessToken);
-
-        return params;
     }
 
     /**
@@ -151,7 +136,7 @@ public class KiteConnect {
      * @param accessToken is the access token received after sending request token and api secret.
      */
     public void setAccessToken(String accessToken){
-        _accessToken = accessToken;
+        this.accessToken = accessToken;
     }
 
     /**
@@ -159,14 +144,14 @@ public class KiteConnect {
      * @param publicToken is the public token received after sending request token and api secret.
      * */
     public void setPublicToken(String publicToken){
-        _publicToken = publicToken;
+        this.publicToken = publicToken;
     }
 
     /**Retrives login url
      * @return String loginUrl is returned. */
     public String getLoginURL() throws NullPointerException{
         String baseUrl = routes.getLoginUrl();
-        return baseUrl+"?"+"api_key="+_apiKey;
+        return baseUrl+"?"+"api_key="+apiKey;
     }
 
     /**
@@ -174,14 +159,14 @@ public class KiteConnect {
      * and retrieve the `access_token` required for all subsequent requests.
      * @param requestToken received from login process.
      * @param apiSecret which is unique for each aap.
-     * @return UserModel is usermodel which contains user and session details.
+     * @return User is usermodel which contains user and session details.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
      */
-    public UserModel requestAccessToken(String requestToken, String apiSecret) throws KiteException, JSONException, IOException {
+    public User requestAccessToken(String requestToken, String apiSecret) throws KiteException, JSONException, IOException {
 
         // Create the checksum needed for authentication.
-        String hashableText = this._apiKey + requestToken + apiSecret;
+        String hashableText = this.apiKey + requestToken + apiSecret;
         String sha256hex = sha256Hex(hashableText);
 
         // Create JSON params object needed to be sent to api.
@@ -189,7 +174,7 @@ public class KiteConnect {
         params.put("request_token", requestToken);
         params.put("checksum", sha256hex);
 
-        return  new UserModel().parseResponse(new KiteRequestHandler(proxy).postRequest(routes.get("api.validate"), authorize(params)));
+        return  new User().parseResponse(new KiteRequestHandler(proxy).postRequest(routes.get("api.validate"), params, apiKey, accessToken));
     }
 
     /** Hex encodes sha256 ouput for android support.*/
@@ -210,9 +195,8 @@ public class KiteConnect {
      * @throws JSONException is thrown when there is exception while parsing response.
      */
     public Margin getMargins(String segment) throws KiteException, JSONException, IOException {
-        Map<String, Object> params = new HashMap<String, Object>();
         String url = routes.get("user.margins.segment").replace(":segment", segment);
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(url, authorize(params));
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(url, apiKey, accessToken);
         return gson.fromJson(String.valueOf(response.get("data")), Margin.class);
     }
 
@@ -224,9 +208,8 @@ public class KiteConnect {
      * @throws JSONException is thrown when there is exception while parsing response.
      */
     public Map<String, Margin> getMargins() throws KiteException, JSONException, IOException {
-        Map<String, Object> params = new HashMap<>();
         String url = routes.get("user.margins");
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(url, authorize(params));
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(url, apiKey, accessToken);
         Type type = new TypeToken<Map<String, Margin>>(){}.getType();
         return gson.fromJson(String.valueOf(response.get("data")), type);
     }
@@ -237,9 +220,8 @@ public class KiteConnect {
      * @throws KiteException is thrown for all kite trade related errors.
      * */
     public List<InstrumentMargin> getInstrumentsMargins(String segment) throws IOException, KiteException {
-        Map<String, Object> params = new HashMap<>();
         String url = routes.get("instruments.margins").replace("segment", segment);
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(url, authorize(params));
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(url, apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), InstrumentMargin[].class));
     }
 
@@ -268,7 +250,7 @@ public class KiteConnect {
     public Order placeOrder(Map<String, Object> params, String variety) throws KiteException, JSONException, IOException {
         String url = routes.get("orders.place").replace(":variety", variety);
 
-        JSONObject jsonObject = new KiteRequestHandler(proxy).postRequest(url, authorize(params));
+        JSONObject jsonObject = new KiteRequestHandler(proxy).postRequest(url, params, apiKey, accessToken);
         Order order =  new Order();
         order.orderId = jsonObject.getJSONObject("data").getString("order_id");
         return order;
@@ -296,7 +278,7 @@ public class KiteConnect {
      */
     public Order modifyOrder(String orderId, Map<String, Object> params, String variety) throws KiteException, JSONException, IOException {
         String url = routes.get("orders.modify").replace(":variety", variety).replace(":order_id", orderId);
-        JSONObject jsonObject = new KiteRequestHandler(proxy).putRequest(url, authorize(params));
+        JSONObject jsonObject = new KiteRequestHandler(proxy).putRequest(url, params, apiKey, accessToken);
         Order order =  new Order();
         order.orderId = jsonObject.getJSONObject("data").getString("order_id");
         return order;
@@ -314,7 +296,7 @@ public class KiteConnect {
         String url = routes.get("orders.cancel").replace(":variety", variety).replace(":order_id", orderId);
         Map<String, Object> params = new HashMap<String, Object>();
 
-        JSONObject jsonObject = new KiteRequestHandler(proxy).deleteRequest(url, authorize(params));
+        JSONObject jsonObject = new KiteRequestHandler(proxy).deleteRequest(url, params, apiKey, accessToken);
         Order order =  new Order();
         order.orderId = jsonObject.getJSONObject("data").getString("order_id");
         return order;
@@ -330,9 +312,8 @@ public class KiteConnect {
      * */
     public Order cancelOrder(Map<String, Object> params, String orderId, String variety) throws KiteException, IOException {
         String url = routes.get("orders.cancel").replace(":variety", variety).replace(":order_id", orderId);
-        params = authorize(params);
 
-        JSONObject jsonObject = new KiteRequestHandler(proxy).deleteRequest(url, params);
+        JSONObject jsonObject = new KiteRequestHandler(proxy).deleteRequest(url, params, apiKey, accessToken);
         Order order =  new Order();
         order.orderId = jsonObject.getJSONObject("data").getString("order_id");
         return order;
@@ -347,7 +328,7 @@ public class KiteConnect {
         String url = routes.get("orders");
         Map<String, Object> params = new HashMap<>();
 
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(url, authorize(params));
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(url, apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Order[].class));
     }
 
@@ -359,7 +340,7 @@ public class KiteConnect {
     public List<Order> getOrderHistory(String orderId) throws KiteException, IOException {
         String url = routes.get("order").replace(":order_id", orderId);
         Map<String, Object> params = new HashMap<>();
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(url, authorize(params));
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(url, apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Order[].class));
     }
 
@@ -371,7 +352,7 @@ public class KiteConnect {
      */
     public List<Trade> getTrades() throws KiteException, JSONException, IOException {
         Map<String, Object> params = new HashMap<>();
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("trades"), authorize(params));
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("trades"), apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Trade[].class));
     }
 
@@ -384,7 +365,7 @@ public class KiteConnect {
      */
     public List<Trade> getOrderTrades(String orderId) throws KiteException, JSONException, IOException {
         Map<String, Object> params = new HashMap<String, Object>();
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("orders.trades").replace(":order_id", orderId), authorize(params));
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("orders.trades").replace(":order_id", orderId), apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Trade[].class));
     }
 
@@ -396,7 +377,7 @@ public class KiteConnect {
      */
     public List<Holding> getHoldings() throws KiteException, JSONException, IOException {
         Map<String, Object> params = new HashMap<>();
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("portfolio.holdings"), authorize(params));
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("portfolio.holdings"), apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Holding[].class));
     }
 
@@ -409,7 +390,7 @@ public class KiteConnect {
     public Map<String, List<Position>> getPositions() throws KiteException, JSONException, IOException {
         Map<String, Object> params = new HashMap<>();
         Map<String, List<Position>> positionsMap = new HashMap<>();
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("portfolio.positions"), authorize(params));
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("portfolio.positions"), apiKey, accessToken);
         JSONObject allPositions = response.getJSONObject("data");
         positionsMap.put("net", Arrays.asList(gson.fromJson(String.valueOf(allPositions.get("net")), Position[].class)));
         positionsMap.put("day", Arrays.asList(gson.fromJson(String.valueOf(allPositions.get("day")), Position[].class)));
@@ -426,7 +407,7 @@ public class KiteConnect {
      */
     public JSONObject convertPosition(Map<String, Object> params) throws KiteException, JSONException, IOException {
         KiteRequestHandler kiteRequestHandler = new KiteRequestHandler(proxy);
-        return kiteRequestHandler.putRequest(routes.get("portfolio.positions.modify"), authorize(params));
+        return kiteRequestHandler.putRequest(routes.get("portfolio.positions.modify"), params, apiKey, accessToken);
     }
 
     /**
@@ -452,8 +433,7 @@ public class KiteConnect {
      */
     public List<Instrument> getInstruments() throws KiteException, IOException {
         KiteRequestHandler kiteRequestHandler = new KiteRequestHandler(proxy);
-        Map<String, Object> params = new HashMap<>();
-        return readCSV(kiteRequestHandler.getCSVRequest(routes.get("market.instruments.all"), authorize(params)));
+        return readCSV(kiteRequestHandler.getCSVRequest(routes.get("market.instruments.all"), apiKey, accessToken));
     }
 
     /**
@@ -481,8 +461,7 @@ public class KiteConnect {
      */
     public List<Instrument> getInstruments(String exchange) throws KiteException, JSONException, IOException {
         KiteRequestHandler kiteRequestHandler = new KiteRequestHandler(proxy);
-        Map<String, Object> params = new HashMap<>();
-        return readCSV(kiteRequestHandler.getCSVRequest(routes.get("market.instruments").replace(":exchange", exchange), authorize(params)));
+        return readCSV(kiteRequestHandler.getCSVRequest(routes.get("market.instruments").replace(":exchange", exchange), apiKey, accessToken));
     }
 
     /**
@@ -495,10 +474,8 @@ public class KiteConnect {
      * @throws JSONException is thrown when there is exception while parsing response.
      */
     public Map<String, Quote> getQuote(String [] instruments) throws KiteException, JSONException, IOException {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params = authorize(params);
         KiteRequestHandler kiteRequestHandler = new KiteRequestHandler(proxy);
-        JSONObject jsonObject = kiteRequestHandler.getRequest(routes.get("market.quote"), params, "i", instruments);
+        JSONObject jsonObject = kiteRequestHandler.getRequest(routes.get("market.quote"), "i", instruments, apiKey, accessToken);
         Type type = new TypeToken<Map<String, Quote>>(){}.getType();
         return gson.fromJson(String.valueOf(jsonObject.get("data")), type);
     }
@@ -510,9 +487,7 @@ public class KiteConnect {
      * @param instruments is the array of tradingsymbol and exchange or instruments token.
      * */
     public Map<String, OHLCQuote> getOHLC(String [] instruments) throws KiteException, IOException {
-        Map<String, Object> params = new HashMap<>();
-        params = authorize(params);
-        JSONObject resp = new KiteRequestHandler(proxy).getRequest(routes.get("quote.ohlc"), params, "i", instruments);
+        JSONObject resp = new KiteRequestHandler(proxy).getRequest(routes.get("quote.ohlc"), "i", instruments, apiKey, accessToken);
         Type type = new TypeToken<Map<String, OHLCQuote>>(){}.getType();
         return gson.fromJson(String.valueOf(resp.get("data")), type);
     }
@@ -524,9 +499,7 @@ public class KiteConnect {
      * @param instruments is the array of tradingsymbol and exchange or instruments token.
      * */
     public Map<String, LTPQuote> getLTP(String[] instruments) throws KiteException, IOException {
-        Map<String, Object> params = new HashMap<>();
-        params = authorize(params);
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("quote.ltp"), params, "i", instruments);
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("quote.ltp"), "i", instruments, apiKey, accessToken);
         Type type = new TypeToken<Map<String, LTPQuote>>(){}.getType();
         return gson.fromJson(String.valueOf(response.get("data")), type);
     }
@@ -542,7 +515,7 @@ public class KiteConnect {
      */
     public TriggerRange getTriggerRange(String exchange, String tradingSymbol, Map<String, Object> params) throws KiteException, JSONException, IOException {
         String url = routes.get("market.trigger_range").replace(":exchange", exchange).replace(":tradingsymbol", tradingSymbol);
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(url, authorize(params));
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(url, params, apiKey, accessToken);
         return gson.fromJson(String.valueOf(response.get("data")), TriggerRange.class);
     }
 
@@ -558,7 +531,7 @@ public class KiteConnect {
     public HistoricalData getHistoricalData(Map<String, Object> params, String token, String interval) throws KiteException, IOException {
         String url = routes.get("market.historical").replace(":instrument_token", token).replace(":interval", interval);
         HistoricalData historicalData = new HistoricalData();
-        historicalData.parseResponse(new KiteRequestHandler(proxy).getRequest(url, authorize(params)));
+        historicalData.parseResponse(new KiteRequestHandler(proxy).getRequest(url, params, apiKey, accessToken));
         return historicalData;
     }
 
@@ -570,7 +543,7 @@ public class KiteConnect {
     public List<MfInstrument> getMFInstruments() throws KiteException, IOException{
         Map<String, Object> params = new HashMap<String, Object>();
         KiteRequestHandler kiteRequestHandler = new KiteRequestHandler(proxy);
-        return readMfCSV(kiteRequestHandler.getCSVRequest(routes.get("mutualfunds.instruments"), params));
+        return readMfCSV(kiteRequestHandler.getCSVRequest(routes.get("mutualfunds.instruments"), apiKey, accessToken));
     }
 
     /** Place a mutualfunds order.
@@ -579,8 +552,7 @@ public class KiteConnect {
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
     public MfOrder placeMFOrder(Map<String, Object> params) throws KiteException, IOException {
-        params = authorize(params);
-        JSONObject response = new KiteRequestHandler(proxy).postRequest(routes.get("mutualfunds.orders.place"), params);
+        JSONObject response = new KiteRequestHandler(proxy).postRequest(routes.get("mutualfunds.orders.place"), params, apiKey, accessToken);
         MfOrder mfOrder = new MfOrder();
         mfOrder.orderId = response.getJSONObject("data").getString("order_id");
         return mfOrder;
@@ -592,10 +564,8 @@ public class KiteConnect {
      * @param orderId is the order id of the mutualfunds order.
      * */
     public boolean cancelMFOrder(String orderId) throws KiteException, IOException {
-        Map<String, Object> params = new HashMap<>();
-        params = authorize(params);
         KiteRequestHandler kiteRequestHandler = new KiteRequestHandler(proxy);
-        kiteRequestHandler.deleteRequest(routes.get("mutualfunds.cancel_order").replace(":order_id", orderId), params);
+        kiteRequestHandler.deleteRequest(routes.get("mutualfunds.cancel_order").replace(":order_id", orderId), new HashMap<>(), apiKey, accessToken);
         return true;
     }
 
@@ -604,9 +574,7 @@ public class KiteConnect {
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
     public List<MfOrder> getMFOrders() throws KiteException, IOException {
-        Map<String, Object> params = new HashMap<>();
-        params = authorize(params);
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.orders"), params);
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.orders"), apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), MfOrder[].class));
     }
 
@@ -616,9 +584,7 @@ public class KiteConnect {
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
     public MfOrder getMFOrder(String orderId) throws KiteException, IOException {
-        Map<String, Object> params = new HashMap<>();
-        params = authorize(params);
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.order").replace(":order_id", orderId), params);
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.order").replace(":order_id", orderId), apiKey, accessToken);
         return gson.fromJson(response.get("data").toString(), MfOrder.class);
     }
 
@@ -628,9 +594,8 @@ public class KiteConnect {
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
     public MfSip placeMFSIP(Map<String, Object> params) throws KiteException, IOException {
-        params = authorize(params);
         MfSip mfSip = new MfSip();
-        JSONObject response = new KiteRequestHandler(proxy).postRequest(routes.get("mutualfunds.sips.place"),params);
+        JSONObject response = new KiteRequestHandler(proxy).postRequest(routes.get("mutualfunds.sips.place"),params, apiKey, accessToken);
         mfSip.orderId = response.getJSONObject("data").getString("order_id");
         mfSip.sipId = response.getJSONObject("data").getString("sip_id");
         return mfSip;
@@ -643,8 +608,7 @@ public class KiteConnect {
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
     public boolean modifyMFSIP(Map<String, Object> params, String sipId) throws KiteException, IOException {
-        params = authorize(params);
-        new KiteRequestHandler(proxy).putRequest(routes.get("mutualfunds.sips.modify").replace(":sip_id", sipId), params);
+        new KiteRequestHandler(proxy).putRequest(routes.get("mutualfunds.sips.modify").replace(":sip_id", sipId), params, apiKey, accessToken);
         return true;
     }
 
@@ -654,9 +618,7 @@ public class KiteConnect {
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
     public boolean cancelMFSIP(String sipId) throws KiteException, IOException {
-        Map<String, Object> params = new HashMap<>();
-        authorize(params);
-        new KiteRequestHandler(proxy).deleteRequest(routes.get("mutualfunds.sip").replace(":sip_id", sipId), params);
+        new KiteRequestHandler(proxy).deleteRequest(routes.get("mutualfunds.sip").replace(":sip_id", sipId), new HashMap<>(), apiKey, accessToken);
         return true;
     }
 
@@ -665,9 +627,7 @@ public class KiteConnect {
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
     public List<MfSip> getMFSIPs() throws KiteException, IOException {
-        Map<String, Object> params = new HashMap<>();
-        params = authorize(params);
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.sips"), params);
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.sips"), apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), MfSip[].class));
     }
 
@@ -677,9 +637,7 @@ public class KiteConnect {
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
     public MfSip getMFSIP(String sipId) throws KiteException, IOException {
-        Map<String, Object> params = new HashMap<>();
-        params = authorize(params);
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.sip").replace(":sip_id", sipId), params);
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.sip").replace(":sip_id", sipId), apiKey, accessToken);
         return gson.fromJson(response.get("data").toString(), MfSip.class);
     }
 
@@ -688,9 +646,7 @@ public class KiteConnect {
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
     public List<MfHolding> getMFHoldings() throws KiteException, IOException {
-        Map<String, Object> params = new HashMap<>();
-        params = authorize(params);
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.holdings"), params);
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.holdings"), apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), MfHolding[].class));
     }
     /**
@@ -710,7 +666,7 @@ public class KiteConnect {
     public JSONObject invalidateToken() throws IOException, KiteException {
         Map<String, Object> params = new HashMap<String, Object>();
         String url = routes.get("logout");
-        return new KiteRequestHandler(proxy).deleteRequest(url, authorize(params));
+        return new KiteRequestHandler(proxy).deleteRequest(url, new HashMap<>(), apiKey, accessToken);
     }
 
     /**This method parses csv and returns instrument list.

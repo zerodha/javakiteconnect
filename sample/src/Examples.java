@@ -46,7 +46,7 @@ public class Examples {
                 put("exchange", "NSE");
                 put("transaction_type", "BUY");
                 put("validity", "DAY");
-                put("price", "116.50");
+                put("price", "123.50");
                 put("trigger_price", "0");
                 put("tag", "myTag");   //tag is optional and it cannot be more than 8 characters and only alphanumeric is allowed
             }
@@ -64,9 +64,9 @@ public class Examples {
             {
                 put("quantity", "1");
                 put("order_type", "LIMIT");
-                put("price", "317.5");
+                put("price", "32.5");
                 put("transaction_type", "BUY");
-                put("tradingsymbol", "SBIN");
+                put("tradingsymbol", "SOUTHBANK");
                 put("trailing_stoploss", "1");
                 put("stoploss", "2");
                 put("exchange", "NSE");
@@ -132,7 +132,7 @@ public class Examples {
 
     /** Get order details*/
     public void getOrder(KiteConnect kiteConnect) throws KiteException, IOException {
-        List<Order> orders = kiteConnect.getOrderHistory("171227000516358");
+        List<Order> orders = kiteConnect.getOrderHistory("180111000561605");
         for(int i = 0; i< orders.size(); i++){
             System.out.println(orders.get(i).orderId+" "+orders.get(i).status);
         }
@@ -149,7 +149,7 @@ public class Examples {
     /** Get trades for an order.*/
     public void getTradesWithOrderId(KiteConnect kiteConnect) throws KiteException, IOException {
         // Returns trades for the given order.
-        List<Trade> trades = kiteConnect.getOrderTrades("171227000516358");
+        List<Trade> trades = kiteConnect.getOrderTrades("180111000561605");
         System.out.println(trades.size());
     }
 
@@ -179,9 +179,9 @@ public class Examples {
             {
                 put("quantity", "1");
                 put("order_type", "LIMIT");
-                put("price", "318");
+                put("price", "32.8");
                 put("transaction_type", "BUY");
-                put("tradingsymbol", "SBIN");
+                put("tradingsymbol", "SOUTHBANK");
                 put("trailing_stoploss", "1");
                 put("exchange", "NSE");
                 put("validity", "DAY");
@@ -190,46 +190,46 @@ public class Examples {
                 put("trigger_price", "0");
             }
         };
-        Order order = kiteConnect.modifyOrder("171227000490831", params, "bo");
+        Order order = kiteConnect.modifyOrder("180111000561605", params, "bo");
         System.out.println(order.orderId);
     }
 
     public void modifySecondLegBoSLM(KiteConnect kiteConnect) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<String, Object>(){
             {
-                put("order_id", "180104000513605");
-                put("parent_order_id", "180104000506306");
+                put("order_id", "180111000603824");
+                put("parent_order_id", "180111000603822");
                 put("tradingsymbol", "SOUTHBANK");
                 put("exchange", "NSE");
                 put("product","MIS");
                 put("validity", "DAY");
-                put("trigger_price", "28.3");
+                put("trigger_price", "31");
                 put("price", "0");
                 put("order_type", "SL-M");
                 put("transaction_type", "SELL");
             }
         };
-        Order order = kiteConnect.modifyOrder("180104000513605", params, "bo");
+        Order order = kiteConnect.modifyOrder("180111000603824", params, "bo");
         System.out.println(order.orderId);
     }
 
     public void modifySecondLegBoLIMIT(KiteConnect kiteConnect) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<String, Object>(){
             {
-                put("order_id", "171227000533463");
-                put("parent_order_id", "171227000490831");
-                put("tradingsymbol", "SBIN");
+                put("order_id", "180111000581854");
+                put("parent_order_id", "180111000561605");
+                put("tradingsymbol", "SOUTHBANK");
                 put("exchange", "NSE");
                 put("quantity", "1");
                 put("product","MIS");
                 put("validity", "DAY");
-                put("price", "321.7");
+                put("price", "35");
                 put("trigger_price", "0");
                 put("order_type", "LIMIT");
                 put("transaction_type", "SELL");
             }
         };
-        Order order = kiteConnect.modifyOrder("171227000533463", params, "bo");
+        Order order = kiteConnect.modifyOrder("180111000581854", params, "bo");
         System.out.println(order.orderId);
     }
 
@@ -237,14 +237,14 @@ public class Examples {
     public void cancelOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         // Order modify request will return order model which will contain only order_id.
         // Cancel order will return order model which will only have orderId.
-        Order order2 = kiteConnect.cancelOrder("171227000469646", "regular");
+        Order order2 = kiteConnect.cancelOrder("180111000543558", "regular");
         System.out.println(order2.orderId);
     }
 
     public void exitBracketOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<>();
-        params.put("parent_order_id", "171227000490831");
-        Order order = kiteConnect.cancelOrder(params, "171227000533463", "bo");
+        params.put("parent_order_id", "180111000823758");
+        Order order = kiteConnect.cancelOrder(params, "180111000823761", "bo");
         System.out.println(order.orderId);
     }
 
@@ -273,8 +273,8 @@ public class Examples {
                 put("transaction_type", "BUY");
                 put("position_type", "day"); //can also be day
                 put("quantity", "1");
-                put("old_product", "CNC");
-                put("new_product", "MIS");
+                put("old_product", "MIS");
+                put("new_product", "CNC");
             }
         };
         JSONObject jsonObject6 = kiteConnect.convertPosition(param6);
