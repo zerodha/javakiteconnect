@@ -1,10 +1,10 @@
 import com.neovisionaries.ws.client.WebSocketException;
-import com.rainmatter.kiteconnect.KiteConnect;
-import com.rainmatter.kiteconnect.kitehttp.exceptions.KiteException;
-import com.rainmatter.models.*;
-import com.rainmatter.ticker.*;
+import com.zerodhatech.kiteconnect.KiteConnect;
+import com.zerodhatech.kiteconnect.kitehttp.exceptions.KiteException;
+import com.zerodhatech.models.*;
+import com.zerodhatech.ticker.*;
 import org.json.JSONObject;
-import  com.rainmatter.models.Margin;
+import com.zerodhatech.models.Margin;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -429,7 +429,7 @@ public class Examples {
         System.out.println("mf sip: "+ kiteConnect.getMFSIP("291156521960679").instalments);
     }
 
-    /** Demonstrates com.rainmatter.ticker connection, subcribing for instruments, unsubscribing for instruments, set mode of tick data, com.rainmatter.ticker disconnection*/
+    /** Demonstrates com.zerodhatech.ticker connection, subcribing for instruments, unsubscribing for instruments, set mode of tick data, com.zerodhatech.ticker disconnection*/
     public void tickerUsage(KiteConnect kiteConnect, ArrayList<Long> tokens) throws IOException, WebSocketException, KiteException {
         /** To get live price use websocket connection.
          * It is recommended to use only one websocket connection at any point of time and make sure you stop connection, once user goes out of app.
@@ -486,7 +486,7 @@ public class Examples {
         //set maximum retry interval in seconds
         tickerProvider.setMaximumRetryInterval(30);
 
-        /** connects to com.rainmatter.com.rainmatter.ticker server for getting live quotes*/
+        /** connects to com.zerodhatech.com.zerodhatech.ticker server for getting live quotes*/
         tickerProvider.connect();
 
         /** You can check, if websocket connection is open or not using the following method.*/
@@ -503,7 +503,7 @@ public class Examples {
         // Unsubscribe for a token.
         tickerProvider.unsubscribe(tokens);
 
-        // After using com.rainmatter.com.rainmatter.ticker, close websocket connection.
+        // After using com.zerodhatech.com.zerodhatech.ticker, close websocket connection.
        tickerProvider.disconnect();
     }
 }

@@ -1,8 +1,8 @@
 import com.neovisionaries.ws.client.WebSocketException;
-import com.rainmatter.kiteconnect.KiteConnect;
-import com.rainmatter.kiteconnect.kitehttp.SessionExpiryHook;
-import com.rainmatter.kiteconnect.kitehttp.exceptions.KiteException;
-import com.rainmatter.models.User;
+import com.zerodhatech.kiteconnect.KiteConnect;
+import com.zerodhatech.kiteconnect.kitehttp.SessionExpiryHook;
+import com.zerodhatech.kiteconnect.kitehttp.exceptions.KiteException;
+import com.zerodhatech.models.User;
 import org.json.JSONException;
 
 import java.io.IOException;
