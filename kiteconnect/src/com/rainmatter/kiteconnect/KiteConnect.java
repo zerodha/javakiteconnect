@@ -171,6 +171,7 @@ public class KiteConnect {
 
         // Create JSON params object needed to be sent to api.
         Map<String, Object> params = new HashMap<String, Object>();
+        params.put("api_key", apiKey);
         params.put("request_token", requestToken);
         params.put("checksum", sha256hex);
 
@@ -184,6 +185,12 @@ public class KiteConnect {
         for(byte b: a)
             sb.append(String.format("%02x", b));
         return sb.toString();
+    }
+
+    public Profile getProfile() throws IOException, KiteException {
+        String url = routes.get("user.profile");
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(url, apiKey, accessToken);
+        return gson.fromJson(String.valueOf(response.get("data")), Profile.class);
     }
 
     /**

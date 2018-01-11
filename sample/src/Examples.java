@@ -16,6 +16,12 @@ import java.util.*;
  */
 public class Examples {
 
+
+    public void getProfile(KiteConnect kiteConnect) throws IOException, KiteException {
+        Profile profile = kiteConnect.getProfile();
+        System.out.println(profile.userName);
+    }
+
     /**Gets Margin.*/
     public void getMargins(KiteConnect kiteConnect) throws KiteException, IOException {
         // Get margins returns margin model, you can pass equity or commodity as arguments to get margins of respective segments.

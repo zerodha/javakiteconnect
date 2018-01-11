@@ -51,6 +51,7 @@ public class Routes {
             put("api.invalidate", "/session/token");
             put("user.margins.segment", "/user/margins/:segment");
             put("user.margins", "/user/margins");
+            put("user.profile", "/user/profile");
 
             put("instruments.margins", "/margins/:segment");
 
