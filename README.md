@@ -3,7 +3,7 @@ The official Java client for communicating with [Kite Connect API](https://kite.
 
 Kite Connect is a set of REST-like APIs that expose many capabilities required to build a complete investment and trading platform. Execute orders in real time, manage user portfolio, stream live market data (WebSockets), and more, with the simple HTTP API collection.
 
-[Rainmatter](http://rainmatter.com) (c) 2016. Licensed under the MIT License.
+[Zerodha Technology Pvt Ltd](http://rainmatter.com) (c) 2016. Licensed under the MIT License.
 
 ## Documentation
 - [Kite Connect HTTP API documentation](https://kite.trade/docs/connect/v1)
@@ -167,8 +167,11 @@ For more details about different mode of quotes and subscribing for them, take a
  
  | version 2 | version 3 |
  | :---: | :---: |
- |com.rainmatter.kitehttp|com.rainmatter.kiteconnect.kitehttp|
- |com.rainmatter.utils|com.rainmatter.kiteconnect.utils|
+ |com.rainmatter.kitehttp|com.zerodhatech.kiteconnect.kitehttp|
+ |com.rainmatter.utils|com.zerodhatech.kiteconnect.utils|
+ |com.rainmatter.kiteconnect|com.zerodhatech.kiteconnect|
+ |com.rainmatter.ticker|com.zerodhatech.kiteconnect|
+ |com.rainmatter.models|com.zerodhatech.models|
  
  #### Method name changes
  
@@ -191,7 +194,10 @@ For more details about different mode of quotes and subscribing for them, take a
  | :---: | :---: |
  | Margins | Margin |
   
- #### UserModel
+ #### User (model)
+ 
+ * UserModel is now User.
+ 
   | version 2 | version 3 |
   | :---: | :---: |
   | product | products |
@@ -276,3 +282,7 @@ For more details about different mode of quotes and subscribing for them, take a
   | version 2 | version 3 |
   | :---: | :---: |
   | IndicesQuote | **NA** |
+  
+  #### Profile
+  
+  * Added new profile API call to fetch user details.
