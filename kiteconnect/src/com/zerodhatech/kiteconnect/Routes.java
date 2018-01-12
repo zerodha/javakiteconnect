@@ -52,6 +52,7 @@ public class Routes {
             put("user.margins.segment", "/user/margins/:segment");
             put("user.margins", "/user/margins");
             put("user.profile", "/user/profile");
+            put("api.refresh", "/session/refresh_token");
 
             put("instruments.margins", "/margins/:segment");
 

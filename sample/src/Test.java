@@ -42,7 +42,7 @@ public class Test {
                    A request token is valid for only a couple of minutes and can be used only once. An access token is valid for one whole day. Don't call this method for every app run.
                    Once an access token is received it should be stored in preferences or database for further usage.
                  */
-                User user =  kiteConnect.requestAccessToken("xxxyyyyzzzzzz", "xxxxxxx");
+                User user =  kiteConnect.generateSession("xxxyyyyzzzzzz", "xxxxxxx");
                 kiteConnect.setAccessToken(user.accessToken);
                 kiteConnect.setPublicToken(user.publicToken);
 

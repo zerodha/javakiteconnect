@@ -151,7 +151,7 @@ public class KiteConnect {
      * @return String loginUrl is returned. */
     public String getLoginURL() throws NullPointerException{
         String baseUrl = routes.getLoginUrl();
-        return baseUrl+"?"+"api_key="+apiKey;
+        return baseUrl+"?api_key="+apiKey+"&v=3";
     }
 
     /**
@@ -163,7 +163,7 @@ public class KiteConnect {
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
      */
-    public User requestAccessToken(String requestToken, String apiSecret) throws KiteException, JSONException, IOException {
+    public User generateSession(String requestToken, String apiSecret) throws KiteException, JSONException, IOException {
 
         // Create the checksum needed for authentication.
         String hashableText = this.apiKey + requestToken + apiSecret;
@@ -176,6 +176,25 @@ public class KiteConnect {
         params.put("checksum", sha256hex);
 
         return  new User().parseResponse(new KiteRequestHandler(proxy).postRequest(routes.get("api.validate"), params, apiKey, accessToken));
+    }
+
+    /** Get a new access token using refresh token.
+     * @param refreshToken is the refresh token obtained after generateSession.
+     * @param apiSecret is unique for each app.
+     * @return TokenSet contains user id, refresh token, api secret.
+     * @throws IOException is thrown when there is connection error.
+     * @throws KiteException is thrown for all Kite trade related errors. */
+    public TokenSet renewAccessToken(String refreshToken, String apiSecret) throws IOException, KiteException {
+        String hashableText = this.apiKey + refreshToken + apiSecret;
+        String sha256hex = sha256Hex(hashableText);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("api_key", apiKey);
+        params.put("refresh_token", refreshToken);
+        params.put("checksum", sha256hex);
+
+        JSONObject response = new KiteRequestHandler(proxy).postRequest(routes.get("api.refresh"), params, apiKey, accessToken);
+        return gson.fromJson(String.valueOf(response.get("data")), TokenSet.class);
     }
 
     /** Hex encodes sha256 ouput for android support.*/
@@ -662,7 +681,7 @@ public class KiteConnect {
      * @throws KiteException is thrown for all Kite trade related errors.
      */
     public JSONObject logout() throws KiteException, IOException {
-        return invalidateToken();
+        return invalidateAccessToken();
     }
 
     /**
@@ -670,10 +689,22 @@ public class KiteConnect {
      * @return JSONObject which contains status
      * @throws KiteException is thrown for all Kite trade related errors.
      */
-    public JSONObject invalidateToken() throws IOException, KiteException {
-        Map<String, Object> params = new HashMap<String, Object>();
+    public JSONObject invalidateAccessToken() throws IOException, KiteException {
         String url = routes.get("logout");
         return new KiteRequestHandler(proxy).deleteRequest(url, new HashMap<>(), apiKey, accessToken);
+    }
+
+    /**
+     * Kills the refresh token.
+     * @return JSONObject contains status.
+     * @throws IOException is thrown for connection related errors.
+     * @throws KiteException is thrown for Kite trade related errors.
+     * */
+    public JSONObject invalidateRefreshToken(String refreshToken) throws IOException, KiteException {
+        Map<String, Object> param = new HashMap<>();
+        param.put("refresh_token", refreshToken);
+        String url = routes.get("api.refresh");
+        return new KiteRequestHandler(proxy).deleteRequest(url, param, apiKey, accessToken);
     }
 
     /**This method parses csv and returns instrument list.

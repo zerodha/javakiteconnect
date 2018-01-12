@@ -33,6 +33,10 @@ public class User {
     public String[] orderTypes;
     @SerializedName("email")
     public String email;
+    @SerializedName("refresh_token")
+    public String refreshToken;
+    @SerializedName("user_shortname")
+    public String shortName;
 
     /** Parses user details response from server.
      * @param response is the json response from server.
