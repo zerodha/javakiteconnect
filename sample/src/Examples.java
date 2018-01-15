@@ -470,8 +470,9 @@ public class Examples {
                 if(ticks.size() > 0) {
                     System.out.println("last price "+ticks.get(0).getLastTradedPrice());
                     System.out.println("open interest "+formatter.format(ticks.get(0).getOpenInterest()));
-                    System.out.println("day high OI "+formatter.format(ticks.get(0).getDayHighOpenInterest()));
-                    System.out.println("day low OI "+formatter.format(ticks.get(0).getDayLowOpenInterest()));
+                    System.out.println("day high OI "+formatter.format(ticks.get(0).getOpenInterestDayHigh()));
+                    System.out.println("day low OI "+formatter.format(ticks.get(0).getOpenInterestDayLow()));
+                    System.out.println("change "+formatter.format(ticks.get(0).getChange()));
                     System.out.println("tick timestamp "+ticks.get(0).getTickTimestamp());
                     System.out.println("tick timestamp date "+ticks.get(0).getTickTimestamp());
                     System.out.println("last traded time "+ticks.get(0).getLastTradedTime());

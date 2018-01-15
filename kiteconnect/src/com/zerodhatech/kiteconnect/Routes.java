@@ -92,7 +92,7 @@ public class Routes {
             put("mutualfunds.instruments", "/mf/instruments");
             put("mutualfunds.holdings", "/mf/holdings");
 
-            put("logout", "/session/token");
+            put("api.token", "/session/token");
         }};
     }
 

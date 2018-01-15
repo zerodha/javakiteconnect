@@ -177,6 +177,7 @@ For more details about different mode of quotes and subscribing for them, take a
  
  | version 2 | version 3 |
  | :---: | :---: |
+ | requestAccessToken | generateSession |
  | modifyProduct | convertPosition |
  | getOrder | getOrderHistory |
  | getTrades(order_id) | getOrderTrades(order_id) |
@@ -243,8 +244,8 @@ For more details about different mode of quotes and subscribing for them, take a
   | :---: |
   | lastTradedTime |
   | openInterest |
-  | dayHighOpenInterest |
-  | dayLowOpenInterest |
+  | oiDayHigh |
+  | oiDayLow |
   | tickTimestamp |
   
   * Changes:
@@ -254,6 +255,7 @@ For more details about different mode of quotes and subscribing for them, take a
   | OnTick | OnTicks |
   | setTimeIntervalForReconnection | **NA** |
   | **NA** | setMaximumRetryInterval |
+  | netPriceChangeFromClosingPrice | change |
   
   #### Quote 
   
@@ -265,8 +267,8 @@ For more details about different mode of quotes and subscribing for them, take a
   | instrumentToken |
   | timestamp |
   | averagePrice |
-  | dayHighOI |
-  | dayLowOI |
+  | oiDayHigh |
+  | oiDayLow |
   
   * Changes:
   

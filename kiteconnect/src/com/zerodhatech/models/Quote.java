@@ -34,9 +34,9 @@ public class Quote {
     @SerializedName("average_price")
     public double averagePrice;
     @SerializedName("day_high_oi")
-    public double dayHighOI;
+    public double oiDayHigh;
     @SerializedName("day_low_oi")
-    public double dayLowOI;
+    public double oiDayLow;
     @SerializedName("depth")
     public MarketDepth depth;
 

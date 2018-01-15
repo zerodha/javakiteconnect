@@ -2,6 +2,7 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.zerodhatech.kiteconnect.KiteConnect;
 import com.zerodhatech.kiteconnect.kitehttp.SessionExpiryHook;
 import com.zerodhatech.kiteconnect.kitehttp.exceptions.KiteException;
+import com.zerodhatech.models.TokenSet;
 import com.zerodhatech.models.User;
 import org.json.JSONException;
 
@@ -19,10 +20,10 @@ public class Test {
         try {
                 // First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteConnect api call.
                 // Initialize KiteSdk with your apiKey.
-                KiteConnect kiteConnect = new KiteConnect("xxxxxxtyyy");
+                KiteConnect kiteConnect = new KiteConnect("xxxyyxxyyxzz");
 
                 // Set userId
-                kiteConnect.setUserId("yyyyyy");
+                kiteConnect.setUserId("xxxzzzz");
 
                 //Enable logs for debugging purpose. This will log request and response.
                 kiteConnect.setEnableLogging(true);

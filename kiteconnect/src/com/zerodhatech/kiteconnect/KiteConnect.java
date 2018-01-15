@@ -690,8 +690,11 @@ public class KiteConnect {
      * @throws KiteException is thrown for all Kite trade related errors.
      */
     public JSONObject invalidateAccessToken() throws IOException, KiteException {
-        String url = routes.get("logout");
-        return new KiteRequestHandler(proxy).deleteRequest(url, new HashMap<>(), apiKey, accessToken);
+        String url = routes.get("api.token");
+        Map<String, Object> params = new HashMap<>();
+        params.put("api_key", apiKey);
+        params.put("access_token", accessToken);
+        return new KiteRequestHandler(proxy).deleteRequest(url, params, apiKey, accessToken);
     }
 
     /**
@@ -703,7 +706,8 @@ public class KiteConnect {
     public JSONObject invalidateRefreshToken(String refreshToken) throws IOException, KiteException {
         Map<String, Object> param = new HashMap<>();
         param.put("refresh_token", refreshToken);
-        String url = routes.get("api.refresh");
+        param.put("api_key", apiKey);
+        String url = routes.get("api.token");
         return new KiteRequestHandler(proxy).deleteRequest(url, param, apiKey, accessToken);
     }
 

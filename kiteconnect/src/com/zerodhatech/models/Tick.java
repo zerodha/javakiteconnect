@@ -28,8 +28,8 @@ public class Tick {
     private double openPrice;
     @SerializedName("closePrice")
     private double closePrice;
-    @SerializedName("netPriceChangeFromClosingPrice")
-    private double netPriceChangeFromClosingPrice;
+    @SerializedName("change")
+    private double change;
     @SerializedName("lastTradeQuantity")
     private double lastTradedQuantity;
     @SerializedName("averageTradePrice")
@@ -44,10 +44,10 @@ public class Tick {
     private Date lastTradedTime;
     @SerializedName("openInterest")
     private double openInterest;
-    @SerializedName("dayHighOpenInterest")
-    private double dayHighOI;
-    @SerializedName("dayLowOpenInterest")
-    private double dayLowOI;
+    @SerializedName("openInterestDayHigh")
+    private double oiDayHigh;
+    @SerializedName("openInterestDayLow")
+    private double oiDayLow;
     @SerializedName("tickTimestamp")
     private Date tickTimestamp;
 
@@ -70,20 +70,20 @@ public class Tick {
         this.openInterest = openInterest;
     }
 
-    public double getDayHighOpenInterest() {
-        return dayHighOI;
+    public double getOpenInterestDayHigh() {
+        return oiDayHigh;
     }
 
-    public void setDayHighOpenInterest(double dayHighOpenInterest) {
-        this.dayHighOI = dayHighOpenInterest;
+    public void setOpenInterestDayHigh(double dayHighOpenInterest) {
+        this.oiDayHigh = dayHighOpenInterest;
     }
 
-    public double getDayLowOpenInterest() {
-        return dayLowOI;
+    public double getOpenInterestDayLow() {
+        return oiDayLow;
     }
 
-    public void setDayLowOpenInterest(double dayLowOpenInterest) {
-        this.dayLowOI = dayLowOpenInterest;
+    public void setOpenInterestDayLow(double dayLowOpenInterest) {
+        this.oiDayLow = dayLowOpenInterest;
     }
 
     public Date getTickTimestamp() {
@@ -158,12 +158,12 @@ public class Tick {
         this.closePrice = closePrice;
     }
 
-    public double getNetPriceChangeFromClosingPrice() {
-        return netPriceChangeFromClosingPrice;
+    public double getChange() {
+        return change;
     }
 
     public void setNetPriceChangeFromClosingPrice(double netPriceChangeFromClosingPrice) {
-        this.netPriceChangeFromClosingPrice = netPriceChangeFromClosingPrice;
+        this.change = netPriceChangeFromClosingPrice;
     }
 
     public double getLastTradedQuantity() {
