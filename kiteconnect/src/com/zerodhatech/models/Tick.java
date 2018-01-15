@@ -42,8 +42,8 @@ public class Tick {
     private double totalSellQuantity;
     @SerializedName("lastTradedTime")
     private Date lastTradedTime;
-    @SerializedName("openInterest")
-    private double openInterest;
+    @SerializedName("oi")
+    private double oi;
     @SerializedName("openInterestDayHigh")
     private double oiDayHigh;
     @SerializedName("openInterestDayLow")
@@ -62,12 +62,12 @@ public class Tick {
         this.lastTradedTime = lastTradedTime;
     }
 
-    public double getOpenInterest() {
-        return openInterest;
+    public double getOi() {
+        return oi;
     }
 
-    public void setOpenInterest(double openInterest) {
-        this.openInterest = openInterest;
+    public void setOi(double oi) {
+        this.oi = oi;
     }
 
     public double getOpenInterestDayHigh() {

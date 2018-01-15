@@ -26,6 +26,10 @@ public class Constants {
     public static String TRANSACTION_TYPE_BUY = "BUY";
     public static String TRANSACTION_TYPE_SELL = "SELL";
 
+    /** Position types. */
+    public static String POSITION_DAY = "day";
+    public static String POSITION_OVERNIGHT = "overnight";
+
     /** Validity types. */
     public static String VALIDITY_DAY = "DAY";
     public static String VALIDITY_IOC = "IOC";

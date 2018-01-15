@@ -57,6 +57,7 @@ public class Examples {
                 put("tag", "myTag");   //tag is optional and it cannot be more than 8 characters and only alphanumeric is allowed
             }
         };
+
         Order order = kiteConnect.placeOrder(param, "regular");
         System.out.println(order.orderId);
     }
@@ -82,8 +83,8 @@ public class Examples {
                 put("tag", "myTag");
             }
         };
-        Order order10 = kiteConnect.placeOrder(param10, "bo");
-        System.out.println(order10.orderId);
+        // Order order10 = kiteConnect.placeOrder(param10, "bo");
+        // System.out.println(order10.orderId);
     }
 
     /** Place cover order.*/
@@ -113,8 +114,8 @@ public class Examples {
                 put("product", "MIS");
             }
         };
-        Order order11 = kiteConnect.placeOrder(param11, "co");
-        System.out.println(order11.orderId);
+//        Order order11 = kiteConnect.placeOrder(param11, "co");
+//        System.out.println(order11.orderId);
     }
 
     /** Get trigger range.*/
@@ -308,7 +309,7 @@ public class Examples {
         String[] instruments = {"256265","BSE:INFY", "NSE:APOLLOTYRE", "NSE:NIFTY 50"};
         Map<String, Quote> quotes = kiteConnect.getQuote(instruments);
         System.out.println(quotes.get("NSE:APOLLOTYRE").instrumentToken+"");
-        System.out.println(quotes.get("NSE:APOLLOTYRE").openInterest+"");
+        System.out.println(quotes.get("NSE:APOLLOTYRE").oi +"");
         System.out.println(quotes.get("NSE:APOLLOTYRE").depth.buy.get(4).getPrice());
         System.out.println(quotes.get("NSE:APOLLOTYRE").timestamp);
     }
@@ -469,7 +470,7 @@ public class Examples {
                 System.out.println("ticks size "+ticks.size());
                 if(ticks.size() > 0) {
                     System.out.println("last price "+ticks.get(0).getLastTradedPrice());
-                    System.out.println("open interest "+formatter.format(ticks.get(0).getOpenInterest()));
+                    System.out.println("open interest "+formatter.format(ticks.get(0).getOi()));
                     System.out.println("day high OI "+formatter.format(ticks.get(0).getOpenInterestDayHigh()));
                     System.out.println("day low OI "+formatter.format(ticks.get(0).getOpenInterestDayLow()));
                     System.out.println("change "+formatter.format(ticks.get(0).getChange()));

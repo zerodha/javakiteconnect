@@ -1,6 +1,7 @@
 package com.zerodhatech.kiteconnect;
 
 import com.google.gson.*;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import com.zerodhatech.kiteconnect.kitehttp.KiteRequestHandler;
 import com.zerodhatech.kiteconnect.kitehttp.SessionExpiryHook;
@@ -38,6 +39,7 @@ public class KiteConnect {
     private String userId;
     private Gson gson;
 
+    private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /** Initializes KiteSDK with the api key provided for your App.
      * @param apiKey is the api key provided after creating new Kite Connect App.
@@ -46,7 +48,6 @@ public class KiteConnect {
         this.apiKey = apiKey;
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
             @Override
             public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
@@ -253,28 +254,30 @@ public class KiteConnect {
 
     /**
      * Places an order.
-     * @param params is Order params.
-     *               params.exchange - Exchange in which instrument is listed (NSE, BSE, NFO, BFO, CDS, MCX).
-     *               params.tradingsymbol - Tradingsymbol of the instrument  (ex. RELIANCE, INFY).
-     *               params.transaction_type - Transaction type (BUY or SELL).
-     *               params.quantity - Order quantity
-     *               params.price - Order Price
-     *               params.product	- Product code (NRML, MIS, CNC).
-     *               params.order_type - Order type (NRML, SL, SL-M, MARKET).
-     *               params.validity - Order validity (DAY, IOC).
-     *               params.disclosed_quantity - Disclosed quantity
-     *               params.trigger_price - Trigger price
-     *               params.squareoff_value - Square off value (only for bracket orders)
-     *               params.stoploss_value - Stoploss value (only for bracket orders)
-     *               params.trailing_stoploss - Trailing stoploss value (only for bracket orders)
-     *
+     * @param orderParams is Order params.
      * @param variety variety="regular". Order variety can be bo, co, amo, regular.
      * @return Order contains only orderId.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
      */
-    public Order placeOrder(Map<String, Object> params, String variety) throws KiteException, JSONException, IOException {
+    public Order placeOrder(OrderParams orderParams, String variety) throws KiteException, JSONException, IOException {
         String url = routes.get("orders.place").replace(":variety", variety);
+
+        Map<String, Object> params = new HashMap<>();
+
+        if(orderParams.exchange != null) params.put("exchange", orderParams.exchange);
+        if(orderParams.tradingsymbol != null) params.put("tradingsymbol", orderParams.tradingsymbol);
+        if(orderParams.transactionType != null) params.put("transaction_type", orderParams.transactionType);
+        if(orderParams.quantity != null) params.put("quantity", orderParams.quantity);
+        if(orderParams.price != null) params.put("price", orderParams.price);
+        if(orderParams.product != null) params.put("product", orderParams.product);
+        if(orderParams.orderType != null) params.put("order_type", orderParams.orderType);
+        if(orderParams.validity != null) params.put("validity", orderParams.validity);
+        if(orderParams.disclosedQuantity != null) params.put("disclosed_quantity", orderParams.disclosedQuantity);
+        if(orderParams.triggerPrice != null) params.put("trigger_price", orderParams.triggerPrice);
+        if(orderParams.squareoffValue != null) params.put("squareoff", orderParams.squareoffValue);
+        if(orderParams.stoplossValue != null) params.put("stoploss", orderParams.stoplossValue);
+        if(orderParams.trailingStoploss != null) params.put("trailing_stoploss", orderParams.trailingStoploss);
 
         JSONObject jsonObject = new KiteRequestHandler(proxy).postRequest(url, params, apiKey, accessToken);
         Order order =  new Order();
@@ -285,25 +288,32 @@ public class KiteConnect {
     /**
      * Modifies an open order.
      *
-     * @param params
-     *               params.exchange - Exchange in which instrument is listed (NSE, BSE, NFO, BFO, CDS, MCX).
-     *               params.tradingsymbol - Tradingsymbol of the instrument  (ex. RELIANCE, INFY).
-     *               params.transaction_type - Transaction type (BUY or SELL).
-     *               params.quantity - Order quantity
-     *               params.price - Order Price
-     *               params.product - Product code (NRML, MIS, CNC).
-     *               params.order_type - Order type (NRML, SL, SL-M, MARKET).
-     *               params.validity - Order validity (DAY, IOC).
-     *               params.disclosed_quantity - Disclosed quantity
-     *               params.trigger_price - Trigger price
+     * @param orderParams is Order params.
      * @param variety variety="regular". Order variety can be bo, co, amo, regular.
      * @param orderId order id of the order being modified.
      * @return Order object contains only orderId.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
      */
-    public Order modifyOrder(String orderId, Map<String, Object> params, String variety) throws KiteException, JSONException, IOException {
+    public Order modifyOrder(String orderId, OrderParams orderParams, String variety) throws KiteException, JSONException, IOException {
         String url = routes.get("orders.modify").replace(":variety", variety).replace(":order_id", orderId);
+
+        Map<String, Object> params = new HashMap<>();
+
+        if(orderParams.exchange != null) params.put("exchange", orderParams.exchange);
+        if(orderParams.tradingsymbol != null) params.put("tradingsymbol", orderParams.tradingsymbol);
+        if(orderParams.transactionType != null) params.put("transaction_type", orderParams.transactionType);
+        if(orderParams.quantity != null) params.put("quantity", orderParams.quantity);
+        if(orderParams.price != null) params.put("price", orderParams.price);
+        if(orderParams.product != null) params.put("product", orderParams.product);
+        if(orderParams.orderType != null) params.put("order_type", orderParams.orderType);
+        if(orderParams.validity != null) params.put("validity", orderParams.validity);
+        if(orderParams.disclosedQuantity != null) params.put("disclosed_quantity", orderParams.disclosedQuantity);
+        if(orderParams.triggerPrice != null) params.put("trigger_price", orderParams.triggerPrice);
+        if(orderParams.squareoffValue != null) params.put("squareoff", orderParams.squareoffValue);
+        if(orderParams.stoplossValue != null) params.put("stoploss", orderParams.stoplossValue);
+        if(orderParams.trailingStoploss != null) params.put("trailing_stoploss", orderParams.trailingStoploss);
+
         JSONObject jsonObject = new KiteRequestHandler(proxy).putRequest(url, params, apiKey, accessToken);
         Order order =  new Order();
         order.orderId = jsonObject.getJSONObject("data").getString("order_id");
@@ -330,14 +340,17 @@ public class KiteConnect {
 
     /**
      * Cancels special orders like BO, CO
-     * @param params is map that contains parent_order_id
+     * @param parentOrderId order id of first leg.
      * @param orderId order id of the order to be cancelled.
      * @param variety [variety="regular"]. Order variety can be bo, co, amo, regular.
      * @return Order object contains only orderId.
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
-    public Order cancelOrder(Map<String, Object> params, String orderId, String variety) throws KiteException, IOException {
+    public Order cancelOrder(String parentOrderId, String orderId, String variety) throws KiteException, IOException {
         String url = routes.get("orders.cancel").replace(":variety", variety).replace(":order_id", orderId);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("parent_order_id", parentOrderId);
 
         JSONObject jsonObject = new KiteRequestHandler(proxy).deleteRequest(url, params, apiKey, accessToken);
         Order order =  new Order();
@@ -426,12 +439,27 @@ public class KiteConnect {
 
     /**
      * Modifies an open position's product type.
-     * @param params include tradingsymbol, exchange, transaction_type, position_type, old_product, new_product, quantity
+     * @param tradingSymbol Tradingsymbol of the instrument  (ex. RELIANCE, INFY).
+     * @param exchange Exchange in which instrument is listed (NSE, BSE, NFO, BFO, CDS, MCX).
+     * @param transactionType Transaction type (BUY or SELL).
+     * @param positionType day or overnight position
+     * @param oldProduct Product code (NRML, MIS, CNC).
+     * @param newProduct Product code (NRML, MIS, CNC).
+     * @param quantity Order quantity
      * @return JSONObject  which will have status.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
      */
-    public JSONObject convertPosition(Map<String, Object> params) throws KiteException, JSONException, IOException {
+    public JSONObject convertPosition(String tradingSymbol, String exchange, String transactionType, String positionType, String oldProduct, String newProduct, int quantity) throws KiteException, JSONException, IOException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("tradingsymbol", tradingSymbol);
+        params.put("exchange", exchange);
+        params.put("transaction_type", transactionType);
+        params.put("position_type", positionType);
+        params.put("old_product", oldProduct);
+        params.put("new_product", newProduct);
+        params.put("quantity", quantity);
+
         KiteRequestHandler kiteRequestHandler = new KiteRequestHandler(proxy);
         return kiteRequestHandler.putRequest(routes.get("portfolio.positions.modify"), params, apiKey, accessToken);
     }
@@ -534,27 +562,35 @@ public class KiteConnect {
      * Retrieves buy or sell trigger range for Cover Orders.
      * @param exchange can be NSE, BSE, MCX
      * @param tradingSymbol is the instrument name.
-     * @param params must have transaction_type as "BUY or "SELL".
+     * @param trasactionType "BUY or "SELL".
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
      * @return TriggerRange object is returned.
      */
-    public TriggerRange getTriggerRange(String exchange, String tradingSymbol, Map<String, Object> params) throws KiteException, JSONException, IOException {
+    public TriggerRange getTriggerRange(String exchange, String tradingSymbol, String trasactionType) throws KiteException, JSONException, IOException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("transaction_type", trasactionType);
+
         String url = routes.get("market.trigger_range").replace(":exchange", exchange).replace(":tradingsymbol", tradingSymbol);
         JSONObject response = new KiteRequestHandler(proxy).getRequest(url, params, apiKey, accessToken);
         return gson.fromJson(String.valueOf(response.get("data")), TriggerRange.class);
     }
 
     /** Retrieves historical data for an instrument.
-     * @param params contains from = "yyyy-mm-dd" and to = "yyyy-mm-dd" for fetching candles between two days or
-     *               from = "yyyy-mm-dd hh:mm:ss" and to = "yyyy-mm-dd hh:mm:ss" for fetching candles between two timestamps.
-     * @param params continuous = 1 can be used for fetching continuous data of expired instruments.
+     * @param from "yyyy-mm-dd" for fetching candles between days and "yyyy-mm-dd hh:mm:ss" for fetching candles between timestamps.
+     * @param to "yyyy-mm-dd" for fetching candles between days and "yyyy-mm-dd hh:mm:ss" for fetching candles between timestamps.
+     * @param continuous set to true for fetching continuous data of expired instruments.
      * @param interval can be minute, day, 3minute, 5minute, 10minute, 15minute, 30minute, 60minute.
      * @param token is instruments token.
      * @return HistoricalData object which contains list of historical data termed as dataArrayList.
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
-    public HistoricalData getHistoricalData(Map<String, Object> params, String token, String interval) throws KiteException, IOException {
+    public HistoricalData getHistoricalData(Date from, Date to, String token, String interval, boolean continuous) throws KiteException, IOException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("from", format.format(from));
+        params.put("from", format.format(to));
+        params.put("continuous", continuous ? 1 : 0);
+
         String url = routes.get("market.historical").replace(":instrument_token", token).replace(":interval", interval);
         HistoricalData historicalData = new HistoricalData();
         historicalData.parseResponse(new KiteRequestHandler(proxy).getRequest(url, params, apiKey, accessToken));
@@ -573,11 +609,22 @@ public class KiteConnect {
     }
 
     /** Place a mutualfunds order.
-     * @param params includes tradingsymbol, transaction_type, amount.
+     * @param tradingsymbol Tradingsymbol (ISIN) of the fund.
+     * @param transactionType BUY or SELL.
+     * @param amount Amount worth of units to purchase. Not applicable on SELLs.
+     * @param quantity Quantity to SELL. Not applicable on BUYs. If the holding is less than minimum_redemption_quantity, all the units have to be sold.
+     * @param tag An optional tag to apply to an order to identify it (alphanumeric, max 8 chars).
      * @return MfOrder object contains only orderId.
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
-    public MfOrder placeMFOrder(Map<String, Object> params) throws KiteException, IOException {
+    public MfOrder placeMFOrder(String tradingsymbol, String transactionType, double amount, double quantity, String tag) throws KiteException, IOException {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("tradingsymbol", tradingsymbol);
+        params.put("transaction_type", transactionType);
+        params.put("amount", amount);
+        params.put("quantity", quantity);
+        params.put("tag", tag);
+
         JSONObject response = new KiteRequestHandler(proxy).postRequest(routes.get("mutualfunds.orders.place"), params, apiKey, accessToken);
         MfOrder mfOrder = new MfOrder();
         mfOrder.orderId = response.getJSONObject("data").getString("order_id");
@@ -615,11 +662,24 @@ public class KiteConnect {
     }
 
     /** Place a mutualfunds sip.
-     * @param params contains tradingsymbol, frequency, day, instalments, initial_amount, amount.
+     * @param tradingsymbol Tradingsymbol (ISIN) of the fund.
+     * @param frequency weekly, monthly, or quarterly.
+     * @param amount >Amount worth of units to purchase. It should be equal to or greated than minimum_additional_purchase_amount and in multiple of purchase_amount_multiplier in the instrument master.
+     * @param day If Frequency is monthly, the day of the month (1, 5, 10, 15, 20, 25) to trigger the order on.
+     * @param instalments Number of instalments to trigger. If set to -1, instalments are triggered at fixed intervals until the SIP is cancelled.
+     * @param initialAmount Amount worth of units to purchase before the SIP starts. Should be equal to or greater than minimum_purchase_amount and in multiple of purchase_amount_multiplier. This is only considered if there have been no prior investments in the target fund.
      * @return MfSip object which contains sip id and order id.
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
-    public MfSip placeMFSIP(Map<String, Object> params) throws KiteException, IOException {
+    public MfSip placeMFSIP(String tradingsymbol, String frequency, int day, int instalments, int initialAmount, double amount) throws KiteException, IOException {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("tradingsymbol", tradingsymbol);
+        params.put("frequency", frequency);
+        params.put("day", day);
+        params.put("instalments", instalments);
+        params.put("initial_amount", initialAmount);
+        params.put("amount", amount);
+
         MfSip mfSip = new MfSip();
         JSONObject response = new KiteRequestHandler(proxy).postRequest(routes.get("mutualfunds.sips.place"),params, apiKey, accessToken);
         mfSip.orderId = response.getJSONObject("data").getString("order_id");
@@ -628,12 +688,23 @@ public class KiteConnect {
     }
 
     /** Modify a mutualfunds sip.
-     * @param params contains frequency, instalments, amount, status, day.
+     * @param frequency weekly, monthly, or quarterly.
+     * @param status Pause or unpause an SIP (active or paused).
+     * @param amount >Amount worth of units to purchase. It should be equal to or greated than minimum_additional_purchase_amount and in multiple of purchase_amount_multiplier in the instrument master.
+     * @param day If Frequency is monthly, the day of the month (1, 5, 10, 15, 20, 25) to trigger the order on.
+     * @param instalments Number of instalments to trigger. If set to -1, instalments are triggered at fixed intervals until the SIP is cancelled.
      * @param sipId is the id of the sip.
      * @return returns true, if modify sip is successful else exception is thrown.
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
-    public boolean modifyMFSIP(Map<String, Object> params, String sipId) throws KiteException, IOException {
+    public boolean modifyMFSIP(String frequency, int day, int instalments, double amount, String status, String sipId) throws KiteException, IOException {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("frequency", frequency);
+        params.put("day", day);
+        params.put("instalments", instalments);
+        params.put("amount", amount);
+        params.put("status", status);
+
         new KiteRequestHandler(proxy).putRequest(routes.get("mutualfunds.sips.modify").replace(":sip_id", sipId), params, apiKey, accessToken);
         return true;
     }

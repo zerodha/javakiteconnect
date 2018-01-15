@@ -530,7 +530,7 @@ public class KiteTicker {
         }else {
             tick.setLastTradedTime(null);
         }
-        tick.setOpenInterest(convertToDouble(getBytes(bin, 48, 52)));
+        tick.setOi(convertToDouble(getBytes(bin, 48, 52)));
         tick.setOpenInterestDayHigh(convertToDouble(getBytes(bin, 52, 56)));
         tick.setOpenInterestDayLow(convertToDouble(getBytes(bin, 56, 60)));
         long tickTimeStamp = convertToLong(getBytes(bin, 60, 64)) * 1000;

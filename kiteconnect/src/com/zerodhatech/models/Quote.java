@@ -17,8 +17,8 @@ public class Quote {
     public Date lastTradedTime;
     @SerializedName("net_change")
     public double change;
-    @SerializedName("open_interest")
-    public double openInterest;
+    @SerializedName("oi")
+    public double oi;
     @SerializedName("sell_quantity")
     public double sellQuantity;
     @SerializedName("last_price")
