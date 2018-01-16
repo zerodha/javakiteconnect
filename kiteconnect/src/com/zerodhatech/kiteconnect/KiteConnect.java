@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import com.zerodhatech.kiteconnect.kitehttp.KiteRequestHandler;
 import com.zerodhatech.kiteconnect.kitehttp.SessionExpiryHook;
 import com.zerodhatech.kiteconnect.kitehttp.exceptions.KiteException;
+import com.zerodhatech.kiteconnect.utils.Constants;
 import com.zerodhatech.models.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.json.JSONException;
@@ -241,17 +242,6 @@ public class KiteConnect {
         return gson.fromJson(String.valueOf(response.get("data")), type);
     }
 
-    /** Gets instruments margins for equity, commodity, currency, futures.
-     * @return List<InstrumetMargin> is the list of instruments margins data.
-     * @throws IOException is thrown when there is conection error.
-     * @throws KiteException is thrown for all kite trade related errors.
-     * */
-    public List<InstrumentMargin> getInstrumentsMargins(String segment) throws IOException, KiteException {
-        String url = routes.get("instruments.margins").replace("segment", segment);
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(url, apiKey, accessToken);
-        return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), InstrumentMargin[].class));
-    }
-
     /**
      * Places an order.
      * @param orderParams is Order params.
@@ -275,9 +265,10 @@ public class KiteConnect {
         if(orderParams.validity != null) params.put("validity", orderParams.validity);
         if(orderParams.disclosedQuantity != null) params.put("disclosed_quantity", orderParams.disclosedQuantity);
         if(orderParams.triggerPrice != null) params.put("trigger_price", orderParams.triggerPrice);
-        if(orderParams.squareoffValue != null) params.put("squareoff", orderParams.squareoffValue);
-        if(orderParams.stoplossValue != null) params.put("stoploss", orderParams.stoplossValue);
+        if(orderParams.squareoff != null) params.put("squareoff", orderParams.squareoff);
+        if(orderParams.stoploss != null) params.put("stoploss", orderParams.stoploss);
         if(orderParams.trailingStoploss != null) params.put("trailing_stoploss", orderParams.trailingStoploss);
+        if(orderParams.tag != null) params.put("tag", orderParams.tag);
 
         JSONObject jsonObject = new KiteRequestHandler(proxy).postRequest(url, params, apiKey, accessToken);
         Order order =  new Order();
@@ -310,9 +301,10 @@ public class KiteConnect {
         if(orderParams.validity != null) params.put("validity", orderParams.validity);
         if(orderParams.disclosedQuantity != null) params.put("disclosed_quantity", orderParams.disclosedQuantity);
         if(orderParams.triggerPrice != null) params.put("trigger_price", orderParams.triggerPrice);
-        if(orderParams.squareoffValue != null) params.put("squareoff", orderParams.squareoffValue);
-        if(orderParams.stoplossValue != null) params.put("stoploss", orderParams.stoplossValue);
+        if(orderParams.squareoff != null) params.put("squareoff", orderParams.squareoff);
+        if(orderParams.stoploss != null) params.put("stoploss", orderParams.stoploss);
         if(orderParams.trailingStoploss != null) params.put("trailing_stoploss", orderParams.trailingStoploss);
+        if(orderParams.parentOrderId != null) params.put("parent_order_id", orderParams.parentOrderId);
 
         JSONObject jsonObject = new KiteRequestHandler(proxy).putRequest(url, params, apiKey, accessToken);
         Order order =  new Order();
@@ -346,7 +338,7 @@ public class KiteConnect {
      * @return Order object contains only orderId.
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
-    public Order cancelOrder(String parentOrderId, String orderId, String variety) throws KiteException, IOException {
+    public Order cancelOrder(String orderId, String parentOrderId, String variety) throws KiteException, IOException {
         String url = routes.get("orders.cancel").replace(":variety", variety).replace(":order_id", orderId);
 
         Map<String, Object> params = new HashMap<>();
@@ -588,7 +580,7 @@ public class KiteConnect {
     public HistoricalData getHistoricalData(Date from, Date to, String token, String interval, boolean continuous) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<>();
         params.put("from", format.format(from));
-        params.put("from", format.format(to));
+        params.put("to", format.format(to));
         params.put("continuous", continuous ? 1 : 0);
 
         String url = routes.get("market.historical").replace(":instrument_token", token).replace(":interval", interval);
@@ -622,7 +614,7 @@ public class KiteConnect {
         params.put("tradingsymbol", tradingsymbol);
         params.put("transaction_type", transactionType);
         params.put("amount", amount);
-        params.put("quantity", quantity);
+        if(transactionType.equals(Constants.TRANSACTION_TYPE_SELL)) params.put("quantity", quantity);
         params.put("tag", tag);
 
         JSONObject response = new KiteRequestHandler(proxy).postRequest(routes.get("mutualfunds.orders.place"), params, apiKey, accessToken);
@@ -665,17 +657,17 @@ public class KiteConnect {
      * @param tradingsymbol Tradingsymbol (ISIN) of the fund.
      * @param frequency weekly, monthly, or quarterly.
      * @param amount >Amount worth of units to purchase. It should be equal to or greated than minimum_additional_purchase_amount and in multiple of purchase_amount_multiplier in the instrument master.
-     * @param day If Frequency is monthly, the day of the month (1, 5, 10, 15, 20, 25) to trigger the order on.
+     * @param installmentDay If Frequency is monthly, the day of the month (1, 5, 10, 15, 20, 25) to trigger the order on.
      * @param instalments Number of instalments to trigger. If set to -1, instalments are triggered at fixed intervals until the SIP is cancelled.
      * @param initialAmount Amount worth of units to purchase before the SIP starts. Should be equal to or greater than minimum_purchase_amount and in multiple of purchase_amount_multiplier. This is only considered if there have been no prior investments in the target fund.
      * @return MfSip object which contains sip id and order id.
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
-    public MfSip placeMFSIP(String tradingsymbol, String frequency, int day, int instalments, int initialAmount, double amount) throws KiteException, IOException {
+    public MfSip placeMFSIP(String tradingsymbol, String frequency, int installmentDay, int instalments, int initialAmount, double amount) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("tradingsymbol", tradingsymbol);
         params.put("frequency", frequency);
-        params.put("day", day);
+        params.put("instalment_day", installmentDay);
         params.put("instalments", instalments);
         params.put("initial_amount", initialAmount);
         params.put("amount", amount);

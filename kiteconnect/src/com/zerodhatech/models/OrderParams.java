@@ -56,15 +56,26 @@ public class OrderParams {
     /**
      * Square off value (only for bracket orders)
      */
-    public Double squareoffValue;
+    public Double squareoff;
 
     /**
      * Stoploss value (only for bracket orders)
      */
-    public Double stoplossValue;
+    public Double stoploss;
 
     /**
      * Trailing stoploss value (only for bracket orders)
      */
     public Double trailingStoploss;
+
+    /**
+     * Tag: field for users to tag orders. It accepts alphanumeric 8 character String values.
+     */
+     public String tag;
+
+     /**
+      * Parent order id is used to send order modify request.
+      */
+     public String parentOrderId;
+
 }

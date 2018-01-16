@@ -189,6 +189,22 @@ For more details about different mode of quotes and subscribing for them, take a
  | cancelSip | cancelSIP |
  | getMfInstruments | getMFInstruments |
  
+ #### Method with signature change
+ 
+ | version 2 |
+ | :---: |
+ | placeOrder |
+ | modifyOrder |
+ | cancelOrder |
+ | convertPosition |
+ | getTriggerRange |
+ | getHistoricalData |
+ | placeMFOrder |
+ | placeMFSIP |
+ | modifyMFSIP |
+ 
+ For more details about each method go to [KiteConnect.java](https://github.com/zerodhatech/javakiteconnect/blob/kite3/kiteconnect/src/com/zerodhatech/kiteconnect/KiteConnect.java)
+ 
  #### Funds (model)
  
  | version 2 | version 3 |

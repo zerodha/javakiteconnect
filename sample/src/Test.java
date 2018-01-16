@@ -19,7 +19,7 @@ public class Test {
         try {
                 // First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteConnect api call.
                 // Initialize KiteSdk with your apiKey.
-                KiteConnect kiteConnect = new KiteConnect("xxxyyxxyyxzz");
+                KiteConnect kiteConnect = new KiteConnect("zxxxxxxxxxxxxxyyy");
 
                 // Set userId
                 kiteConnect.setUserId("xxxzzzz");
@@ -42,7 +42,7 @@ public class Test {
                    A request token is valid for only a couple of minutes and can be used only once. An access token is valid for one whole day. Don't call this method for every app run.
                    Once an access token is received it should be stored in preferences or database for further usage.
                  */
-                User user =  kiteConnect.generateSession("xxxyyyyzzzzzz", "xxxxxxx");
+                User user =  kiteConnect.generateSession("xxxxxyyyzzzz", "zzxxxxyyyyyyyyyy");
                 kiteConnect.setAccessToken(user.accessToken);
                 kiteConnect.setPublicToken(user.publicToken);
 
@@ -54,15 +54,27 @@ public class Test {
 
                 examples.placeOrder(kiteConnect);
 
+                examples.modifyOrder(kiteConnect);
+
                 examples.cancelOrder(kiteConnect);
 
                 examples.placeBracketOrder(kiteConnect);
 
                 examples.modifyFirstLegBo(kiteConnect);
 
+                examples.modifySecondLegBoSLM(kiteConnect);
+
+                examples.modifySecondLegBoLIMIT(kiteConnect);
+
+                examples.exitBracketOrder(kiteConnect);
+
                 examples.getTriggerRange(kiteConnect);
 
                 examples.placeCoverOrder(kiteConnect);
+
+                examples.converPosition(kiteConnect);
+
+                examples.getHistoricalData(kiteConnect);
 
                 examples.getOrders(kiteConnect);
 
@@ -72,27 +84,15 @@ public class Test {
 
                 examples.getTradesWithOrderId(kiteConnect);
 
-                examples.modifyOrder(kiteConnect);
-
-                examples.modifySecondLegBoSLM(kiteConnect);
-
-                examples.modifySecondLegBoLIMIT(kiteConnect);
-
-                examples.exitBracketOrder(kiteConnect);
-
                 examples.getPositions(kiteConnect);
 
                 examples.getHoldings(kiteConnect);
-
-                examples.converPosition(kiteConnect);
 
                 examples.getAllInstruments(kiteConnect);
 
                 examples.getInstrumentsForExchange(kiteConnect);
 
                 examples.getQuote(kiteConnect);
-
-                examples.getHistoricalData(kiteConnect);
 
                 examples.getOHLC(kiteConnect);
 
