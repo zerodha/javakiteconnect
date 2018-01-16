@@ -10,6 +10,11 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 - [Java library documentation](https://kite.trade/docs/javakiteconnect)
 
 ##Usage
+
+
+
+> **This version will be deprecated soon. Please refer to the [kite3](https://github.com/zerodhatech/javakiteconnect/tree/kite3) branch for the Kite Connect 3 API and use the JAR in the dist directory.**
+
 - [Download jar file](https://github.com/rainmattertech/javakiteconnect/blob/master/dist/kiteconnect.jar) and include it in your build path.
 
 - Include com.rainmatter.kiteconnect into build path from maven. Use version 1.4.5
