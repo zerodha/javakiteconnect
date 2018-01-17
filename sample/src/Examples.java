@@ -391,7 +391,7 @@ public class Examples {
         /** To get live price use websocket connection.
          * It is recommended to use only one websocket connection at any point of time and make sure you stop connection, once user goes out of app.
          * custom url points to new endpoint which can be used till complete Kite Connect 3 migration is done. */
-        KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.getAccessToken(), kiteConnect.getApiKey(), "wss://websocket.kite.trade/v3");
+        KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.getAccessToken(), kiteConnect.getApiKey());
 
         tickerProvider.setOnConnectedListener(new OnConnect() {
             @Override

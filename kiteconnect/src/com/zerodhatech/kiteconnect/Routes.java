@@ -41,7 +41,7 @@ public class Routes {
     public Map<String, String> routes;
     private static String _rootUrl = "https://api.kite.trade";
     private static String  _loginUrl = "https://kite.trade/connect/login";
-    private static String _wsuri = "wss://websocket.kite.trade/"+"?user_id=:user_id&access_token=:access_token&api_key=:api_key";
+    private static String _wsuri = "wss://ws.kite.trade/"+"?user_id=:user_id&access_token=:access_token&api_key=:api_key";
 
     // Initialize all routes,
        public Routes(){

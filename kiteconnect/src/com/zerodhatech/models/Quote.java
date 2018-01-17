@@ -22,7 +22,7 @@ public class Quote {
     @SerializedName("sell_quantity")
     public double sellQuantity;
     @SerializedName("last_price")
-    public double lastTradedPrice;
+    public double lastPrice;
     @SerializedName("buy_quantity")
     public double buyQuantity;
     @SerializedName("ohlc")

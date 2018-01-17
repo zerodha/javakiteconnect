@@ -74,12 +74,10 @@ For more details, take a look at Examples.java in sample directory.
 
 ## WebSocket live streaming data
 ```java
-
-/** To get live price use KiteTicker websocket connection. 
-It is recommended to use only one websocket connection at any point of time and make sure you stop connection, once user goes out of app.*/
-ArrayList tokens = new ArrayList<>();
-tokens.add(53287175);
-KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.getAccessToken(), kiteConnect.getApiKey(), "wss://websocket.kite.trade/v3");
+ /** To get live price use websocket connection.
+         * It is recommended to use only one websocket connection at any point of time and make sure you stop connection, once user goes out of app.
+         * custom url points to new endpoint which can be used till complete Kite Connect 3 migration is done. */
+        KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.getAccessToken(), kiteConnect.getApiKey());
 
         tickerProvider.setOnConnectedListener(new OnConnect() {
             @Override
@@ -114,9 +112,10 @@ KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.
                 System.out.println("ticks size "+ticks.size());
                 if(ticks.size() > 0) {
                     System.out.println("last price "+ticks.get(0).getLastTradedPrice());
-                    System.out.println("open interest "+formatter.format(ticks.get(0).getOpenInterest()));
-                    System.out.println("day high OI "+formatter.format(ticks.get(0).getDayHighOpenInterest()));
-                    System.out.println("day low OI "+formatter.format(ticks.get(0).getDayLowOpenInterest()));
+                    System.out.println("open interest "+formatter.format(ticks.get(0).getOi()));
+                    System.out.println("day high OI "+formatter.format(ticks.get(0).getOpenInterestDayHigh()));
+                    System.out.println("day low OI "+formatter.format(ticks.get(0).getOpenInterestDayLow()));
+                    System.out.println("change "+formatter.format(ticks.get(0).getChange()));
                     System.out.println("tick timestamp "+ticks.get(0).getTickTimestamp());
                     System.out.println("tick timestamp date "+ticks.get(0).getTickTimestamp());
                     System.out.println("last traded time "+ticks.get(0).getLastTradedTime());
@@ -131,7 +130,7 @@ KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.
         //set maximum retry interval in seconds
         tickerProvider.setMaximumRetryInterval(30);
 
-        /** connects to com.rainmatter.com.rainmatter.ticker server for getting live quotes*/
+        /** connects to com.zerodhatech.com.zerodhatech.ticker server for getting live quotes*/
         tickerProvider.connect();
 
         /** You can check, if websocket connection is open or not using the following method.*/
@@ -148,8 +147,8 @@ KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.
         // Unsubscribe for a token.
         tickerProvider.unsubscribe(tokens);
 
-        // After using com.rainmatter.com.rainmatter.ticker, close websocket connection.
-       tickerProvider.disconnect();
+        // After using com.zerodhatech.com.zerodhatech.ticker, close websocket connection.
+        tickerProvider.disconnect();
 
 ```
 For more details about different mode of quotes and subscribing for them, take a look at Examples in sample directory.
@@ -291,7 +290,7 @@ For more details about different mode of quotes and subscribing for them, take a
   ```
   Version 3:
   ```java
-  KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.getAccessToken(), kiteConnect.getApiKey(), "wss://websocket.kite.trade/v3");
+  KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.getAccessToken(), kiteConnect.getApiKey());
   ```  
   * Order postbacks are now streamed on Kite Ticker.
    
@@ -318,6 +317,7 @@ For more details about different mode of quotes and subscribing for them, take a
   
   * Quote will accept multiple params and returns a map of Quote model.
   * Added new fields open interest, tick timestamp, last traded time, average price, day high OI, day low OI.
+  * lastTradedPrice is now lastPrice.
   
   | version 3 |
   | :---: |

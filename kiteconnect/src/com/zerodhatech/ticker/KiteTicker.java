@@ -64,24 +64,6 @@ public class KiteTicker {
     private int nextReconnectInterval = 0;
     private int maxRetryInterval = 30000;
     private Map<Long, String> modeMap;
-    private String customRootUrl = null;
-
-    public KiteTicker(String userId, String accessToken, String apiKey, String customUrl) {
-        customRootUrl = customUrl;
-
-        if (wsuri == null) {
-            createUrl(userId, accessToken, apiKey);
-        }
-
-        try {
-            ws = new WebSocketFactory().createSocket(wsuri);
-        } catch (IOException e) {
-            onErrorListener.onError(e);
-            return;
-        }
-        ws.addListener(getWebscoketAdapter());
-        modeMap = new HashMap<>();
-    }
 
     public KiteTicker(String userId, String accessToken, String apiKey) {
 
@@ -92,7 +74,9 @@ public class KiteTicker {
         try {
             ws = new WebSocketFactory().createSocket(wsuri);
         } catch (IOException e) {
-            onErrorListener.onError(e);
+            if(onErrorListener != null) {
+                onErrorListener.onError(e);
+            }
             return;
         }
         ws.addListener(getWebscoketAdapter());
@@ -174,11 +158,7 @@ public class KiteTicker {
 
     /** Creates url for websocket connection.*/
     private void createUrl(String userId, String accessToken, String apiKey){
-        if(customRootUrl == null) {
-            wsuri = new Routes().getWsuri().replace(":user_id", userId).replace(":access_token", accessToken).replace(":api_key", apiKey);
-        }else {
-            wsuri = customRootUrl+"?user_id="+userId+"&access_token="+accessToken+"&api_key="+apiKey;
-        }
+        wsuri = new Routes().getWsuri().replace(":user_id", userId).replace(":access_token", accessToken).replace(":api_key", apiKey);
     }
     /** Set listener for listening to ticks.
      * @param onTickerArrivalListener is listener which listens for each tick.*/
@@ -213,7 +193,9 @@ public class KiteTicker {
             ws.connect();
         } catch (WebSocketException e){
             e.printStackTrace();
-            onErrorListener.onError(e);
+            if(onErrorListener != null) {
+                onErrorListener.onError(e);
+            }
             doReconnect();
         }
     }
@@ -252,7 +234,9 @@ public class KiteTicker {
                     super.onBinaryMessage(websocket, binary);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    onErrorListener.onError(e);
+                    if(onErrorListener != null) {
+                        onErrorListener.onError(e);
+                    }
                 }
 
                 ArrayList<Tick> tickerData = parseBinary(binary);
@@ -270,7 +254,9 @@ public class KiteTicker {
                     lastPongAt = date.getTime();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    onErrorListener.onError(e);
+                    if(onErrorListener != null) {
+                        onErrorListener.onError(e);
+                    }
                 }
             }
 
@@ -301,7 +287,9 @@ public class KiteTicker {
                     super.onError(websocket, cause);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    onErrorListener.onError(e);
+                    if(onErrorListener != null) {
+                        onErrorListener.onError(e);
+                    }
                 }
             }
 
@@ -385,10 +373,14 @@ public class KiteTicker {
                     modeMap.put(tokens.get(i), modeQuote);
                 }
             }else {
-                onErrorListener.onError(new KiteException("ticker is not connected", 504));
+                if(onErrorListener != null) {
+                    onErrorListener.onError(new KiteException("ticker is not connected", 504));
+                }
             }
         }else {
-            onErrorListener.onError(new KiteException("ticker is null not connected", 504));
+            if(onErrorListener != null) {
+                onErrorListener.onError(new KiteException("ticker is null not connected", 504));
+            }
         }
     }
 
@@ -621,7 +613,9 @@ public class KiteTicker {
         try {
             ws = new WebSocketFactory().createSocket(wsuri);
         } catch (IOException e) {
-            onErrorListener.onError(e);
+            if(onErrorListener != null) {
+                onErrorListener.onError(e);
+            }
                 return;
         }
         ws.addListener(getWebscoketAdapter());
