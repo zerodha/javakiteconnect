@@ -4,8 +4,7 @@ package com.zerodhatech.ticker;
  * Created by H1ccup on 10/09/16.
  */
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.neovisionaries.ws.client.*;
 import com.zerodhatech.kiteconnect.Routes;
 import com.zerodhatech.kiteconnect.kitehttp.exceptions.KiteException;
@@ -17,8 +16,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -677,15 +679,31 @@ public class KiteTicker {
             String type = data.getString("type");
             if(type.equals("order")) {
                 if(orderUpdateListener != null) {
-                    GsonBuilder gsonBuilder = new GsonBuilder();
-                    Gson gson = gsonBuilder.create();
-                    orderUpdateListener.onOrderUpdate(gson.fromJson(String.valueOf(data.get("data")), Order.class));
+                    orderUpdateListener.onOrderUpdate(getOrder(data));
                 }
             }
 
         }catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public Order getOrder(JSONObject data) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+
+            @Override
+            public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+                try {
+                    return format.parse(jsonElement.getAsString());
+                } catch (ParseException e) {
+                    return null;
+                }
+            }
+        });
+        Gson gson = gsonBuilder.setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        return gson.fromJson(String.valueOf(data.get("data")), Order.class);
     }
 
 }
