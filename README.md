@@ -154,14 +154,43 @@ KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.
 ```
 For more details about different mode of quotes and subscribing for them, take a look at Examples in sample directory.
 
-## Breaking changes from version 2 to version 3
+ ## Breaking changes from version 2 to version 3
 
-#### Place order (bracket order) parameters
+ #### Place order (bracket order) parameters
 
 | version 2 | version 3 |
 | :---: | :---:|
 | squareoff_value | squareoff |
 | stoploss_value | stoploss |
+
+ #### Model name changes
+ 
+ | version 2 | version 3 |
+ | :---: | :---:|
+ | MfHolding | MFHolding |
+ | MfInstrument | MFInstrument |
+ | MfOrder | MFOrder |
+ | MfSip | MFSIP |
+
+ ##### Order (model)
+ 
+ * The orderTimestamp is now Date type.
+ * The exchangeTimestamp is now Date type.
+ 
+ #### Trades (model)
+ 
+ * The orderTimestamp is now fillTimestamp.
+ * The exchangeTimestamp is now Date type.
+ 
+ #### MFOrder (model)
+
+ * The orderTimestamp is now Date type.
+ * The exchangeTimestamp is now Date type. 
+ 
+ #### MFSIP (model)
+ 
+ * The created is now Date type.
+ * The Date is now Date type.
 
  #### Package name changes
  
@@ -223,6 +252,8 @@ For more details about different mode of quotes and subscribing for them, take a
   | passwordReset | **NA** |
   | memberId | **NA** |
   | **NA** | apiKey |
+  
+ * loginTime is now of Date type.
   
  #### Position (model)
  

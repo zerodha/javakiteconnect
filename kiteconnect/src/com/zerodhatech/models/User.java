@@ -1,11 +1,15 @@
 package com.zerodhatech.models;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.google.gson.annotations.SerializedName;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * A wrapper for user and session details.
@@ -26,7 +30,7 @@ public class User {
     @SerializedName("user_id")
     public String userId;
     @SerializedName("login_time")
-    public String loginTime;
+    public Date loginTime;
     @SerializedName("api_key")
     public String apiKey;
     public String[] exchanges;
@@ -44,8 +48,20 @@ public class User {
      * @return User is the parsed data.
      * */
     public User parseResponse(JSONObject response) throws JSONException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
+        gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+
+            @Override
+            public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+                try {
+                    return format.parse(jsonElement.getAsString());
+                } catch (ParseException e) {
+                    return null;
+                }
+            }
+        });
+        Gson gson = gsonBuilder.setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         User user = gson.fromJson(String.valueOf(response.get("data")), User.class);
         user = parseArray(user, response.getJSONObject("data"));
         return user;

@@ -3,7 +3,7 @@ package com.zerodhatech.models;
 /**
  * A wrapper for Mutualfunds instrument.
  */
-public class MfInstrument {
+public class MFInstrument {
     public String tradingsymbol, amc, name;
     public int purchase_allowed, redemption_allowed;
     public double minimum_purchase_amount, purchase_amount_multiplier, minimum_additional_purchase_amount, minimum_redemption_quantity;

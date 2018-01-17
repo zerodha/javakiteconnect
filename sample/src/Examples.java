@@ -125,7 +125,7 @@ public class Examples {
         // Get orders returns order model which will have list of orders inside, which can be accessed as follows,
         List<Order> orders = kiteConnect.getOrders();
         for(int i = 0; i< orders.size(); i++){
-            System.out.println(orders.get(i).tradingSymbol+" "+orders.get(i).orderId+" "+orders.get(i).parentOrderId+" "+orders.get(i).orderType+" "+orders.get(i).averagePrice);
+            System.out.println(orders.get(i).tradingSymbol+" "+orders.get(i).orderId+" "+orders.get(i).parentOrderId+" "+orders.get(i).orderType+" "+orders.get(i).averagePrice+" "+orders.get(i).exchangeTimestamp);
         }
         System.out.println("list of orders size is "+orders.size());
     }
@@ -143,6 +143,9 @@ public class Examples {
     public void getTrades(KiteConnect kiteConnect) throws KiteException, IOException {
         // Returns tradebook.
         List<Trade> trades = kiteConnect.getTrades();
+        for (int i=0; i < trades.size(); i++) {
+            System.out.println(trades.get(i).tradingSymbol+" "+trades.size());
+        }
         System.out.println(trades.size());
     }
 
@@ -324,14 +327,14 @@ public class Examples {
 
     /** Retrieve mf instrument dump */
     public void getMFInstruments(KiteConnect kiteConnect) throws KiteException, IOException {
-        List<MfInstrument> mfList = kiteConnect.getMFInstruments();
+        List<MFInstrument> mfList = kiteConnect.getMFInstruments();
         System.out.println("size of mf instrument list: "+mfList.size());
     }
 
     /* Get all mutualfunds holdings */
     public void getMFHoldings(KiteConnect kiteConnect) throws KiteException, IOException {
-        List<MfHolding> mfHoldings = kiteConnect.getMFHoldings();
-        System.out.println("mf holdings "+mfHoldings.size());
+        List<MFHolding> MFHoldings = kiteConnect.getMFHoldings();
+        System.out.println("mf holdings "+ MFHoldings.size());
     }
 
     /* Place a mutualfunds order */
@@ -347,8 +350,8 @@ public class Examples {
 
     /* retrieve all mutualfunds orders */
     public void getMFOrders(KiteConnect kiteConnect) throws KiteException, IOException {
-        List<MfOrder> mfOrders = kiteConnect.getMFOrders();
-        System.out.println("mf orders: "+mfOrders.get(0).orderId+ " "+mfOrders.get(0).tradingsymbol);
+        List<MFOrder> MFOrders = kiteConnect.getMFOrders();
+        System.out.println("mf orders: "+ MFOrders.size());
     }
 
     /* retrieve individual mutualfunds order */
@@ -374,7 +377,8 @@ public class Examples {
 
     /* retrieve all mutualfunds sip */
     public void getMFSIPS(KiteConnect kiteConnect) throws KiteException, IOException {
-        System.out.println("mf sips: "+ kiteConnect.getMFSIPs().size());
+        List<MFSIP> sips = kiteConnect.getMFSIPs();
+        System.out.println("mf sips: "+ sips.size());
     }
 
     /* retrieve individual mutualfunds sip */

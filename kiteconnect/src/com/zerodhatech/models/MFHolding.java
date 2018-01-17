@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * A wrapper for Mutualfunds holding.
  */
-public class MfHolding {
+public class MFHolding {
     @SerializedName("quantity")
     public double quantity;
     @SerializedName("fund")

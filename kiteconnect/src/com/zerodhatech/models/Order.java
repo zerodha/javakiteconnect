@@ -2,6 +2,8 @@ package com.zerodhatech.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 /**
 *   A wrapper for order.
 */
@@ -42,9 +44,9 @@ public class Order {
     @SerializedName("pending_quantity")
     public String pendingQuantity;
     @SerializedName("order_timestamp")
-    public String orderTimestamp;
+    public Date orderTimestamp;
     @SerializedName("exchange_timestamp")
-    public String exchangeTimestamp;
+    public Date exchangeTimestamp;
     @SerializedName("average_price")
     public String averagePrice;
     @SerializedName("transaction_type")

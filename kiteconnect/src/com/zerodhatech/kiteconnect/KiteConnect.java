@@ -1,7 +1,6 @@
 package com.zerodhatech.kiteconnect;
 
 import com.google.gson.*;
-import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import com.zerodhatech.kiteconnect.kitehttp.KiteRequestHandler;
 import com.zerodhatech.kiteconnect.kitehttp.SessionExpiryHook;
@@ -594,7 +593,7 @@ public class KiteConnect {
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws IOException is thrown when there is connection related errors.
      * */
-    public List<MfInstrument> getMFInstruments() throws KiteException, IOException{
+    public List<MFInstrument> getMFInstruments() throws KiteException, IOException{
         Map<String, Object> params = new HashMap<String, Object>();
         KiteRequestHandler kiteRequestHandler = new KiteRequestHandler(proxy);
         return readMfCSV(kiteRequestHandler.getCSVRequest(routes.get("mutualfunds.instruments"), apiKey, accessToken));
@@ -606,10 +605,10 @@ public class KiteConnect {
      * @param amount Amount worth of units to purchase. Not applicable on SELLs.
      * @param quantity Quantity to SELL. Not applicable on BUYs. If the holding is less than minimum_redemption_quantity, all the units have to be sold.
      * @param tag An optional tag to apply to an order to identify it (alphanumeric, max 8 chars).
-     * @return MfOrder object contains only orderId.
+     * @return MFOrder object contains only orderId.
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
-    public MfOrder placeMFOrder(String tradingsymbol, String transactionType, double amount, double quantity, String tag) throws KiteException, IOException {
+    public MFOrder placeMFOrder(String tradingsymbol, String transactionType, double amount, double quantity, String tag) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("tradingsymbol", tradingsymbol);
         params.put("transaction_type", transactionType);
@@ -618,9 +617,9 @@ public class KiteConnect {
         params.put("tag", tag);
 
         JSONObject response = new KiteRequestHandler(proxy).postRequest(routes.get("mutualfunds.orders.place"), params, apiKey, accessToken);
-        MfOrder mfOrder = new MfOrder();
-        mfOrder.orderId = response.getJSONObject("data").getString("order_id");
-        return mfOrder;
+        MFOrder MFOrder = new MFOrder();
+        MFOrder.orderId = response.getJSONObject("data").getString("order_id");
+        return MFOrder;
     }
 
     /** If cancel is successful then api will respond as 200 and send back true else it will be sent back to user as KiteException.
@@ -638,9 +637,9 @@ public class KiteConnect {
      * @return List of all the mutualfunds orders.
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
-    public List<MfOrder> getMFOrders() throws KiteException, IOException {
+    public List<MFOrder> getMFOrders() throws KiteException, IOException {
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.orders"), apiKey, accessToken);
-        return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), MfOrder[].class));
+        return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), MFOrder[].class));
     }
 
     /** Retrieves individual mutualfunds order.
@@ -648,9 +647,9 @@ public class KiteConnect {
      * @return returns a single mutualfunds object with all the parameters.
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
-    public MfOrder getMFOrder(String orderId) throws KiteException, IOException {
+    public MFOrder getMFOrder(String orderId) throws KiteException, IOException {
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.order").replace(":order_id", orderId), apiKey, accessToken);
-        return gson.fromJson(response.get("data").toString(), MfOrder.class);
+        return gson.fromJson(response.get("data").toString(), MFOrder.class);
     }
 
     /** Place a mutualfunds sip.
@@ -660,10 +659,10 @@ public class KiteConnect {
      * @param installmentDay If Frequency is monthly, the day of the month (1, 5, 10, 15, 20, 25) to trigger the order on.
      * @param instalments Number of instalments to trigger. If set to -1, instalments are triggered at fixed intervals until the SIP is cancelled.
      * @param initialAmount Amount worth of units to purchase before the SIP starts. Should be equal to or greater than minimum_purchase_amount and in multiple of purchase_amount_multiplier. This is only considered if there have been no prior investments in the target fund.
-     * @return MfSip object which contains sip id and order id.
+     * @return MFSIP object which contains sip id and order id.
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
-    public MfSip placeMFSIP(String tradingsymbol, String frequency, int installmentDay, int instalments, int initialAmount, double amount) throws KiteException, IOException {
+    public MFSIP placeMFSIP(String tradingsymbol, String frequency, int installmentDay, int instalments, int initialAmount, double amount) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("tradingsymbol", tradingsymbol);
         params.put("frequency", frequency);
@@ -672,11 +671,11 @@ public class KiteConnect {
         params.put("initial_amount", initialAmount);
         params.put("amount", amount);
 
-        MfSip mfSip = new MfSip();
+        MFSIP MFSIP = new MFSIP();
         JSONObject response = new KiteRequestHandler(proxy).postRequest(routes.get("mutualfunds.sips.place"),params, apiKey, accessToken);
-        mfSip.orderId = response.getJSONObject("data").getString("order_id");
-        mfSip.sipId = response.getJSONObject("data").getString("sip_id");
-        return mfSip;
+        MFSIP.orderId = response.getJSONObject("data").getString("order_id");
+        MFSIP.sipId = response.getJSONObject("data").getString("sip_id");
+        return MFSIP;
     }
 
     /** Modify a mutualfunds sip.
@@ -715,28 +714,28 @@ public class KiteConnect {
      * @return List of sips.
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
-    public List<MfSip> getMFSIPs() throws KiteException, IOException {
+    public List<MFSIP> getMFSIPs() throws KiteException, IOException {
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.sips"), apiKey, accessToken);
-        return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), MfSip[].class));
+        return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), MFSIP[].class));
     }
 
     /** Retrieve an individual sip.
      * @param sipId is the id of a particular sip.
-     * @return MfSip object which contains all the details of the sip.
+     * @return MFSIP object which contains all the details of the sip.
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
-    public MfSip getMFSIP(String sipId) throws KiteException, IOException {
+    public MFSIP getMFSIP(String sipId) throws KiteException, IOException {
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.sip").replace(":sip_id", sipId), apiKey, accessToken);
-        return gson.fromJson(response.get("data").toString(), MfSip.class);
+        return gson.fromJson(response.get("data").toString(), MFSIP.class);
     }
 
     /** Retrieve all the mutualfunds holdings.
      * @return List of mutualfunds holdings.
      * @throws KiteException is thrown for all Kite trade related errors.
      * */
-    public List<MfHolding> getMFHoldings() throws KiteException, IOException {
+    public List<MFHolding> getMFHoldings() throws KiteException, IOException {
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.holdings"), apiKey, accessToken);
-        return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), MfHolding[].class));
+        return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), MFHolding[].class));
     }
     /**
      * Logs out user by invalidating the access token.
@@ -802,7 +801,7 @@ public class KiteConnect {
      * @return  returns list of mutualfunds instruments.
      * @throws IOException is thrown when there is connection related error.
      * */
-    private List<MfInstrument> readMfCSV(String input) throws IOException{
+    private List<MFInstrument> readMfCSV(String input) throws IOException{
         ICsvBeanReader beanReader = null;
         File temp = File.createTempFile("tempfile", ".tmp");
         BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
@@ -812,9 +811,9 @@ public class KiteConnect {
         beanReader = new CsvBeanReader(new FileReader(temp), CsvPreference.STANDARD_PREFERENCE);
         String[] header = beanReader.getHeader(true);
         CellProcessor[] processors = getMfProcessors();
-        MfInstrument instrument;
-        List<MfInstrument> instruments = new ArrayList<>();
-        while((instrument = beanReader.read(MfInstrument.class, header, processors)) != null ) {
+        MFInstrument instrument;
+        List<MFInstrument> instruments = new ArrayList<>();
+        while((instrument = beanReader.read(MFInstrument.class, header, processors)) != null ) {
             System.out.println(instrument.tradingsymbol);
             instruments.add(instrument);
         }

@@ -2,18 +2,20 @@ package com.zerodhatech.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 /**
  * A wrapper for Mutualfunds sip.
  */
-public class MfSip {
+public class MFSIP {
     @SerializedName("dividend_type")
     public String dividendType;
     @SerializedName("pending_instalments")
     public int pendingInstalments;
     @SerializedName("created")
-    public String created;
+    public Date created;
     @SerializedName("last_instalment")
-    public String lastInstalment;
+    public Date lastInstalment;
     @SerializedName("transaction_type")
     public String transactionType;
     @SerializedName("frequency")

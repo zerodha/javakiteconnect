@@ -2,6 +2,8 @@ package com.zerodhatech.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 /**
  * A wrapper for trade.
  */
@@ -24,11 +26,10 @@ public class Trade {
 	public String averagePrice;
 	@SerializedName("quantity")
 	public String quantity;
-	@SerializedName("order_timestamp")
-	public String orderTimestamp;
+	@SerializedName("fill_timestamp")
+	public Date fillTimestamp;
 	@SerializedName("exchange_timestamp")
-	public String exchangeTimestamp;
+	public Date exchangeTimestamp;
 	@SerializedName("transaction_type")
 	public String transactionType;
-
 }

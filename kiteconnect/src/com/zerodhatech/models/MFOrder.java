@@ -2,10 +2,12 @@ package com.zerodhatech.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 /**
  * A wrapper for Mutualfunds order.
  */
-public class MfOrder {
+public class MFOrder {
     @SerializedName("status_message")
     public String statusMessage;
     @SerializedName("purchase_type")
@@ -19,15 +21,15 @@ public class MfOrder {
     @SerializedName("settlement_id")
     public String settlementId;
     @SerializedName("order_timestamp")
-    public String orderTimestamp;
+    public Date orderTimestamp;
     @SerializedName("average_price")
     public double averagePrice;
     @SerializedName("transaction_type")
     public String transactionType;
     @SerializedName("exchange_order_id")
-    public String exchangeOrderId;
+    public Date exchangeOrderId;
     @SerializedName("exchange_timestamp")
-    public String exchangeTimestamp;
+    public Date exchangeTimestamp;
     @SerializedName("fund")
     public String fund;
     @SerializedName("variety")
