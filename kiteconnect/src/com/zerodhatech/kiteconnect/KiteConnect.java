@@ -594,7 +594,6 @@ public class KiteConnect {
      * @throws IOException is thrown when there is connection related errors.
      * */
     public List<MFInstrument> getMFInstruments() throws KiteException, IOException{
-        Map<String, Object> params = new HashMap<String, Object>();
         KiteRequestHandler kiteRequestHandler = new KiteRequestHandler(proxy);
         return readMfCSV(kiteRequestHandler.getCSVRequest(routes.get("mutualfunds.instruments"), apiKey, accessToken));
     }
@@ -814,7 +813,6 @@ public class KiteConnect {
         MFInstrument instrument;
         List<MFInstrument> instruments = new ArrayList<>();
         while((instrument = beanReader.read(MFInstrument.class, header, processors)) != null ) {
-            System.out.println(instrument.tradingsymbol);
             instruments.add(instrument);
         }
         return instruments;
@@ -830,7 +828,7 @@ public class KiteConnect {
                 new NotNull(),                  //trading_symbol
                 new org.supercsv.cellprocessor.Optional(),                 //company name
                 new NotNull(new ParseDouble()), //last_price
-                new org.supercsv.cellprocessor.Optional(),                 //expiry
+                new org.supercsv.cellprocessor.Optional(new ParseDate("yyyy-MM-dd")),                 //expiry
                 new org.supercsv.cellprocessor.Optional(),                 //strike
                 new NotNull(new ParseDouble()), //tick_size
                 new NotNull(new ParseInt()),    //lot_size
@@ -849,8 +847,8 @@ public class KiteConnect {
                 new org.supercsv.cellprocessor.Optional(),                  //tradingsymbol
                 new org.supercsv.cellprocessor.Optional(),                  //amc
                 new org.supercsv.cellprocessor.Optional(),                  //name
-                new org.supercsv.cellprocessor.Optional(new ParseInt()),    //purchase_allowed
-                new org.supercsv.cellprocessor.Optional(new ParseInt()),    //redemption_allowed
+                new org.supercsv.cellprocessor.Optional(new ParseBool()),    //purchase_allowed
+                new org.supercsv.cellprocessor.Optional(new ParseBool()),    //redemption_allowed
                 new org.supercsv.cellprocessor.Optional(new ParseDouble()), //minimum_purchase_amount
                 new org.supercsv.cellprocessor.Optional(new ParseDouble()), //purchase_amount_multiplier
                 new org.supercsv.cellprocessor.Optional(new ParseDouble()), //minimum_additional_purchase_amount
@@ -861,7 +859,7 @@ public class KiteConnect {
                 new org.supercsv.cellprocessor.Optional(),                  //plan
                 new org.supercsv.cellprocessor.Optional(),                  //settlement_type
                 new org.supercsv.cellprocessor.Optional(new ParseDouble()), //last_price
-                new org.supercsv.cellprocessor.Optional()                   //last_price_date
+                new org.supercsv.cellprocessor.Optional(new ParseDate("yyyy-MM-dd"))                   //last_price_date
         };
         return processors;
     }

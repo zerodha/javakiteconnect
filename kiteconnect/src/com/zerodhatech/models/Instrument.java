@@ -1,5 +1,7 @@
 package com.zerodhatech.models;
 
+import java.util.Date;
+
 /**
  * A wrapper for Instrument.
  */
@@ -7,8 +9,9 @@ public class Instrument {
     public long instrument_token,exchange_token;
     public String tradingsymbol,name;
     public double last_price, tick_size;
-    public String expiry, instrument_type,segment,exchange, strike;
+    public String instrument_type,segment,exchange, strike;
     public int lot_size;
+    public Date expiry;
 
 
     public long getInstrument_token() {
@@ -59,11 +62,11 @@ public class Instrument {
         this.tick_size = tick_size;
     }
 
-    public String getExpiry() {
+    public Date getExpiry() {
         return expiry;
     }
 
-    public void setExpiry(String expiry) {
+    public void setExpiry(Date expiry) {
         this.expiry = expiry;
     }
 

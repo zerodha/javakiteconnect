@@ -1,14 +1,17 @@
 package com.zerodhatech.models;
 
+import java.util.Date;
+
 /**
  * A wrapper for Mutualfunds instrument.
  */
 public class MFInstrument {
     public String tradingsymbol, amc, name;
-    public int purchase_allowed, redemption_allowed;
+    public boolean purchase_allowed, redemption_allowed;
     public double minimum_purchase_amount, purchase_amount_multiplier, minimum_additional_purchase_amount, minimum_redemption_quantity;
     public double redemption_quantity_multiplier, last_price;
-    public String dividend_type, scheme_type, plan, settlement_type, last_price_date;
+    public String dividend_type, scheme_type, plan, settlement_type;
+    public Date last_price_date;
 
     public String getTradingsymbol() {
         return tradingsymbol;
@@ -34,19 +37,19 @@ public class MFInstrument {
         this.name = name;
     }
 
-    public int getPurchase_allowed() {
+    public boolean getPurchase_allowed() {
         return purchase_allowed;
     }
 
-    public void setPurchase_allowed(int purchase_allowed) {
+    public void setPurchase_allowed(boolean purchase_allowed) {
         this.purchase_allowed = purchase_allowed;
     }
 
-    public int getRedemption_allowed() {
+    public boolean getRedemption_allowed() {
         return redemption_allowed;
     }
 
-    public void setRedemption_allowed(int redemption_allowed) {
+    public void setRedemption_allowed(boolean redemption_allowed) {
         this.redemption_allowed = redemption_allowed;
     }
 
@@ -130,11 +133,11 @@ public class MFInstrument {
         this.settlement_type = settlement_type;
     }
 
-    public String getLast_price_date() {
+    public Date getLast_price_date() {
         return last_price_date;
     }
 
-    public void setLast_price_date(String last_price_date) {
+    public void setLast_price_date(Date last_price_date) {
         this.last_price_date = last_price_date;
     }
 }

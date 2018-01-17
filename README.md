@@ -191,6 +191,16 @@ For more details about different mode of quotes and subscribing for them, take a
  
  * The created is now Date type.
  * The Date is now Date type.
+ 
+ #### MFInstrument (model)
+ 
+ * The purchase_allowed is now boolean type.
+ * The redemption_allowed is now boolean type.
+ * The last_price_date is now Date type.
+ 
+ #### Instrument (model)
+ 
+ * The expiry is now Date type.
 
  #### Package name changes
  

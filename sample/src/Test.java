@@ -19,7 +19,7 @@ public class Test {
         try {
                 // First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteConnect api call.
                 // Initialize KiteSdk with your apiKey.
-                KiteConnect kiteConnect = new KiteConnect("xxxxxxyyyyzzzxxx");
+                KiteConnect kiteConnect = new KiteConnect("xxxxzzzzyyyy");
 
                 // Set userId
                 kiteConnect.setUserId("xxxxxx");
@@ -42,7 +42,7 @@ public class Test {
                    A request token is valid for only a couple of minutes and can be used only once. An access token is valid for one whole day. Don't call this method for every app run.
                    Once an access token is received it should be stored in preferences or database for further usage.
                  */
-                User user =  kiteConnect.generateSession("xxxxxxxxxyyyyy", "xxxxxxxxxxxxxxxxxxx");
+                User user =  kiteConnect.generateSession("xxxxxyyyzzzz", "xxxxxzzzzzxxxxxxx");
                 kiteConnect.setAccessToken(user.accessToken);
                 kiteConnect.setPublicToken(user.publicToken);
 
