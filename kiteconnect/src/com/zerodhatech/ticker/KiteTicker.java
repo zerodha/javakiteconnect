@@ -67,10 +67,10 @@ public class KiteTicker {
     private int maxRetryInterval = 30000;
     private Map<Long, String> modeMap;
 
-    public KiteTicker(String userId, String accessToken, String apiKey) {
+    public KiteTicker(String accessToken, String apiKey) {
 
         if (wsuri == null) {
-            createUrl(userId, accessToken, apiKey);
+            createUrl(accessToken, apiKey);
         }
 
         try {
@@ -159,8 +159,8 @@ public class KiteTicker {
     }
 
     /** Creates url for websocket connection.*/
-    private void createUrl(String userId, String accessToken, String apiKey){
-        wsuri = new Routes().getWsuri().replace(":user_id", userId).replace(":access_token", accessToken).replace(":api_key", apiKey);
+    private void createUrl(String accessToken, String apiKey){
+        wsuri = new Routes().getWsuri().replace(":access_token", accessToken).replace(":api_key", apiKey);
     }
     /** Set listener for listening to ticks.
      * @param onTickerArrivalListener is listener which listens for each tick.*/

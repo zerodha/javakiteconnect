@@ -47,10 +47,10 @@ public class Position {
     public Double pnl;
     @SerializedName("overnight_quantity")
     public int overnightQuantity;
-    @SerializedName("buy_m2m_value")
-    public double buym2mValue;
-    @SerializedName("sell_m2m_value")
-    public double sellm2mValue;
+    @SerializedName("buy_m2m")
+    public double buym2m;
+    @SerializedName("sell_m2m")
+    public double sellm2m;
     @SerializedName("day_buy_quantity")
     public double dayBuyQuantity;
     @SerializedName("day_sell_quantity")

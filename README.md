@@ -1,4 +1,4 @@
-# The Kite Connect API Java client
+# The Kite Connect 3.0 API Java client
 The official Java client for communicating with [Kite Connect API](https://kite.trade).
 
 Kite Connect is a set of REST-like APIs that expose many capabilities required to build a complete investment and trading platform. Execute orders in real time, manage user portfolio, stream live market data (WebSockets), and more, with the simple HTTP API collection.
@@ -6,7 +6,7 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 [Zerodha Technology Pvt Ltd](http://rainmatter.com) (c) 2016. Licensed under the MIT License.
 
 ## Documentation
-- [Kite Connect HTTP API documentation](https://kite.trade/docs/connect/v1)
+- [Kite Connect HTTP API documentation](https://kite.trade/docs/connect/v3/)
 - [Java library documentation](https://kite.trade/docs/javakiteconnect)
 
 ## Usage
@@ -77,7 +77,7 @@ For more details, take a look at Examples.java in sample directory.
  /** To get live price use websocket connection.
          * It is recommended to use only one websocket connection at any point of time and make sure you stop connection, once user goes out of app.
          * custom url points to new endpoint which can be used till complete Kite Connect 3 migration is done. */
-        KiteTicker tickerProvider = new KiteTicker(kiteConnect.getUserId(), kiteConnect.getAccessToken(), kiteConnect.getApiKey());
+        KiteTicker tickerProvider = new KiteTicker(kiteConnect.getAccessToken(), kiteConnect.getApiKey());
 
         tickerProvider.setOnConnectedListener(new OnConnect() {
             @Override
@@ -270,8 +270,6 @@ For more details about different mode of quotes and subscribing for them, take a
  
   | version 3 |
   | :---: |
-  | buym2mValue |
-  | sellm2mValue |
   | dayBuyQuantity |
   | daySellQuantity |
   | dayBuyPrice |  

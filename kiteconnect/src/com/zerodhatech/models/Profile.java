@@ -23,5 +23,7 @@ public class Profile {
     public String[] products;
     @SerializedName("order_types")
     public String[] orderTypes;
+    @SerializedName("avatar_url")
+    public String avatarURL;
 
 }

@@ -41,6 +41,8 @@ public class User {
     public String refreshToken;
     @SerializedName("user_shortname")
     public String shortName;
+    @SerializedName("avatar_url")
+    public String avatarURL;
 
     /** Parses user details response from server.
      * @param response is the json response from server.
