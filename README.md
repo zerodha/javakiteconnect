@@ -14,6 +14,15 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 
 - Include com.rainmatter.kiteconnect into build path from maven. Use version 1.4.5
 
+In case of using Android Studio,
+add
+
+    dependencies {
+        implementation 'com.rainmatter.kiteconnect:kiteconnect:1.4.5'
+    }
+    
+to your app's `build.gradle`.
+
 ## API usage
 ```java
 // Initialize Kiteconnect using apiKey.
