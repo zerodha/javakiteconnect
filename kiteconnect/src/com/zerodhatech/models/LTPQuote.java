@@ -3,7 +3,7 @@ package com.zerodhatech.models;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by sujith on 10/11/17.
+ * A wrapper for instrument token, OHLC data.
  */
 public class LTPQuote {
 

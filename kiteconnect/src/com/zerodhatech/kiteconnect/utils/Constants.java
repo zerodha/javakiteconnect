@@ -1,7 +1,7 @@
 package com.zerodhatech.kiteconnect.utils;
 
 /**
- * Created by sujith on 11/27/17.
+ * Contains all the Strings that are being used in the Kite Connect library.
  */
 public class Constants {
 

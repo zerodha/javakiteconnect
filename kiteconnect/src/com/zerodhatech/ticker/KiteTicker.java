@@ -67,6 +67,9 @@ public class KiteTicker {
     private int maxRetryInterval = 30000;
     private Map<Long, String> modeMap;
 
+    /** Initialize Kite Ticker.
+     * @param accessToken is the token received after successful login process.
+     * @param apiKey is the api key of the app which is received after creating an app on developers console.*/
     public KiteTicker(String accessToken, String apiKey) {
 
         if (wsuri == null) {
@@ -81,7 +84,7 @@ public class KiteTicker {
             }
             return;
         }
-        ws.addListener(getWebscoketAdapter());
+        ws.addListener(getWebsocketAdapter());
         modeMap = new HashMap<>();
     }
 
@@ -104,6 +107,7 @@ public class KiteTicker {
         return checkForRestartTask;
     }
 
+    /** Performs reconnection after a particular interval if count is less than maximum retries.*/
     public void doReconnect() {
         if(!tryReconnection) return;
 
@@ -150,6 +154,7 @@ public class KiteTicker {
         }
     }
 
+    /* Set a maximum interval for every retry.*/
     public void setMaximumRetryInterval(int interval) throws KiteException {
         if(interval >= 5) {
             maxRetryInterval = interval;
@@ -202,7 +207,8 @@ public class KiteTicker {
         }
     }
 
-    public WebSocketAdapter getWebscoketAdapter(){
+    /** Returns a WebSocketAdapter to listen to ticker related events.*/
+    public WebSocketAdapter getWebsocketAdapter(){
        return new WebSocketAdapter() {
 
             @Override
@@ -517,6 +523,7 @@ public class KiteTicker {
 
     }
 
+    /** Parses full mode data.*/
     private Tick getFullData(byte[] bin, int dec, Tick tick){
         long lastTradedtime = convertToLong(getBytes(bin, 44, 48)) * 1000;
         if(isValidDate(lastTradedtime)) {
@@ -620,7 +627,7 @@ public class KiteTicker {
             }
                 return;
         }
-        ws.addListener(getWebscoketAdapter());
+        ws.addListener(getWebsocketAdapter());
         lastPongAt = 0;
         connect();
         final OnConnect onUsersConnectedListener = this.onConnectedListener;
@@ -668,6 +675,7 @@ public class KiteTicker {
         }
     }
 
+    /** Parses incoming text message.*/
     private void parseTextMessage(String message) {
         JSONObject data;
         try {

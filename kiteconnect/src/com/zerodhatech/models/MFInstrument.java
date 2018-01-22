@@ -3,7 +3,7 @@ package com.zerodhatech.models;
 import java.util.Date;
 
 /**
- * A wrapper for Mutualfunds instrument.
+ * A wrapper for mutual funds instrument.
  */
 public class MFInstrument {
     public String tradingsymbol, amc, name;

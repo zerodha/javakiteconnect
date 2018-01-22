@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
 /**
- * A wrapper for Mutualfunds order.
+ * A wrapper for mutual funds order.
  */
 public class MFOrder {
     @SerializedName("status_message")

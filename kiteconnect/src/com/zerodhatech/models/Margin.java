@@ -1,7 +1,7 @@
 package com.zerodhatech.models;
 
 /**
- * A wrapper for margins.
+ * A wrapper for funds.
  */
 
 import com.google.gson.annotations.SerializedName;

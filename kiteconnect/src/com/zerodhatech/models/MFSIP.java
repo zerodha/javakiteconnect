@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
 /**
- * A wrapper for Mutualfunds sip.
+ * A wrapper for mutual funds sip.
  */
 public class MFSIP {
     @SerializedName("dividend_type")

@@ -3,7 +3,7 @@ package com.zerodhatech.models;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by sujith on 1/12/18.
+ * A wrapper for user id, access token, refresh token.
  */
 public class TokenSet {
 

@@ -3,7 +3,7 @@ package com.zerodhatech.models;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * A wrapper for Mutualfunds holding.
+ * A wrapper for mutual funds holding.
  */
 public class MFHolding {
     @SerializedName("quantity")

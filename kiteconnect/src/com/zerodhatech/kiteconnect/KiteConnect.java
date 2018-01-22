@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by sujith on 11/16/17.
+ * Offers all the functionality like placing order, fetch margins, orderbook, positions, fetch market snap quote.
  */
 public class KiteConnect {
 
@@ -41,8 +41,8 @@ public class KiteConnect {
 
     private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    /** Initializes KiteSDK with the api key provided for your App.
-     * @param apiKey is the api key provided after creating new Kite Connect App.
+    /** Initializes KiteSDK with the api key provided for your app.
+     * @param apiKey is the api key provided after creating new Kite Connect app on developers console.
      */
     public KiteConnect(String apiKey){
         this.apiKey = apiKey;
@@ -148,7 +148,7 @@ public class KiteConnect {
         this.publicToken = publicToken;
     }
 
-    /**Retrives login url
+    /** Retrieves login url
      * @return String loginUrl is returned. */
     public String getLoginURL() throws NullPointerException{
         String baseUrl = routes.getLoginUrl();
@@ -160,9 +160,10 @@ public class KiteConnect {
      * and retrieve the `access_token` required for all subsequent requests.
      * @param requestToken received from login process.
      * @param apiSecret which is unique for each aap.
-     * @return User is usermodel which contains user and session details.
+     * @return User is the user model which contains user and session details.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection error.
      */
     public User generateSession(String requestToken, String apiSecret) throws KiteException, JSONException, IOException {
 
@@ -198,7 +199,7 @@ public class KiteConnect {
         return gson.fromJson(String.valueOf(response.get("data")), TokenSet.class);
     }
 
-    /** Hex encodes sha256 ouput for android support.*/
+    /** Hex encodes sha256 output for android support.*/
     public String sha256Hex(String str) {
         byte[] a = DigestUtils.sha256(str);
         StringBuilder sb = new StringBuilder(a.length * 2);
@@ -207,6 +208,9 @@ public class KiteConnect {
         return sb.toString();
     }
 
+    /** Get the profile details of the use.
+     * @throws IOException is thrown when there is connection error.
+     * @throws KiteException is thrown for all Kite trade related errors.*/
     public Profile getProfile() throws IOException, KiteException {
         String url = routes.get("user.profile");
         JSONObject response = new KiteRequestHandler(proxy).getRequest(url, apiKey, accessToken);
@@ -220,6 +224,7 @@ public class KiteConnect {
      * @return Margins object.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection error.
      */
     public Margin getMargins(String segment) throws KiteException, JSONException, IOException {
         String url = routes.get("user.margins.segment").replace(":segment", segment);
@@ -229,10 +234,10 @@ public class KiteConnect {
 
     /**
      * Gets account balance and cash margin details for a equity and commodity.
-     * Example for segment can be equity or commodity.
      * @return Map<String, Margin> map of commodity and equity margins data.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection error.
      */
     public Map<String, Margin> getMargins() throws KiteException, JSONException, IOException {
         String url = routes.get("user.margins");
@@ -248,6 +253,7 @@ public class KiteConnect {
      * @return Order contains only orderId.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection error.
      */
     public Order placeOrder(OrderParams orderParams, String variety) throws KiteException, JSONException, IOException {
         String url = routes.get("orders.place").replace(":variety", variety);
@@ -284,6 +290,7 @@ public class KiteConnect {
      * @return Order object contains only orderId.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection error.
      */
     public Order modifyOrder(String orderId, OrderParams orderParams, String variety) throws KiteException, JSONException, IOException {
         String url = routes.get("orders.modify").replace(":variety", variety).replace(":order_id", orderId);
@@ -318,6 +325,7 @@ public class KiteConnect {
      * @return Order object contains only orderId.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection error.
      */
     public Order cancelOrder(String orderId, String variety) throws KiteException, JSONException, IOException {
         String url = routes.get("orders.cancel").replace(":variety", variety).replace(":order_id", orderId);
@@ -330,12 +338,13 @@ public class KiteConnect {
     }
 
     /**
-     * Cancels special orders like BO, CO
+     * Cancel/exit special orders like BO, CO
      * @param parentOrderId order id of first leg.
      * @param orderId order id of the order to be cancelled.
      * @param variety [variety="regular"]. Order variety can be bo, co, amo, regular.
      * @return Order object contains only orderId.
      * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection error.
      * */
     public Order cancelOrder(String orderId, String parentOrderId, String variety) throws KiteException, IOException {
         String url = routes.get("orders.cancel").replace(":variety", variety).replace(":order_id", orderId);
@@ -349,10 +358,11 @@ public class KiteConnect {
         return order;
     }
 
-    /**Gets collection of orders from the orderbook..
+    /** Fetches collection of orders from the orderbook.
      * @return List of orders.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection error.
      * */
     public List<Order> getOrders() throws KiteException, JSONException, IOException {
         String url = routes.get("orders");
@@ -366,6 +376,8 @@ public class KiteConnect {
      * @return List of multiple stages an order has gone through in the system.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @param orderId is the order id which is obtained from orderbook.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection error.
      * */
     public List<Order> getOrderHistory(String orderId) throws KiteException, IOException {
         String url = routes.get("order").replace(":order_id", orderId);
@@ -375,10 +387,11 @@ public class KiteConnect {
     }
 
     /**
-     * Retreives list of trades executed.
+     * Retrieves list of trades executed.
      * @return List of trades.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection error.
      */
     public List<Trade> getTrades() throws KiteException, JSONException, IOException {
         Map<String, Object> params = new HashMap<>();
@@ -387,11 +400,12 @@ public class KiteConnect {
     }
 
     /**
-     * Retreives list of trades executed of an order.
+     * Retrieves list of trades executed of an order.
      * @param orderId order if of the order whose trades are fetched.
      * @return List of trades for the given order.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection error.
      */
     public List<Trade> getOrderTrades(String orderId) throws KiteException, JSONException, IOException {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -404,6 +418,7 @@ public class KiteConnect {
      * @return List of holdings.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection error.
      */
     public List<Holding> getHoldings() throws KiteException, JSONException, IOException {
         Map<String, Object> params = new HashMap<>();
@@ -416,6 +431,7 @@ public class KiteConnect {
      * @return List of positions.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection error.
      */
     public Map<String, List<Position>> getPositions() throws KiteException, JSONException, IOException {
         Map<String, Object> params = new HashMap<>();
@@ -429,7 +445,7 @@ public class KiteConnect {
 
 
     /**
-     * Modifies an open position's product type.
+     * Modifies an open position's product type. Only an MIS, CNC, and NRML positions can be converted.
      * @param tradingSymbol Tradingsymbol of the instrument  (ex. RELIANCE, INFY).
      * @param exchange Exchange in which instrument is listed (NSE, BSE, NFO, BFO, CDS, MCX).
      * @param transactionType Transaction type (BUY or SELL).
@@ -440,6 +456,7 @@ public class KiteConnect {
      * @return JSONObject  which will have status.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection error.
      */
     public JSONObject convertPosition(String tradingSymbol, String exchange, String transactionType, String positionType, String oldProduct, String newProduct, int quantity) throws KiteException, JSONException, IOException {
         Map<String, Object> params = new HashMap<>();
@@ -472,7 +489,7 @@ public class KiteConnect {
      *		instrument_type: 'EQ',
      *		segment: 'BSE',
      *		exchange: 'BSE' }, ...]
-     * @return List of intruments which are available to trade.
+     * @return List of instruments which are available to trade.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws IOException is thrown when there is connection related errors.
      */
@@ -502,7 +519,7 @@ public class KiteConnect {
      * @return List of instruments which are available to trade for an exchange.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
-     * @throws IOException is thrown when there connection related error.
+     * @throws IOException is thrown when there is connection related error.
      */
     public List<Instrument> getInstruments(String exchange) throws KiteException, JSONException, IOException {
         KiteRequestHandler kiteRequestHandler = new KiteRequestHandler(proxy);
@@ -514,9 +531,10 @@ public class KiteConnect {
      *
      * @param instruments is the array of tradingsymbol and exchange or instrument token. For example {NSE:NIFTY 50, BSE:SENSEX} or {256265, 265}
      *
-     * @return Quote object.
+     * @return Map of String and Quote.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection related error.
      */
     public Map<String, Quote> getQuote(String [] instruments) throws KiteException, JSONException, IOException {
         KiteRequestHandler kiteRequestHandler = new KiteRequestHandler(proxy);
@@ -525,11 +543,12 @@ public class KiteConnect {
         return gson.fromJson(String.valueOf(jsonObject.get("data")), type);
     }
 
-    /** Retrieves ohlc and last price.
+    /** Retrieves OHLC and last price.
      * User can either pass exchange with tradingsymbol or instrument token only. For example {NSE:NIFTY 50, BSE:SENSEX} or {256265, 265}
-     * @return Map which contains key value pair of user input data as key and data as value.
-     * @throws KiteException is thrown for all Kite trade related errors.
+     * @return Map of String and OHLCQuote.
      * @param instruments is the array of tradingsymbol and exchange or instruments token.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection related error.
      * */
     public Map<String, OHLCQuote> getOHLC(String [] instruments) throws KiteException, IOException {
         JSONObject resp = new KiteRequestHandler(proxy).getRequest(routes.get("quote.ohlc"), "i", instruments, apiKey, accessToken);
@@ -539,9 +558,10 @@ public class KiteConnect {
 
     /** Retrieves last price.
      * User can either pass exchange with tradingsymbol or instrument token only. For example {NSE:NIFTY 50, BSE:SENSEX} or {256265, 265}.
-     * @return Map which contains key value pair of user input data as key and data as value.
-     * @throws KiteException is thrown for all Kite trade related errors.
+     * @return Map of String and LTPQuote.
      * @param instruments is the array of tradingsymbol and exchange or instruments token.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection related error.
      * */
     public Map<String, LTPQuote> getLTP(String[] instruments) throws KiteException, IOException {
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("quote.ltp"), "i", instruments, apiKey, accessToken);
@@ -551,12 +571,13 @@ public class KiteConnect {
 
     /**
      * Retrieves buy or sell trigger range for Cover Orders.
+     * @return TriggerRange object is returned.
      * @param exchange can be NSE, BSE, MCX
      * @param tradingSymbol is the instrument name.
      * @param trasactionType "BUY or "SELL".
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
-     * @return TriggerRange object is returned.
+     * @throws IOException is thrown when there is connection related error.
      */
     public TriggerRange getTriggerRange(String exchange, String tradingSymbol, String trasactionType) throws KiteException, JSONException, IOException {
         Map<String, Object> params = new HashMap<>();
@@ -575,6 +596,7 @@ public class KiteConnect {
      * @param token is instruments token.
      * @return HistoricalData object which contains list of historical data termed as dataArrayList.
      * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection related error.
      * */
     public HistoricalData getHistoricalData(Date from, Date to, String token, String interval, boolean continuous) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<>();
@@ -599,13 +621,14 @@ public class KiteConnect {
     }
 
     /** Place a mutualfunds order.
+     * @return MFOrder object contains only orderId.
      * @param tradingsymbol Tradingsymbol (ISIN) of the fund.
      * @param transactionType BUY or SELL.
      * @param amount Amount worth of units to purchase. Not applicable on SELLs.
      * @param quantity Quantity to SELL. Not applicable on BUYs. If the holding is less than minimum_redemption_quantity, all the units have to be sold.
      * @param tag An optional tag to apply to an order to identify it (alphanumeric, max 8 chars).
-     * @return MFOrder object contains only orderId.
      * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection related error.
      * */
     public MFOrder placeMFOrder(String tradingsymbol, String transactionType, double amount, double quantity, String tag) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -623,8 +646,9 @@ public class KiteConnect {
 
     /** If cancel is successful then api will respond as 200 and send back true else it will be sent back to user as KiteException.
      * @return true if api call is successful.
-     * @throws KiteException is thrown for all Kite trade related errors.
      * @param orderId is the order id of the mutualfunds order.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there connection related error.
      * */
     public boolean cancelMFOrder(String orderId) throws KiteException, IOException {
         KiteRequestHandler kiteRequestHandler = new KiteRequestHandler(proxy);
@@ -635,6 +659,7 @@ public class KiteConnect {
     /** Retrieves all mutualfunds orders.
      * @return List of all the mutualfunds orders.
      * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection related error.
      * */
     public List<MFOrder> getMFOrders() throws KiteException, IOException {
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.orders"), apiKey, accessToken);
@@ -645,6 +670,7 @@ public class KiteConnect {
      * @param orderId is the order id of a mutualfunds scrip.
      * @return returns a single mutualfunds object with all the parameters.
      * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection related error.
      * */
     public MFOrder getMFOrder(String orderId) throws KiteException, IOException {
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.order").replace(":order_id", orderId), apiKey, accessToken);
@@ -660,6 +686,7 @@ public class KiteConnect {
      * @param initialAmount Amount worth of units to purchase before the SIP starts. Should be equal to or greater than minimum_purchase_amount and in multiple of purchase_amount_multiplier. This is only considered if there have been no prior investments in the target fund.
      * @return MFSIP object which contains sip id and order id.
      * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection related error.
      * */
     public MFSIP placeMFSIP(String tradingsymbol, String frequency, int installmentDay, int instalments, int initialAmount, double amount) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -686,6 +713,7 @@ public class KiteConnect {
      * @param sipId is the id of the sip.
      * @return returns true, if modify sip is successful else exception is thrown.
      * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection related error.
      * */
     public boolean modifyMFSIP(String frequency, int day, int instalments, double amount, String status, String sipId) throws KiteException, IOException {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -703,6 +731,7 @@ public class KiteConnect {
      * @param sipId is the id of mutualfunds sip.
      * @return returns true, if cancel sip is successful else exception is thrown.
      * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection related error.
      * */
     public boolean cancelMFSIP(String sipId) throws KiteException, IOException {
         new KiteRequestHandler(proxy).deleteRequest(routes.get("mutualfunds.sip").replace(":sip_id", sipId), new HashMap<>(), apiKey, accessToken);
@@ -712,6 +741,7 @@ public class KiteConnect {
     /** Retrieve all mutualfunds sip.
      * @return List of sips.
      * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection related error.
      * */
     public List<MFSIP> getMFSIPs() throws KiteException, IOException {
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.sips"), apiKey, accessToken);
@@ -722,6 +752,7 @@ public class KiteConnect {
      * @param sipId is the id of a particular sip.
      * @return MFSIP object which contains all the details of the sip.
      * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection related error.
      * */
     public MFSIP getMFSIP(String sipId) throws KiteException, IOException {
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.sip").replace(":sip_id", sipId), apiKey, accessToken);
@@ -731,6 +762,7 @@ public class KiteConnect {
     /** Retrieve all the mutualfunds holdings.
      * @return List of mutualfunds holdings.
      * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection related error.
      * */
     public List<MFHolding> getMFHoldings() throws KiteException, IOException {
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("mutualfunds.holdings"), apiKey, accessToken);
@@ -740,6 +772,7 @@ public class KiteConnect {
      * Logs out user by invalidating the access token.
      * @return JSONObject which contains status
      * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection related error.
      */
     public JSONObject logout() throws KiteException, IOException {
         return invalidateAccessToken();
@@ -749,6 +782,7 @@ public class KiteConnect {
      * Kills the session by invalidating the access token.
      * @return JSONObject which contains status
      * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection related error.
      */
     public JSONObject invalidateAccessToken() throws IOException, KiteException {
         String url = routes.get("api.token");

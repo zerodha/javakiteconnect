@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Created by sujith on 1/8/18.
+ * A wrapper for market depth data.
  */
 public class MarketDepth {
     @SerializedName("buy")

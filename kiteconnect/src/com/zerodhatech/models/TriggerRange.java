@@ -3,7 +3,7 @@ package com.zerodhatech.models;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by sujith on 13/10/16.
+ * A wrapper for trigger range.
  */
 public class TriggerRange {
 

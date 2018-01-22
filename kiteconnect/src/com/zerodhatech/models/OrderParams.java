@@ -1,7 +1,6 @@
 package com.zerodhatech.models;
 
-import com.google.gson.annotations.SerializedName;
-
+/** A wrapper for order params to be sent while placing an order.*/
 public class OrderParams {
     /**
      * Exchange in which instrument is listed (NSE, BSE, NFO, BFO, CDS, MCX).

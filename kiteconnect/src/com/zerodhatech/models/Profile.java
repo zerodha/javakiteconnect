@@ -3,7 +3,7 @@ package com.zerodhatech.models;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by sujith on 1/11/18.
+ * A wrapper for profile response.
  */
 public class Profile {
 
