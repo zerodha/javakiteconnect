@@ -74,7 +74,8 @@ public class KiteConnect {
         ENABLE_LOGGING = enable;
     }
 
-    /** Set proxy. */
+    /** Set proxy.
+     * @param  proxy defined by user for making requests. */
     public void setProxy(Proxy proxy){
         this.proxy = proxy;
     }
@@ -199,7 +200,10 @@ public class KiteConnect {
         return gson.fromJson(String.valueOf(response.get("data")), TokenSet.class);
     }
 
-    /** Hex encodes sha256 output for android support.*/
+    /** Hex encodes sha256 output for android support.
+     * @return Hex encoded String.
+     * @param str is the String that has to be encrypted.
+     * */
     public String sha256Hex(String str) {
         byte[] a = DigestUtils.sha256(str);
         StringBuilder sb = new StringBuilder(a.length * 2);
@@ -209,6 +213,7 @@ public class KiteConnect {
     }
 
     /** Get the profile details of the use.
+     * @return Profile is a POJO which contains profile related data.
      * @throws IOException is thrown when there is connection error.
      * @throws KiteException is thrown for all Kite trade related errors.*/
     public Profile getProfile() throws IOException, KiteException {
@@ -234,7 +239,7 @@ public class KiteConnect {
 
     /**
      * Gets account balance and cash margin details for a equity and commodity.
-     * @return Map<String, Margin> map of commodity and equity margins data.
+     * @return Map of String and Margin is a map of commodity or equity string and funds data.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
      * @throws IOException is thrown when there is connection error.
@@ -680,7 +685,7 @@ public class KiteConnect {
     /** Place a mutualfunds sip.
      * @param tradingsymbol Tradingsymbol (ISIN) of the fund.
      * @param frequency weekly, monthly, or quarterly.
-     * @param amount >Amount worth of units to purchase. It should be equal to or greated than minimum_additional_purchase_amount and in multiple of purchase_amount_multiplier in the instrument master.
+     * @param amount Amount worth of units to purchase. It should be equal to or greated than minimum_additional_purchase_amount and in multiple of purchase_amount_multiplier in the instrument master.
      * @param installmentDay If Frequency is monthly, the day of the month (1, 5, 10, 15, 20, 25) to trigger the order on.
      * @param instalments Number of instalments to trigger. If set to -1, instalments are triggered at fixed intervals until the SIP is cancelled.
      * @param initialAmount Amount worth of units to purchase before the SIP starts. Should be equal to or greater than minimum_purchase_amount and in multiple of purchase_amount_multiplier. This is only considered if there have been no prior investments in the target fund.
@@ -707,7 +712,7 @@ public class KiteConnect {
     /** Modify a mutualfunds sip.
      * @param frequency weekly, monthly, or quarterly.
      * @param status Pause or unpause an SIP (active or paused).
-     * @param amount >Amount worth of units to purchase. It should be equal to or greated than minimum_additional_purchase_amount and in multiple of purchase_amount_multiplier in the instrument master.
+     * @param amount Amount worth of units to purchase. It should be equal to or greated than minimum_additional_purchase_amount and in multiple of purchase_amount_multiplier in the instrument master.
      * @param day If Frequency is monthly, the day of the month (1, 5, 10, 15, 20, 25) to trigger the order on.
      * @param instalments Number of instalments to trigger. If set to -1, instalments are triggered at fixed intervals until the SIP is cancelled.
      * @param sipId is the id of the sip.
@@ -795,6 +800,7 @@ public class KiteConnect {
     /**
      * Kills the refresh token.
      * @return JSONObject contains status.
+     * @param refreshToken is the token received after successful log in.
      * @throws IOException is thrown for connection related errors.
      * @throws KiteException is thrown for Kite trade related errors.
      * */

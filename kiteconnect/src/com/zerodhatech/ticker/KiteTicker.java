@@ -139,13 +139,16 @@ public class KiteTicker {
         tryReconnection = retry;
     }
 
-    /** Set error listener. */
+    /** Set error listener.
+     * @param listener of type OnError which listens to all the type of errors that may arise in Kite Ticker class. */
    public void setOnErrorListener(OnError listener){
         onErrorListener = listener;
    }
 
     /** Set max number of retries for reconnection, for infinite retries set value as -1.
-     * @param maxRetries denotes maximum number of retries that the com.zerodhatech.ticker can perform. */
+     * @param maxRetries denotes maximum number of retries that the com.zerodhatech.ticker can perform.
+     * @throws KiteException when maximum retries is less than 0.
+     * */
     public void setMaximumRetries(int maxRetries) throws KiteException {
         if(maxRetries > 0) {
             this.maxRetries = maxRetries;
@@ -192,7 +195,6 @@ public class KiteTicker {
     }
 
     /** Establishes a web socket connection.
-     * @throws WebSocketException is thrown when there is socket error.
      * */
     public void connect() {
         try {
@@ -367,9 +369,6 @@ public class KiteTicker {
 
     /** Subscribes for list of tokens.
      * @param tokens is list of tokens to be subscribed for.
-     * @throws IOException is thrown when there is connection related errors.
-     * @throws WebSocketException is thrown when there is Websocket exception.
-     * @throws KiteException is thrown when there is Kite related exception.
      * */
     public void subscribe(ArrayList<Long> tokens) {
         if(ws != null) {

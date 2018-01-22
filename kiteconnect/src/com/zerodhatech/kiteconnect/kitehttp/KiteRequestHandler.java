@@ -126,7 +126,7 @@ public class KiteRequestHandler {
      * @param url is the endpoint to which request has to be sent.
      * @param apiKey is the api key of the Kite Connect app.
      * @param accessToken is the access token obtained after successful login process.
-     * @param commonKey is the key that has to be sent in query param for quote calls like i=265&i=256265.
+     * @param commonKey is the key that has to be sent in query param for quote calls.
      * @param values is the values that has to be sent in query param like 265, 256265, NSE:INFY.
      * @throws IOException is thrown when there is a connection related error.
      * @throws KiteException is thrown for all Kite Trade related errors.
@@ -144,6 +144,8 @@ public class KiteRequestHandler {
      * @param url is the endpoint to which request has to be done.
      * @param apiKey is the api key of the Kite Connect app.
      * @param accessToken is the access token obtained after successful login process.
+     * @throws IOException is thrown when there is a connection related error.
+     * @throws KiteException is thrown for all Kite Trade related errors.
      * */
     public String getCSVRequest(String url, String apiKey, String accessToken) throws IOException, KiteException {
         Request request = new Request.Builder().url(url).header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").header("Authorization", "token "+apiKey+":"+accessToken).build();
@@ -180,7 +182,7 @@ public class KiteRequestHandler {
      * @param url is the endpoint to which request has to be done.
      * @param apiKey is the api key of the Kite Connect app.
      * @param accessToken is the access token obtained after successful login process.
-     * @param commonKey is the key that has to be sent in query param for quote calls like i=265&i=256265.
+     * @param commonKey is the key that has to be sent in query param for quote calls.
      * @param values is the values that has to be sent in query param like 265, 256265, NSE:INFY.
      * */
     public Request createGetRequest(String url, String commonKey, String[] values, String apiKey, String accessToken) {
