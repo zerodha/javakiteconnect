@@ -14,6 +14,8 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 
 - Include com.rainmatter.kiteconnect into build path from maven. Use version 1.4.5
 
+- To use javakiteconnect in **Android**, you need to include jar file in the libs directory and add the following line in you module's gradle file ``` compile files('libs/kiteconnect.jar') ```
+
 ## API usage
 ```java
 // Initialize Kiteconnect using apiKey.
