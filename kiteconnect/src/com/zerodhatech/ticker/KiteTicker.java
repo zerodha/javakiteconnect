@@ -644,7 +644,7 @@ public class KiteTicker {
                     Map<String, ArrayList<Long>> modes = new HashMap<>();
                     for (Map.Entry<Long, String> item: backupModeMap.entrySet()){
                         if(!modes.containsKey(item.getValue())){
-                            modes.put(item.getValue(), new ArrayList<>());
+                            modes.put(item.getValue(), new ArrayList<Long>());
                         }
                         modes.get(item.getValue()).add(item.getKey());
                     }
@@ -696,7 +696,7 @@ public class KiteTicker {
     }
 
     public Order getOrder(JSONObject data) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
 

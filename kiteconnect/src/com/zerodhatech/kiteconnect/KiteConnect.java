@@ -371,8 +371,6 @@ public class KiteConnect {
      * */
     public List<Order> getOrders() throws KiteException, JSONException, IOException {
         String url = routes.get("orders");
-        Map<String, Object> params = new HashMap<>();
-
         JSONObject response = new KiteRequestHandler(proxy).getRequest(url, apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Order[].class));
     }
@@ -386,7 +384,6 @@ public class KiteConnect {
      * */
     public List<Order> getOrderHistory(String orderId) throws KiteException, IOException {
         String url = routes.get("order").replace(":order_id", orderId);
-        Map<String, Object> params = new HashMap<>();
         JSONObject response = new KiteRequestHandler(proxy).getRequest(url, apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Order[].class));
     }
@@ -399,7 +396,6 @@ public class KiteConnect {
      * @throws IOException is thrown when there is connection error.
      */
     public List<Trade> getTrades() throws KiteException, JSONException, IOException {
-        Map<String, Object> params = new HashMap<>();
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("trades"), apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Trade[].class));
     }
@@ -413,7 +409,6 @@ public class KiteConnect {
      * @throws IOException is thrown when there is connection error.
      */
     public List<Trade> getOrderTrades(String orderId) throws KiteException, JSONException, IOException {
-        Map<String, Object> params = new HashMap<String, Object>();
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("orders.trades").replace(":order_id", orderId), apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Trade[].class));
     }
@@ -426,7 +421,6 @@ public class KiteConnect {
      * @throws IOException is thrown when there is connection error.
      */
     public List<Holding> getHoldings() throws KiteException, JSONException, IOException {
-        Map<String, Object> params = new HashMap<>();
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("portfolio.holdings"), apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Holding[].class));
     }
@@ -439,7 +433,6 @@ public class KiteConnect {
      * @throws IOException is thrown when there is connection error.
      */
     public Map<String, List<Position>> getPositions() throws KiteException, JSONException, IOException {
-        Map<String, Object> params = new HashMap<>();
         Map<String, List<Position>> positionsMap = new HashMap<>();
         JSONObject response = new KiteRequestHandler(proxy).getRequest(routes.get("portfolio.positions"), apiKey, accessToken);
         JSONObject allPositions = response.getJSONObject("data");
@@ -657,7 +650,7 @@ public class KiteConnect {
      * */
     public boolean cancelMFOrder(String orderId) throws KiteException, IOException {
         KiteRequestHandler kiteRequestHandler = new KiteRequestHandler(proxy);
-        kiteRequestHandler.deleteRequest(routes.get("mutualfunds.cancel_order").replace(":order_id", orderId), new HashMap<>(), apiKey, accessToken);
+        kiteRequestHandler.deleteRequest(routes.get("mutualfunds.cancel_order").replace(":order_id", orderId), new HashMap<String, Object>(), apiKey, accessToken);
         return true;
     }
 
@@ -739,7 +732,7 @@ public class KiteConnect {
      * @throws IOException is thrown when there is connection related error.
      * */
     public boolean cancelMFSIP(String sipId) throws KiteException, IOException {
-        new KiteRequestHandler(proxy).deleteRequest(routes.get("mutualfunds.sip").replace(":sip_id", sipId), new HashMap<>(), apiKey, accessToken);
+        new KiteRequestHandler(proxy).deleteRequest(routes.get("mutualfunds.sip").replace(":sip_id", sipId), new HashMap<String, Object>(), apiKey, accessToken);
         return true;
     }
 

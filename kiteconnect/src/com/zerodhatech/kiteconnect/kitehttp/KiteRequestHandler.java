@@ -17,10 +17,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class KiteRequestHandler {
 
-    private String GET = "GET";
-    private String POST = "POST";
-    private String PUT = "PUT";
-    private String DELETE = "DELETE";
     private OkHttpClient client;
     private String USER_AGENT = "javakiteconnect/3.0.0";
 
