@@ -39,8 +39,6 @@ public class KiteConnect {
     private String userId;
     private Gson gson;
 
-    private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
     /** Initializes KiteSDK with the api key provided for your app.
      * @param apiKey is the api key provided after creating new Kite Connect app on developers console.
      */
@@ -52,6 +50,7 @@ public class KiteConnect {
             @Override
             public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
                 try {
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     return format.parse(jsonElement.getAsString());
                 } catch (ParseException e) {
                     return null;
@@ -597,6 +596,7 @@ public class KiteConnect {
      * @throws IOException is thrown when there is connection related error.
      * */
     public HistoricalData getHistoricalData(Date from, Date to, String token, String interval, boolean continuous) throws KiteException, IOException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String, Object> params = new HashMap<>();
         params.put("from", format.format(from));
         params.put("to", format.format(to));
