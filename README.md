@@ -7,7 +7,7 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 
 ## Documentation
 - [Kite Connect HTTP API documentation](https://kite.trade/docs/connect/v3/)
-- [Java library documentation](https://kite.trade/docs/javakiteconnect)
+- [Java library documentation](https://kite.trade/docs/javakiteconnect/v3/)
 
 ## Usage
 - [Download Kite Connect 3 jar file](https://github.com/zerodhatech/javakiteconnect/tree/kite3/dist) and include it in your build path.
