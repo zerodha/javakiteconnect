@@ -1,4 +1,8 @@
+> **NOTICE (Jan 2018): Upgrade to Kite Connect 3.0**
+This repository is being phased and will be replaced soon by Kite Connect v3. Use the [kite3](https://github.com/zerodhatech/javakiteconnect/tree/kite3) branch instead. Read the [announcement](https://kite.trade/forum/discussion/2998/upgrade-to-kite-connect-3-0) on the forum.
+
 # The Kite Connect API Java client
+
 The official Java client for communicating with [Kite Connect API](https://kite.trade).
 
 Kite Connect is a set of REST-like APIs that expose many capabilities required to build a complete investment and trading platform. Execute orders in real time, manage user portfolio, stream live market data (WebSockets), and more, with the simple HTTP API collection.
