@@ -419,6 +419,19 @@ public class Examples {
             }
         });
 
+        /** Set error listener to listen to errors.*/
+        tickerProvider.setOnErrorListener(new OnError() {
+            @Override
+            public void onError(Exception exception) {
+                //handle here.
+            }
+
+            @Override
+            public void onError(KiteException kiteException) {
+                //handle here.
+            }
+        });
+
         tickerProvider.setOnTickerArrivalListener(new OnTicks() {
             @Override
             public void onTicks(ArrayList<Tick> ticks) {
