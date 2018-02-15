@@ -66,6 +66,9 @@ public class KiteTicker {
     private int nextReconnectInterval = 0;
     private int maxRetryInterval = 30000;
     private Map<Long, String> modeMap;
+    private Timer canReconnectTimer = null;
+    /** Used to reconnect after the specified delay.*/
+    private boolean canReconnect = true;
 
     /** Initialize Kite Ticker.
      * @param accessToken is the token received after successful login process.
@@ -98,7 +101,6 @@ public class KiteTicker {
 
                 Date currentDate = new Date();
                 long timeInterval = (currentDate.getTime() - lastPongAt);
-
                 if (timeInterval >= 2 * pingInterval) {
                     doReconnect();
                 }
@@ -120,16 +122,25 @@ public class KiteTicker {
         if(nextReconnectInterval > maxRetryInterval){
             nextReconnectInterval = maxRetryInterval;
         }
-
-        count++;
-        if(count < maxRetries) {
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    reconnect(new ArrayList<>(subscribedTokens));
-                }
-            }, nextReconnectInterval);
+        if(count <= maxRetries) {
+            if(canReconnect) {
+                count++;
+                reconnect(new ArrayList<>(subscribedTokens));
+                canReconnect = false;
+                canReconnectTimer = new Timer();
+                canReconnectTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        canReconnect = true;
+                    }
+                }, nextReconnectInterval);
+            }
+        }else if(count > maxRetries) {
+            // if number of tries exceeds maximum number of retries then stop timer.
+            if(timer != null) {
+                timer.cancel();
+                timer = null;
+            }
         }
     }
 
@@ -160,7 +171,8 @@ public class KiteTicker {
     /* Set a maximum interval for every retry.*/
     public void setMaximumRetryInterval(int interval) throws KiteException {
         if(interval >= 5) {
-            maxRetryInterval = interval;
+            //convert to milliseconds
+            maxRetryInterval = interval * 1000;
         } else {
             throw new KiteException("Maximum retry interval can't be less than 0");
         }
@@ -205,7 +217,16 @@ public class KiteTicker {
             if(onErrorListener != null) {
                 onErrorListener.onError(e);
             }
-            doReconnect();
+            if(tryReconnection) {
+                if (timer == null) {
+                    // this is to handle reconnection first time
+                    if (lastPongAt == 0) {
+                        lastPongAt = 1;
+                    }
+                    timer = new Timer();
+                    timer.scheduleAtFixedRate(getTask(), 0, pongCheckInterval);
+                }
+            }
         }
     }
 
@@ -216,7 +237,6 @@ public class KiteTicker {
             @Override
             public void onConnected(WebSocket websocket, Map<String, List<String>> headers) {
                 count = 0;
-
                 nextReconnectInterval = 0;
 
                 if (onConnectedListener != null) {
@@ -281,13 +301,9 @@ public class KiteTicker {
              */
             @Override
             public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) {
-                if (timer != null){
-                    timer.cancel();
-                }
                 if (onDisconnectedListener != null) {
                     onDisconnectedListener.onDisconnected();
                 }
-                //connection = false;
                 return;
             }
 
@@ -627,7 +643,6 @@ public class KiteTicker {
                 return;
         }
         ws.addListener(getWebsocketAdapter());
-        lastPongAt = 0;
         connect();
         final OnConnect onUsersConnectedListener = this.onConnectedListener;
         setOnConnectedListener(new OnConnect() {
@@ -652,6 +667,7 @@ public class KiteTicker {
                         setMode(modeArrayItem.getValue(), modeArrayItem.getKey());
                     }
                 }
+                lastPongAt = 0;
                 count = 0;
                 nextReconnectInterval = 0;
                 onConnectedListener = onUsersConnectedListener;

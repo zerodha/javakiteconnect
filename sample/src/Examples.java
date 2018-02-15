@@ -453,10 +453,10 @@ public class Examples {
                 }
             }
         });
-
+        // Make sure this is called before calling connect.
         tickerProvider.setTryReconnection(true);
         //maximum retries and should be greater than 0
-        tickerProvider.setMaximumRetries(50);
+        tickerProvider.setMaximumRetries(10);
         //set maximum retry interval in seconds
         tickerProvider.setMaximumRetryInterval(30);
 
