@@ -569,20 +569,17 @@ public class KiteConnect {
     /**
      * Retrieves buy or sell trigger range for Cover Orders.
      * @return TriggerRange object is returned.
-     * @param exchange can be NSE, BSE, MCX
-     * @param tradingSymbol is the instrument name.
-     * @param trasactionType "BUY or "SELL".
+     * @param instruments is the array of tradingsymbol and exchange or instrument token.
+     * @param transactionType "BUY or "SELL".
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
      * @throws IOException is thrown when there is connection related error.
      */
-    public TriggerRange getTriggerRange(String exchange, String tradingSymbol, String trasactionType) throws KiteException, JSONException, IOException {
-        Map<String, Object> params = new HashMap<>();
-        params.put("transaction_type", trasactionType);
-
-        String url = routes.get("market.trigger_range").replace(":exchange", exchange).replace(":tradingsymbol", tradingSymbol);
-        JSONObject response = new KiteRequestHandler(proxy).getRequest(url, params, apiKey, accessToken);
-        return gson.fromJson(String.valueOf(response.get("data")), TriggerRange.class);
+    public Map<String, TriggerRange> getTriggerRange(String[] instruments, String transactionType) throws KiteException, JSONException, IOException {
+        String url = routes.get("market.trigger_range").replace(":transaction_type", transactionType.toLowerCase());
+        JSONObject response = new KiteRequestHandler(proxy).getRequest(url, "i", instruments, apiKey, accessToken);
+        Type type = new TypeToken<Map<String, TriggerRange>>(){}.getType();
+        return gson.fromJson(String.valueOf(response.get("data")), type);
     }
 
     /** Retrieves historical data for an instrument.

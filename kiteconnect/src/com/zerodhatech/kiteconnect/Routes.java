@@ -73,7 +73,7 @@ public class Routes {
             put("market.instruments", "/instruments/:exchange");
             put("market.quote", "/quote");
             put("market.historical", "/instruments/historical/:instrument_token/:interval");
-            put("market.trigger_range", "/instruments/:exchange/:tradingsymbol/trigger_range");
+            put("market.trigger_range", "/instruments/trigger_range/:transaction_type");
 
             put("quote.ohlc", "/quote/ohlc");
             put("quote.ltp", "/quote/ltp");

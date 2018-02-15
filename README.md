@@ -345,3 +345,15 @@ For more details about different mode of quotes and subscribing for them, take a
   #### Profile
   
   * Added new profile API call to fetch user details.
+  
+  #### Trigger range
+  
+  * Trigger range API supports fetching trigger range for multiple instruments in one request.
+  
+  #### TriggerRange (model)
+  
+  | version 2 | version 3 |
+  | :---: | :---: |
+  | start | lower |
+  | end | upper |
+  | percent | percentage |

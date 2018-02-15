@@ -116,8 +116,11 @@ public class Examples {
     /** Get trigger range.*/
     public void getTriggerRange(KiteConnect kiteConnect) throws KiteException, IOException {
         // You need to send transaction_type, exchange and tradingsymbol to get trigger range.
-        TriggerRange triggerRange = kiteConnect.getTriggerRange(Constants.EXCHANGE_CDS, "USDINR18JANFUT", Constants.TRANSACTION_TYPE_BUY);
-        System.out.println(triggerRange.start);
+        String[] instruments = {"BSE:INFY", "NSE:APOLLOTYRE", "NSE:SBIN"};
+        Map<String, TriggerRange> triggerRangeMap = kiteConnect.getTriggerRange(instruments, Constants.TRANSACTION_TYPE_BUY);
+        System.out.println(triggerRangeMap.get("NSE:SBIN").lower);
+        System.out.println(triggerRangeMap.get("NSE:APOLLOTYRE").upper);
+        System.out.println(triggerRangeMap.get("BSE:INFY").percentage);
     }
 
     /** Get orderbook.*/

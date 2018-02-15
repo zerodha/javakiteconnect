@@ -7,10 +7,10 @@ import com.google.gson.annotations.SerializedName;
  */
 public class TriggerRange {
 
-    @SerializedName("start")
-    public double start;
-    @SerializedName("end")
-    public double end;
-    @SerializedName("percent")
-    public double percent;
+    @SerializedName("lower")
+    public double lower;
+    @SerializedName("upper")
+    public double upper;
+    @SerializedName("percentage")
+    public double percentage;
 }
