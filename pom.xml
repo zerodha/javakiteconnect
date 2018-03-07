@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.rainmatter.kiteconnect</groupId>
+    <groupId>com.zerodhatech.kiteconnect</groupId>
     <artifactId>kiteconnect</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0</version>
     <packaging>jar</packaging>
 
     <distributionManagement>
@@ -20,7 +20,7 @@
         </repository>
     </distributionManagement>
 
-    <name>com.rainmatter.kiteconnect:kiteconnect</name>
+    <name>com.zerodhatech.kiteconnect:kiteconnect</name>
     <description>Kite Connect is a set of REST-like APIs that expose many capabilities required to build a complete investment and trading platform.</description>
     <url>https://github.com/rainmattertech/kiteconnectjava</url>
 
@@ -41,9 +41,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git:github.com/rainmattertech/kiteconnectjava.git</connection>
-        <developerConnection>scm:git:ssh:github.com/rainmattertech/kiteconnectjava.git</developerConnection>
-        <url>https://github.com/rainmattertech/kiteconnectjava/tree/master</url>
+        <connection>scm:git:git:github.com/zerodhatech/kiteconnectjava.git</connection>
+        <developerConnection>scm:git:ssh:github.com/zerodhatech/kiteconnectjava.git</developerConnection>
+        <url>https://github.com/zerodhatech/javakiteconnect/tree/kite3</url>
     </scm>
 
     <build>
@@ -128,12 +128,17 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>3.9.0</version>
+            <version>3.9.1</version>
         </dependency>
         <dependency>
             <groupId>com.squareup.okio</groupId>
             <artifactId>okio</artifactId>
             <version>1.13.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>logging-interceptor</artifactId>
+            <version>3.9.1</version>
         </dependency>
     </dependencies>
 

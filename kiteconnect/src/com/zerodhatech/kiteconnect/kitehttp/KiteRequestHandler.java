@@ -62,7 +62,7 @@ public class KiteRequestHandler {
      * @throws IOException is thrown when there is a connection related error.
      * @throws KiteException is thrown for all Kite Trade related errors.
      * @throws JSONException is thrown for parsing errors.*/
-    public JSONObject getRequest(String url, Map<String, Object> params, String apiKey, String accessToken) throws IOException, KiteException {
+    public JSONObject getRequest(String url, Map<String, Object> params, String apiKey, String accessToken) throws IOException, KiteException, JSONException {
         Request request = createGetRequest(url, params, apiKey, accessToken);
         Response response = client.newCall(request).execute();
         String body = response.body().string();
@@ -143,7 +143,7 @@ public class KiteRequestHandler {
      * @throws IOException is thrown when there is a connection related error.
      * @throws KiteException is thrown for all Kite Trade related errors.
      * */
-    public String getCSVRequest(String url, String apiKey, String accessToken) throws IOException, KiteException {
+    public String getCSVRequest(String url, String apiKey, String accessToken) throws IOException, KiteException, JSONException {
         Request request = new Request.Builder().url(url).header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").header("Authorization", "token "+apiKey+":"+accessToken).build();
         Response response = client.newCall(request).execute();
         String body = response.body().string();
