@@ -12,14 +12,14 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 ## Usage
 - [Download Kite Connect 3 jar file](https://github.com/zerodhatech/javakiteconnect/tree/kite3/dist) and include it in your build path.
 
-- Include com.rainmatter.kiteconnect into build path from maven. Use version 3.0.0
+- Include com.zerodhatech.kiteconnect into build path from maven. Use version 3.0.0
 
 - To use javakiteconnect in **Android**, you need to include jar file in the libs directory and add the following line in you module's gradle file ``` compile files('libs/kiteconnect.jar') ```
 
 ## API usage
 ```java
 // Initialize Kiteconnect using apiKey.
-Kiteconnect kiteSdk = new Kiteconnect("your_apiKey");
+KiteConnect kiteSdk = new KiteConnect("your_apiKey");
 
 // Set userId.
 kiteSdk.setUserId("your_userId");
@@ -29,7 +29,7 @@ Get login url. Use this url in webview to login user, after authenticating user 
 String url = kiteSdk.getLoginUrl();
 
 // Get accessToken as follows,
-UserModel userModel =  kiteSdk.requestAccessToken("request_token", "your_apiSecret");
+User user =  kiteSdk.requestAccessToken("request_token", "your_apiSecret");
 
 // Set request token and public token which are obtained from login process.
 kiteSdk.setAccessToken(userModel.accessToken);
@@ -48,29 +48,30 @@ Margin margins = kiteSdk.getMargins("equity");
 System.out.println(margins.available.cash);
 System.out.println(margins.utilised.debits);
 
-/* Place order method requires a map argument which contains,
-tradingsymbol, exchange, transaction_type, order_type, quantity, product, price, trigger_price, disclosed_quantity, validity
-squareoff_value, stoploss_value, trailing_stoploss
-and variety  which can be value can be regular, bo, co, amo.
-place order which will return order model which will have only orderId in the order model.
+/** Place order method requires a orderParams argument which contains,
+         * tradingsymbol, exchange, transaction_type, order_type, quantity, product, price, trigger_price, disclosed_quantity, validity
+         * squareoff_value, stoploss_value, trailing_stoploss
+         * and variety (value can be regular, bo, co, amo)
+         * place order will return order model which will have only orderId in the order model
+         *
+         * Following is an example param for LIMIT order,
+         * if a call fails then KiteException will have error message in it
+         * Success of this call implies only order has been placed successfully, not order execution. */
 
-Following is an example param for SL order,
-if a call fails then KiteException will have error message in it
-Success of this call implies only order has been placed successfully, not order execution.*/
-Map<String, Object> param = new HashMap<String, Object>(){
-   {
-        put("quantity", "1");
-        put("order_type", "SL");
-        put("tradingsymbol", "HINDALCO");
-        put("product", "CNC");
-        put("exchange", "NSE");
-        put("transaction_type", "BUY");
-        put("validity", "DAY");
-        put("price", "158.0");
-        put("trigger_price", "157.5");
-    }};
-Order order = kiteconnect.placeOrder(param, "regular");
-System.out.println(order.orderId);
+        OrderParams orderParams = new OrderParams();
+        orderParams.quantity = 1;
+        orderParams.orderType = Constants.ORDER_TYPE_LIMIT;
+        orderParams.tradingsymbol = "ASHOKLEY";
+        orderParams.product = Constants.PRODUCT_CNC;
+        orderParams.exchange = Constants.EXCHANGE_NSE;
+        orderParams.transactionType = Constants.TRANSACTION_TYPE_BUY;
+        orderParams.validity = Constants.VALIDITY_DAY;
+        orderParams.price = 122.2;
+        orderParams.triggerPrice = 0.0;
+        orderParams.tag = "myTag"; //tag is optional and it cannot be more than 8 characters and only alphanumeric is allowed
+
+        Order order = kiteConnect.placeOrder(orderParams, Constants.VARIETY_REGULAR);
+        System.out.println(order.orderId);
 ```
 For more details, take a look at Examples.java in sample directory.
 
@@ -128,7 +129,7 @@ For more details, take a look at Examples.java in sample directory.
 
         tickerProvider.setTryReconnection(true);
         //maximum retries and should be greater than 0
-        tickerProvider.setMaximumRetries(50);
+        tickerProvider.setMaximumRetries(10);
         //set maximum retry interval in seconds
         tickerProvider.setMaximumRetryInterval(30);
 
@@ -286,7 +287,7 @@ For more details about different mode of quotes and subscribing for them, take a
   
   Version 2: 
   ```java
-  Kiteconnect kiteSdk = new Kiteconnect("your_apiKey");
+  KiteConnect kiteSdk = new KiteConnect("your_apiKey");
   ```
   Version 3:
   ```java
