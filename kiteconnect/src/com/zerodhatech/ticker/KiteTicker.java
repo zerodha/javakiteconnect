@@ -706,6 +706,12 @@ public class KiteTicker {
                 }
             }
 
+            if(type.equals("error")) {
+                if(onErrorListener != null) {
+                    onErrorListener.onError(data.getString("data"));
+                }
+            }
+
         }catch (JSONException e) {
             e.printStackTrace();
         }

@@ -10,4 +10,6 @@ public interface OnError {
     public void onError(Exception exception);
 
     public void onError(KiteException kiteException);
+
+    void onError(String error);
 }

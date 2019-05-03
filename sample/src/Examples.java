@@ -433,6 +433,11 @@ public class Examples {
             public void onError(KiteException kiteException) {
                 //handle here.
             }
+
+            @Override
+            public void onError(String error) {
+                System.out.println(error);
+            }
         });
 
         tickerProvider.setOnTickerArrivalListener(new OnTicks() {
