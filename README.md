@@ -3,7 +3,7 @@ The official Java client for communicating with [Kite Connect API](https://kite.
 
 Kite Connect is a set of REST-like APIs that expose many capabilities required to build a complete investment and trading platform. Execute orders in real time, manage user portfolio, stream live market data (WebSockets), and more, with the simple HTTP API collection.
 
-[Zerodha Technology Pvt Ltd](http://rainmatter.com) (c) 2016. Licensed under the MIT License.
+[Zerodha Technology Pvt Ltd](http://rainmatter.com) (c) 2018. Licensed under the MIT License.
 
 ## Documentation
 - [Kite Connect HTTP API documentation](https://kite.trade/docs/connect/v3/)
@@ -49,29 +49,28 @@ System.out.println(margins.available.cash);
 System.out.println(margins.utilised.debits);
 
 /** Place order method requires a orderParams argument which contains,
-         * tradingsymbol, exchange, transaction_type, order_type, quantity, product, price, trigger_price, disclosed_quantity, validity
-         * squareoff_value, stoploss_value, trailing_stoploss
-         * and variety (value can be regular, bo, co, amo)
-         * place order will return order model which will have only orderId in the order model
-         *
-         * Following is an example param for LIMIT order,
-         * if a call fails then KiteException will have error message in it
-         * Success of this call implies only order has been placed successfully, not order execution. */
+   * tradingsymbol, exchange, transaction_type, order_type, quantity, product, price, trigger_price, disclosed_quantity, validity
+   * squareoff_value, stoploss_value, trailing_stoploss
+   * and variety (value can be regular, bo, co, amo)
+   * place order will return order model which will have only orderId in the order model
+   * Following is an example param for LIMIT order,
+   * if a call fails then KiteException will have error message in it
+   * Success of this call implies only order has been placed successfully, not order execution. */
 
-        OrderParams orderParams = new OrderParams();
-        orderParams.quantity = 1;
-        orderParams.orderType = Constants.ORDER_TYPE_LIMIT;
-        orderParams.tradingsymbol = "ASHOKLEY";
-        orderParams.product = Constants.PRODUCT_CNC;
-        orderParams.exchange = Constants.EXCHANGE_NSE;
-        orderParams.transactionType = Constants.TRANSACTION_TYPE_BUY;
-        orderParams.validity = Constants.VALIDITY_DAY;
-        orderParams.price = 122.2;
-        orderParams.triggerPrice = 0.0;
-        orderParams.tag = "myTag"; //tag is optional and it cannot be more than 8 characters and only alphanumeric is allowed
+   OrderParams orderParams = new OrderParams();
+   orderParams.quantity = 1;
+   orderParams.orderType = Constants.ORDER_TYPE_LIMIT;
+   orderParams.tradingsymbol = "ASHOKLEY";
+   orderParams.product = Constants.PRODUCT_CNC;
+   orderParams.exchange = Constants.EXCHANGE_NSE;
+   orderParams.transactionType = Constants.TRANSACTION_TYPE_BUY;
+   orderParams.validity = Constants.VALIDITY_DAY;
+   orderParams.price = 122.2;
+   orderParams.triggerPrice = 0.0;
+   orderParams.tag = "myTag"; //tag is optional and it cannot be more than 8 characters and only alphanumeric is allowed
 
-        Order order = kiteConnect.placeOrder(orderParams, Constants.VARIETY_REGULAR);
-        System.out.println(order.orderId);
+   Order order = kiteConnect.placeOrder(orderParams, Constants.VARIETY_REGULAR);
+   System.out.println(order.orderId);
 ```
 For more details, take a look at Examples.java in sample directory.
 
