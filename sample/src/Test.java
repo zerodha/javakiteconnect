@@ -19,6 +19,7 @@ public class Test {
         try {
                 // First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteConnect api call.
                 // Initialize KiteSdk with your apiKey.
+                // If you wish to set proxy then pass proxy as a second parameter in the constructor with api_key. syntax:- new KiteConnect("xxxxxxyyyyyzzz", proxy).
                 KiteConnect kiteConnect = new KiteConnect("xxxxxxyyyyyzzz");
 
                 // Set userId
