@@ -19,14 +19,16 @@ public class Test {
         try {
                 // First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteConnect api call.
                 // Initialize KiteSdk with your apiKey.
+                KiteConnect kiteConnect = new KiteConnect("xxxxyyyyzzzz");
+
+                //If you wish to enable debug logs send true in the constructor, this will log request and response.
+                //KiteConnect kiteConnect = new KiteConnect("xxxxyyyyzzzz", true);
+
                 // If you wish to set proxy then pass proxy as a second parameter in the constructor with api_key. syntax:- new KiteConnect("xxxxxxyyyyyzzz", proxy).
-                KiteConnect kiteConnect = new KiteConnect("xxxxxxyyyyyzzz");
+                //KiteConnect kiteConnect = new KiteConnect("xxxxyyyyzzzz", userProxy, false);
 
                 // Set userId
-                kiteConnect.setUserId("xxxxyyy");
-
-                //Enable logs for debugging purpose. This will log request and response.
-                kiteConnect.setEnableLogging(true);
+                kiteConnect.setUserId("xxxyyy");
 
                 // Get login url
                 String url = kiteConnect.getLoginURL();
@@ -124,7 +126,7 @@ public class Test {
                 examples.logout(kiteConnect);
 
                 ArrayList<Long> tokens = new ArrayList<>();
-                tokens.add(Long.parseLong("265"));
+                tokens.add(Long.parseLong("256265"));
                 examples.tickerUsage(kiteConnect, tokens);
         } catch (KiteException e) {
             System.out.println(e.message+" "+e.code+" "+e.getClass().getName());

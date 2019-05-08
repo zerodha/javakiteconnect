@@ -44,14 +44,22 @@ public class KiteConnect {
      * @param apiKey is the api key provided after creating new Kite Connect app on developers console.
      */
     public KiteConnect(String apiKey){
-        this(apiKey, null);
+        this(apiKey, null, false);
+    }
+
+    /** Initializes KiteSDK with the api key provided for your app.
+     * @param apiKey is the api key provided after creating new Kite Connect app on developers console.
+     * @param enableDebugLog is a boolean to enable debug logs
+     */
+    public KiteConnect(String apiKey, boolean enableDebugLog){
+        this(apiKey, null, enableDebugLog);
     }
 
     /** Initializes KiteSDK with the api key provided for your app.
      * @param apiKey is the api key provided after creating new Kite Connect app on developers console.
      * @param userProxy is the user defined proxy. Can be used only if a user chose to use the proxy.
      */
-    public KiteConnect(String apiKey, Proxy userProxy) {
+    public KiteConnect(String apiKey, Proxy userProxy, boolean enableDebugLog) {
         this.proxy = userProxy;
         this.apiKey = apiKey;
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -68,6 +76,7 @@ public class KiteConnect {
             }
         });
         gson = gsonBuilder.setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        ENABLE_LOGGING = enableDebugLog;
         kiteRequestHandler = new KiteRequestHandler(proxy);
     }
 
@@ -77,18 +86,6 @@ public class KiteConnect {
     public void setSessionExpiryHook(SessionExpiryHook hook){
         sessionExpiryHook = hook;
     }
-
-    /** Enables logging of requests and responses.
-     * @param enable is set to true to enable logging. */
-    public void setEnableLogging(boolean enable) {
-        ENABLE_LOGGING = enable;
-    }
-
-    /** Set proxy.
-     * @param  proxy defined by user for making requests. *//*
-    public void setProxy(Proxy proxy){
-        this.proxy = proxy;
-    }*/
 
     /**
      *  Returns apiKey of the App.
