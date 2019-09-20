@@ -18,6 +18,7 @@ public class HistoricalData {
     public double low;
     public double close;
     public long volume;
+    public long oi;
     public List<HistoricalData> dataArrayList = new ArrayList<>();
 
     public void parseResponse(JSONObject response) throws JSONException {
@@ -32,6 +33,8 @@ public class HistoricalData {
             historicalData.low = itemArray.getDouble(3);
             historicalData.close = itemArray.getDouble(4);
             historicalData.volume = itemArray.getLong(5);
+            if(itemArray.length() > 6)
+            historicalData.oi = itemArray.getLong(6);
             dataArrayList.add(historicalData);
         }
     }

@@ -596,12 +596,13 @@ public class KiteConnect {
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws IOException is thrown when there is connection related error.
      * */
-    public HistoricalData getHistoricalData(Date from, Date to, String token, String interval, boolean continuous) throws KiteException, IOException, JSONException {
+    public HistoricalData getHistoricalData(Date from, Date to, String token, String interval, boolean continuous, boolean oi) throws KiteException, IOException, JSONException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String, Object> params = new HashMap<>();
         params.put("from", format.format(from));
         params.put("to", format.format(to));
         params.put("continuous", continuous ? 1 : 0);
+        params.put("oi", oi ? 1 : 0);
 
         String url = routes.get("market.historical").replace(":instrument_token", token).replace(":interval", interval);
         HistoricalData historicalData = new HistoricalData();

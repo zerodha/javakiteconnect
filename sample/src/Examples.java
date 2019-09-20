@@ -312,15 +312,16 @@ public class Examples {
         Date from =  new Date();
         Date to = new Date();
         try {
-            from = formatter.parse("2018-01-03 12:00:00");
-            to = formatter.parse("2018-01-03 22:49:12");
+            from = formatter.parse("2019-09-20 09:15:00");
+            to = formatter.parse("2019-09-20 15:30:00");
         }catch (ParseException e) {
             e.printStackTrace();
         }
-        HistoricalData historicalData = kiteConnect.getHistoricalData(from, to, "11946498", "15minute", false);
+        HistoricalData historicalData = kiteConnect.getHistoricalData(from, to, "54872327", "15minute", false, true);
         System.out.println(historicalData.dataArrayList.size());
         System.out.println(historicalData.dataArrayList.get(0).volume);
         System.out.println(historicalData.dataArrayList.get(historicalData.dataArrayList.size() - 1).volume);
+        System.out.println(historicalData.dataArrayList.get(0).oi);
     }
 
     /** Logout user.*/
