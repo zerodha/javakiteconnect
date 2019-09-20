@@ -285,6 +285,8 @@ public class Examples {
         System.out.println(quotes.get("NSE:APOLLOTYRE").oi +"");
         System.out.println(quotes.get("NSE:APOLLOTYRE").depth.buy.get(4).getPrice());
         System.out.println(quotes.get("NSE:APOLLOTYRE").timestamp);
+        System.out.println(quotes.get("NSE:APOLLOTYRE").lowerCircuitLimit+"");
+        System.out.println(quotes.get("NSE:APOLLOTYRE").upperCircuitLimit+"");
     }
 
     /* Get ohlc and lastprice for multiple instruments at once.

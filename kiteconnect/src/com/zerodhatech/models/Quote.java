@@ -39,5 +39,8 @@ public class Quote {
     public double oiDayLow;
     @SerializedName("depth")
     public MarketDepth depth;
-
+    @SerializedName("lower_circuit_limit")
+    public double lowerCircuitLimit;
+    @SerializedName("upper_circuit_limit")
+    public double upperCircuitLimit;
 }
