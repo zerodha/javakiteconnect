@@ -592,6 +592,7 @@ public class KiteConnect {
      * @param continuous set to true for fetching continuous data of expired instruments.
      * @param interval can be minute, day, 3minute, 5minute, 10minute, 15minute, 30minute, 60minute.
      * @param token is instruments token.
+     * @param oi set to true for fetching open interest data. The default value is 0.
      * @return HistoricalData object which contains list of historical data termed as dataArrayList.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws IOException is thrown when there is connection related error.

@@ -306,7 +306,7 @@ public class Examples {
 
     /** Get historical data for an instrument.*/
     public void getHistoricalData(KiteConnect kiteConnect) throws KiteException, IOException {
-        /** Get historical data dump, requires from and to date, intrument token, interval, continuous (for expired F&O contracts)
+        /** Get historical data dump, requires from and to date, intrument token, interval, continuous (for expired F&O contracts), oi (open interest)
          * returns historical data object which will have list of historical data inside the object.*/
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date from =  new Date();
