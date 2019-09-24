@@ -65,6 +65,12 @@ public class Routes {
             put("orders.cancel", "/orders/:variety/:order_id");
             put("orders.trades", "/orders/:order_id/trades");
 
+            put("gtt", "/gtt/triggers");
+            put("gtt.place", "/gtt/triggers");
+            put("gtt.info", "/gtt/triggers/:id");
+            put("gtt.modify", "/gtt/triggers/:id");
+            put("gtt.delete", "/gtt/triggers/:id");
+
             put("portfolio.positions", "/portfolio/positions");
             put("portfolio.holdings", "/portfolio/holdings");
             put("portfolio.positions.modify", "/portfolio/positions");

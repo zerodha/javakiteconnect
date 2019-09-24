@@ -33,7 +33,7 @@ public class OrderParams {
     public String product;
 
     /**
-     * Order type (NRML, SL, SL-M, MARKET).
+     * Order type (LIMIT, SL, SL-M, MARKET).
      */
     public String orderType;
 

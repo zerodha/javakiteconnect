@@ -51,4 +51,18 @@ public class Constants {
     public static String INSTRUMENTS_SEGMENTS_COMMODITY = "commodity";
     public static String INSTRUMENTS_SEGMENTS_FUTURES = "futures";
     public static String INSTRUMENTS_SEGMENTS_CURRENCY = "currency";
+
+    /* GTT status */
+    public static String ACTIVE = "active";
+    public static String TRIGGERED = "triggered";
+    public static String DISABLED = "disabled";
+    public static String EXPIRED = "expired";
+    public static String CANCELLED = "cancelled";
+    public static String REJECTED = "rejected";
+    public static String DELETED = "deleted";
+
+
+    /* GTT trigger type */
+    public static String OCO = "two-leg";
+    public static String SINGLE = "single";
 }

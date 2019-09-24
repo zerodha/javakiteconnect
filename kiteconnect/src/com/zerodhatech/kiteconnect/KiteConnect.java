@@ -8,6 +8,7 @@ import com.zerodhatech.kiteconnect.kitehttp.exceptions.KiteException;
 import com.zerodhatech.kiteconnect.utils.Constants;
 import com.zerodhatech.models.*;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.supercsv.cellprocessor.*;
@@ -380,6 +381,127 @@ public class KiteConnect {
         String url = routes.get("orders");
         JSONObject response = kiteRequestHandler.getRequest(url, apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Order[].class));
+    }
+
+    /* Fetches list of gtt existing in an account.
+    * @return List of GTTs.
+    * @throws KiteException is thrown for all Kite trade related errors.
+    * @throws IOException is thrown when there is connection error.
+    * */
+    public List<GTT> getGTTs() throws KiteException, IOException, JSONException {
+        String url = routes.get("gtt");
+        JSONObject response = kiteRequestHandler.getRequest(url, apiKey, accessToken);
+        return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), GTT[].class));
+    }
+
+    /** Fetch details of a GTT.
+     * @param gttId is the id of the GTT that needs to be fetched.
+     * @return GTT object which contains all the details.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection error.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * */
+    public GTT getGTT(int gttId) throws IOException, KiteException, JSONException {
+        String url = routes.get("gtt.info").replace(":id", gttId+"");
+        JSONObject response = kiteRequestHandler.getRequest(url, apiKey, accessToken);
+        return gson.fromJson(String.valueOf(response.get("data")), GTT.class);
+    }
+
+    /** Place a GTT.
+     * @param gttParams is GTT param which container condition, type, order details. It can contain one or two orders.
+     * @throws IOException  is thrown when there is connection error.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * @return GTT object contains only gttId.*/
+    public GTT placeGTT(GTTParams gttParams) throws IOException, KiteException, JSONException {
+        String url = routes.get("gtt.place");
+        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> conditionParam = new HashMap<>();
+        JSONArray ordersParam = new JSONArray();
+
+        conditionParam.put("exchange", gttParams.exchange);
+        conditionParam.put("tradingsymbol", gttParams.tradingsymbol);
+        conditionParam.put("trigger_values", gttParams.triggerPrices.toArray());
+        conditionParam.put("last_price", gttParams.lastPrice);
+        conditionParam.put("instrument_token", gttParams.instrumentToken);
+
+        for(GTTParams.GTTOrderParams order : gttParams.orders) {
+            JSONObject gttOrderItem = new JSONObject();
+            gttOrderItem.put("exchange", gttParams.exchange);
+            gttOrderItem.put("tradingsymbol", gttParams.tradingsymbol);
+            gttOrderItem.put("transaction_type", order.transactionType);
+            gttOrderItem.put("quantity", order.quantity);
+            gttOrderItem.put("price", order.price);
+            gttOrderItem.put("order_type", order.orderType);
+            gttOrderItem.put("product", order.product);
+            ordersParam.put(gttOrderItem);
+        }
+
+        params.put("condition", new JSONObject(conditionParam).toString());
+        params.put("orders", ordersParam.toString());
+        params.put("type", gttParams.triggerType);
+
+        JSONObject response = kiteRequestHandler.postRequest(url, params, apiKey, accessToken);
+        GTT gtt = new GTT();
+        gtt.id = response.getJSONObject("data").getInt("trigger_id");
+        return gtt;
+    }
+
+    /** Modify a GTT.
+     * @param gttParams is GTT param which container condition, type, order details. It can contain one or two orders.
+     * @param gttId is the id of the GTT to be modified.
+     * @throws IOException  is thrown when there is connection error.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * @return GTT object contains only gttId.*/
+    public GTT modifyGTT(int gttId, GTTParams gttParams) throws IOException, KiteException, JSONException {
+        String url = routes.get("gtt.modify").replace(":id", gttId+"");
+        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> conditionParam = new HashMap<>();
+        JSONArray ordersParam = new JSONArray();
+
+        conditionParam.put("exchange", gttParams.exchange);
+        conditionParam.put("tradingsymbol", gttParams.tradingsymbol);
+        conditionParam.put("trigger_values", gttParams.triggerPrices.toArray());
+        conditionParam.put("last_price", gttParams.lastPrice);
+        conditionParam.put("instrument_token", gttParams.instrumentToken);
+
+        for(GTTParams.GTTOrderParams order : gttParams.orders) {
+            JSONObject gttOrderItem = new JSONObject();
+            gttOrderItem.put("exchange", gttParams.exchange);
+            gttOrderItem.put("tradingsymbol", gttParams.tradingsymbol);
+            gttOrderItem.put("transaction_type", order.transactionType);
+            gttOrderItem.put("quantity", order.quantity);
+            gttOrderItem.put("price", order.price);
+            gttOrderItem.put("order_type", order.orderType);
+            gttOrderItem.put("product", order.product);
+            ordersParam.put(gttOrderItem);
+        }
+
+        params.put("condition", new JSONObject(conditionParam).toString());
+        params.put("orders", ordersParam.toString());
+        params.put("type", gttParams.triggerType);
+
+        JSONObject response = kiteRequestHandler.putRequest(url, params, apiKey, accessToken);
+        GTT gtt = new GTT();
+        gtt.id = response.getJSONObject("data").getInt("trigger_id");
+        return  gtt;
+    }
+
+    /**
+     * Cancel GTT.
+     * @param gttId order id of first leg.
+     * @return GTT object contains only gttId.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection error.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * */
+    public GTT cancelGTT(int gttId) throws IOException, KiteException, JSONException {
+        String url = routes.get("gtt.delete").replace(":id", gttId+"");
+        JSONObject response  = kiteRequestHandler.deleteRequest(url, new HashMap<>(), apiKey, accessToken);
+        GTT gtt = new GTT();
+        gtt.id = response.getJSONObject("data").getInt("trigger_id");
+        return gtt;
     }
 
     /** Returns list of different stages an order has gone through.

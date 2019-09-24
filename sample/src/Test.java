@@ -28,7 +28,7 @@ public class Test {
                 //KiteConnect kiteConnect = new KiteConnect("xxxxyyyyzzzz", userProxy, false);
 
                 // Set userId
-                kiteConnect.setUserId("xxxyyy");
+                kiteConnect.setUserId("xxxxx");
 
                 // Get login url
                 String url = kiteConnect.getLoginURL();
@@ -100,6 +100,16 @@ public class Test {
                 examples.getOHLC(kiteConnect);
 
                 examples.getLTP(kiteConnect);
+
+                examples.getGTTs(kiteConnect);
+
+                examples.getGTT(kiteConnect);
+
+                examples.placeGTT(kiteConnect);
+
+                examples.modifyGTT(kiteConnect);
+
+                examples.cancelGTT(kiteConnect);
 
                 examples.getMFInstruments(kiteConnect);
 

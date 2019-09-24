@@ -239,6 +239,107 @@ public class Examples {
         System.out.println(order.orderId);
     }
 
+    /**Get all gtts. */
+    public void getGTTs(KiteConnect kiteConnect) throws KiteException, IOException {
+        List<GTT> gtts = kiteConnect.getGTTs();
+        System.out.println(gtts.get(0).createdAt);
+        System.out.println(gtts.get(0).condition.exchange);
+        System.out.println(gtts.get(0).orders.get(0).price);
+    }
+
+    /** Get a particular GTT. */
+    public void getGTT(KiteConnect kiteConnect) throws IOException, KiteException {
+        GTT gtt = kiteConnect.getGTT(177574);
+        System.out.println(gtt.condition.tradingSymbol);
+    }
+
+    /** Place a GTT (Good till trigger)*/
+    public void placeGTT(KiteConnect kiteConnect) throws IOException, KiteException {
+        GTTParams gttParams = new GTTParams();
+        gttParams.triggerType = Constants.OCO;
+        gttParams.exchange = "NSE";
+        gttParams.tradingsymbol = "SBIN";
+        gttParams.lastPrice = 302.95;
+
+        List<Double> triggerPrices = new ArrayList<>();
+        triggerPrices.add(290d);
+        triggerPrices.add(320d);
+        gttParams.triggerPrices = triggerPrices;
+
+        /** Only sell is allowed for OCO or two-leg orders.
+         * Single leg orders can be buy or sell order.
+         * Passing a last price is mandatory.
+         * A stop-loss order must have trigger and price below last price and target order must have trigger and price above last price.
+         * Only limit order type  and CNC product type is allowed for now.
+         * */
+
+        /** Stop-loss or lower trigger. */
+        GTTParams.GTTOrderParams order1Params = gttParams. new GTTOrderParams();
+        order1Params.orderType = Constants.ORDER_TYPE_LIMIT;
+        order1Params.price = 290;
+        order1Params.product = Constants.PRODUCT_CNC;
+        order1Params.transactionType = Constants.TRANSACTION_TYPE_SELL;
+        order1Params.quantity = 0;
+
+        GTTParams.GTTOrderParams order2Params = gttParams. new GTTOrderParams();
+        order2Params.orderType = Constants.ORDER_TYPE_LIMIT;
+        order2Params.price = 320;
+        order2Params.product = Constants.PRODUCT_CNC;
+        order2Params.transactionType = Constants.TRANSACTION_TYPE_SELL;
+        order2Params.quantity = 1;
+
+        /** Target or upper trigger. */
+        List<GTTParams.GTTOrderParams> ordersList = new ArrayList();
+        ordersList.add(order1Params);
+        ordersList.add(order2Params);
+        gttParams.orders = ordersList;
+
+        GTT gtt = kiteConnect.placeGTT(gttParams);
+        System.out.println(gtt.id);
+    }
+
+    /** Modify a GTT (Good till trigger)*/
+    public void modifyGTT(KiteConnect kiteConnect) throws IOException, KiteException {
+        GTTParams gttParams = new GTTParams();
+        gttParams.triggerType = Constants.OCO;
+        gttParams.exchange = "NSE";
+        gttParams.tradingsymbol = "SBIN";
+        gttParams.lastPrice = 302.95;
+
+        List<Double> triggerPrices = new ArrayList<>();
+        triggerPrices.add(290d);
+        triggerPrices.add(320d);
+        gttParams.triggerPrices = triggerPrices;
+
+        GTTParams.GTTOrderParams order1Params = gttParams. new GTTOrderParams();
+        order1Params.orderType = Constants.ORDER_TYPE_LIMIT;
+        order1Params.price = 290;
+        order1Params.product = Constants.PRODUCT_CNC;
+        order1Params.transactionType = Constants.TRANSACTION_TYPE_SELL;
+        order1Params.quantity = 1;
+
+        GTTParams.GTTOrderParams order2Params = gttParams. new GTTOrderParams();
+        order2Params.orderType = Constants.ORDER_TYPE_LIMIT;
+        order2Params.price = 320;
+        order2Params.product = Constants.PRODUCT_CNC;
+        order2Params.transactionType = Constants.TRANSACTION_TYPE_SELL;
+        order2Params.quantity = 1;
+
+        List<GTTParams.GTTOrderParams> ordersList = new ArrayList();
+        ordersList.add(order1Params);
+        ordersList.add(order2Params);
+        gttParams.orders = ordersList;
+
+        GTT gtt = kiteConnect.modifyGTT(176036, gttParams);
+        System.out.println(gtt.id);
+    }
+
+    /** Cancel a GTT.*/
+    public void cancelGTT(KiteConnect kiteConnect) throws IOException, KiteException {
+        GTT gtt = kiteConnect.cancelGTT(175859);
+        System.out.println(gtt.id);
+    }
+
     /** Get all positions.*/
     public void getPositions(KiteConnect kiteConnect) throws KiteException, IOException {
         // Get positions returns position model which contains list of positions.
