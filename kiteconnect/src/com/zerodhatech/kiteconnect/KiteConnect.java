@@ -383,7 +383,7 @@ public class KiteConnect {
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Order[].class));
     }
 
-    /* Fetches list of gtt existing in an account.
+    /** Fetches list of gtt existing in an account.
     * @return List of GTTs.
     * @throws KiteException is thrown for all Kite trade related errors.
     * @throws IOException is thrown when there is connection error.
