@@ -47,6 +47,8 @@ public class Order {
     public Date orderTimestamp;
     @SerializedName("exchange_timestamp")
     public Date exchangeTimestamp;
+    @SerializedName("exchange_update_timestamp")
+    public Date exchangeUpdateTimestamp;
     @SerializedName("average_price")
     public String averagePrice;
     @SerializedName("transaction_type")
@@ -59,5 +61,6 @@ public class Order {
     public String parentOrderId;
     @SerializedName("tag")
     public String tag;
-
+    @SerializedName("guid")
+    public String guid;
 }
