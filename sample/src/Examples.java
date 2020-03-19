@@ -128,7 +128,8 @@ public class Examples {
         // Get orders returns order model which will have list of orders inside, which can be accessed as follows,
         List<Order> orders = kiteConnect.getOrders();
         for(int i = 0; i< orders.size(); i++){
-            System.out.println(orders.get(i).tradingSymbol+" "+orders.get(i).orderId+" "+orders.get(i).parentOrderId+" "+orders.get(i).orderType+" "+orders.get(i).averagePrice+" "+orders.get(i).exchangeTimestamp);
+            System.out.println(orders.get(i).tradingSymbol+" "+orders.get(i).orderId+" "+orders.get(i).parentOrderId+
+                " "+orders.get(i).orderType+" "+orders.get(i).averagePrice+" "+orders.get(i).exchangeTimestamp+" "+orders.get(i).exchangeUpdateTimestamp+" "+orders.get(i).guid);
         }
         System.out.println("list of orders size is "+orders.size());
     }
