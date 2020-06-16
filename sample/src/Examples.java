@@ -381,7 +381,7 @@ public class Examples {
     /** Get quote for a scrip.*/
     public void getQuote(KiteConnect kiteConnect) throws KiteException, IOException {
         // Get quotes returns quote for desired tradingsymbol.
-        String[] instruments = {"256265","BSE:INFY", "NSE:APOLLOTYRE", "NSE:NIFTY 50"};
+        String[] instruments = {"256265","BSE:INFY", "NSE:APOLLOTYRE", "NSE:NIFTY 50", "24507906"};
         Map<String, Quote> quotes = kiteConnect.getQuote(instruments);
         System.out.println(quotes.get("NSE:APOLLOTYRE").instrumentToken+"");
         System.out.println(quotes.get("NSE:APOLLOTYRE").oi +"");
@@ -389,6 +389,8 @@ public class Examples {
         System.out.println(quotes.get("NSE:APOLLOTYRE").timestamp);
         System.out.println(quotes.get("NSE:APOLLOTYRE").lowerCircuitLimit+"");
         System.out.println(quotes.get("NSE:APOLLOTYRE").upperCircuitLimit+"");
+        System.out.println(quotes.get("24507906").oiDayHigh);
+        System.out.println(quotes.get("24507906").oiDayLow);
     }
 
     /* Get ohlc and lastprice for multiple instruments at once.
