@@ -12,7 +12,7 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 ## Usage
 - [Download Kite Connect 3 jar file](https://github.com/zerodhatech/javakiteconnect/tree/master/dist) and include it in your build path.
 
-- Include com.zerodhatech.kiteconnect into build path from maven. Use version 3.1.1
+- Include com.zerodhatech.kiteconnect into build path from maven. Use version 3.1.2
 
 - To use javakiteconnect in **Android**, you need to include jar file in the libs directory and add the following line in you module's gradle file ``` compile files('libs/kiteconnect.jar') ```
 
