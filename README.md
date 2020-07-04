@@ -26,7 +26,7 @@ kiteSdk.setUserId("your_userId");
 
 /* First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteconnect api call.
 Get login url. Use this url in webview to login user, after authenticating user you will get requestToken. Use the same to get accessToken. */
-String url = kiteSdk.getLoginUrl();
+String url = kiteSdk.getLoginURL();
 
 // Get accessToken as follows,
 User user =  kiteSdk.requestAccessToken("request_token", "your_apiSecret");
