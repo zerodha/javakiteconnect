@@ -65,5 +65,7 @@ public class Position {
     public double daySellValue;
     @SerializedName("value")
     public double value;
+    @SerializedName("average_price")
+    public double averagePrice;
 }
 
