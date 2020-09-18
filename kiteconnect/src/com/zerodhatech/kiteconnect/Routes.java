@@ -99,6 +99,8 @@ public class Routes {
             put("mutualfunds.holdings", "/mf/holdings");
 
             put("api.token", "/session/token");
+
+            put("margin.calculation.order", "/margins/orders");
         }};
     }
 

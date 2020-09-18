@@ -4,6 +4,7 @@ import com.zerodhatech.kiteconnect.KiteConnect;
 import com.zerodhatech.kiteconnect.kitehttp.exceptions.KiteException;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -83,6 +84,22 @@ public class KiteRequestHandler {
         Response response = client.newCall(request).execute();
         String body = response.body().string();
         return new KiteResponseHandler().handle(response, body);
+    }
+
+    /** Make a JSON POST request.
+     * @param url is the endpoint to which request has to be sent.
+     * @param apiKey is the api key of the Kite Connect app.
+     * @param accessToken is the access token obtained after successful login process.
+     * @param jsonArray is the JSON array of params which has to be sent in the body.
+     * @throws IOException is thrown when there is a connection related error.
+     * @throws KiteException is thrown for all Kite Trade related errors.
+     * @throws JSONException is thrown for parsing errors.
+     * */
+    public JSONObject postRequestJSON(String url, JSONArray jsonArray, String apiKey, String accessToken) throws IOException, KiteException, JSONException {
+        Request request = createJsonPostRequest(url, jsonArray, apiKey, accessToken);
+        Response response = client.newCall(request).execute();
+        String body = response.body().string();
+        return  new KiteResponseHandler().handle(response, body);
     }
 
     /** Makes a PUT request.
@@ -203,6 +220,24 @@ public class KiteRequestHandler {
 
         RequestBody requestBody = builder.build();
         Request request = new Request.Builder().url(url).post(requestBody).header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").header("Authorization", "token "+apiKey+":"+accessToken).build();
+        return request;
+    }
+
+    /** Create a POST request with body type JSON.
+     * @param url is the endpoint to which request has to be done.
+     * @param apiKey is the api key of the Kite Connect app.
+     * @param accessToken is the access token obtained after successful login process.
+     * @param jsonArray is the JSONArray of data that has to be sent in the body.
+     * */
+    public Request createJsonPostRequest(String url, JSONArray jsonArray, String apiKey, String accessToken) {
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        RequestBody body = RequestBody.create(jsonArray.toString(), JSON);
+        Request request = new Request.Builder()
+            .url(url)
+            .header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").header("Authorization", "token "+apiKey+":"+accessToken)
+            .post(body)
+            .build();
         return request;
     }
 

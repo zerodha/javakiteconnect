@@ -35,6 +35,20 @@ public class Examples {
         System.out.println(margins.utilised.m2mUnrealised);
     }
 
+    public void getMarginCalculation(KiteConnect kiteConnect) throws IOException, KiteException {
+        MarginCalculationParams param = new MarginCalculationParams();
+        param.exchange = "NSE";
+        param.tradingSymbol = "INFY";
+        param.orderType = "MARKET";
+        param.quantity = 1;
+        param.product = "MIS";
+        param.variety = "regular";
+        List<MarginCalculationParams> params = new ArrayList<>();
+        params.add(param);
+        List<MarginCalculationData> data = kiteConnect.getMarginCalculation(params);
+        System.out.println(data.get(0).total);
+    }
+
     /**Place order.*/
     public void placeOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         /** Place order method requires a orderParams argument which contains,
@@ -347,6 +361,7 @@ public class Examples {
         Map<String, List<Position>> position = kiteConnect.getPositions();
         System.out.println(position.get("net").size());
         System.out.println(position.get("day").size());
+        System.out.println(position.get("net").get(0).averagePrice);
     }
 
     /** Get holdings.*/

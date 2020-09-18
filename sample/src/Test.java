@@ -17,127 +17,129 @@ public class Test {
 
     public static void main(String[] args){
         try {
-                // First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteConnect api call.
-                // Initialize KiteSdk with your apiKey.
-                KiteConnect kiteConnect = new KiteConnect("xxxxyyyyzzzz");
+            // First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteConnect api call.
+            // Initialize KiteSdk with your apiKey.
+            KiteConnect kiteConnect = new KiteConnect("xxxxyyyyzzzz");
 
-                //If you wish to enable debug logs send true in the constructor, this will log request and response.
-                //KiteConnect kiteConnect = new KiteConnect("xxxxyyyyzzzz", true);
+            //If you wish to enable debug logs send true in the constructor, this will log request and response.
+            //KiteConnect kiteConnect = new KiteConnect("xxxxyyyyzzzz", true);
 
-                // If you wish to set proxy then pass proxy as a second parameter in the constructor with api_key. syntax:- new KiteConnect("xxxxxxyyyyyzzz", proxy).
-                //KiteConnect kiteConnect = new KiteConnect("xxxxyyyyzzzz", userProxy, false);
+            // If you wish to set proxy then pass proxy as a second parameter in the constructor with api_key. syntax:- new KiteConnect("xxxxxxyyyyyzzz", proxy).
+            //KiteConnect kiteConnect = new KiteConnect("xxxxyyyyzzzz", userProxy, false);
 
-                // Set userId
-                kiteConnect.setUserId("xxxxx");
+            // Set userId
+            kiteConnect.setUserId("xxxxx");
 
-                // Get login url
-                String url = kiteConnect.getLoginURL();
+            // Get login url
+            String url = kiteConnect.getLoginURL();
 
-                // Set session expiry callback.
-                kiteConnect.setSessionExpiryHook(new SessionExpiryHook() {
-                    @Override
-                    public void sessionExpired() {
-                        System.out.println("session expired");
-                    }
-                });
+            // Set session expiry callback.
+            kiteConnect.setSessionExpiryHook(new SessionExpiryHook() {
+                @Override
+                public void sessionExpired() {
+                    System.out.println("session expired");
+                }
+            });
 
                 /* The request token can to be obtained after completion of login process. Check out https://kite.trade/docs/connect/v1/#login-flow for more information.
                    A request token is valid for only a couple of minutes and can be used only once. An access token is valid for one whole day. Don't call this method for every app run.
                    Once an access token is received it should be stored in preferences or database for further usage.
                  */
-                User user =  kiteConnect.generateSession("xxxxxtttyyy", "xxxxxxxyyyyy");
-                kiteConnect.setAccessToken(user.accessToken);
-                kiteConnect.setPublicToken(user.publicToken);
+            User user =  kiteConnect.generateSession("xxxxxtttyyy", "xxxxxxxyyyyy");
+            kiteConnect.setAccessToken(user.accessToken);
+            kiteConnect.setPublicToken(user.publicToken);
 
-                Examples examples = new Examples();
+            Examples examples = new Examples();
 
-                examples.getProfile(kiteConnect);
+            examples.getProfile(kiteConnect);
 
-                examples.getMargins(kiteConnect);
+            examples.getMargins(kiteConnect);
 
-                examples.placeOrder(kiteConnect);
+            examples.getMarginCalculation(kiteConnect);
 
-                examples.modifyOrder(kiteConnect);
+            examples.placeOrder(kiteConnect);
 
-                examples.cancelOrder(kiteConnect);
+            examples.modifyOrder(kiteConnect);
 
-                examples.placeBracketOrder(kiteConnect);
+            examples.cancelOrder(kiteConnect);
 
-                examples.modifyFirstLegBo(kiteConnect);
+            examples.placeBracketOrder(kiteConnect);
 
-                examples.modifySecondLegBoSLM(kiteConnect);
+            examples.modifyFirstLegBo(kiteConnect);
 
-                examples.modifySecondLegBoLIMIT(kiteConnect);
+            examples.modifySecondLegBoSLM(kiteConnect);
 
-                examples.exitBracketOrder(kiteConnect);
+            examples.modifySecondLegBoLIMIT(kiteConnect);
 
-                examples.getTriggerRange(kiteConnect);
+            examples.exitBracketOrder(kiteConnect);
 
-                examples.placeCoverOrder(kiteConnect);
+            examples.getTriggerRange(kiteConnect);
 
-                examples.converPosition(kiteConnect);
+            examples.placeCoverOrder(kiteConnect);
 
-                examples.getHistoricalData(kiteConnect);
+            examples.converPosition(kiteConnect);
 
-                examples.getOrders(kiteConnect);
+            examples.getHistoricalData(kiteConnect);
 
-                examples.getOrder(kiteConnect);
+            examples.getOrders(kiteConnect);
 
-                examples.getTrades(kiteConnect);
+            examples.getOrder(kiteConnect);
 
-                examples.getTradesWithOrderId(kiteConnect);
+            examples.getTrades(kiteConnect);
 
-                examples.getPositions(kiteConnect);
+            examples.getTradesWithOrderId(kiteConnect);
 
-                examples.getHoldings(kiteConnect);
+            examples.getPositions(kiteConnect);
 
-                examples.getAllInstruments(kiteConnect);
+            examples.getHoldings(kiteConnect);
 
-                examples.getInstrumentsForExchange(kiteConnect);
+            examples.getAllInstruments(kiteConnect);
 
-                examples.getQuote(kiteConnect);
+            examples.getInstrumentsForExchange(kiteConnect);
 
-                examples.getOHLC(kiteConnect);
+            examples.getQuote(kiteConnect);
 
-                examples.getLTP(kiteConnect);
+            examples.getOHLC(kiteConnect);
 
-                examples.getGTTs(kiteConnect);
+            examples.getLTP(kiteConnect);
 
-                examples.getGTT(kiteConnect);
+            examples.getGTTs(kiteConnect);
 
-                examples.placeGTT(kiteConnect);
+            examples.getGTT(kiteConnect);
 
-                examples.modifyGTT(kiteConnect);
+            examples.placeGTT(kiteConnect);
 
-                examples.cancelGTT(kiteConnect);
+            examples.modifyGTT(kiteConnect);
 
-                examples.getMFInstruments(kiteConnect);
+            examples.cancelGTT(kiteConnect);
 
-                examples.placeMFOrder(kiteConnect);
+            examples.getMFInstruments(kiteConnect);
 
-                examples.cancelMFOrder(kiteConnect);
+            examples.placeMFOrder(kiteConnect);
 
-                examples.getMFOrders(kiteConnect);
+            examples.cancelMFOrder(kiteConnect);
 
-                examples.getMFOrder(kiteConnect);
+            examples.getMFOrders(kiteConnect);
 
-                examples.placeMFSIP(kiteConnect);
+            examples.getMFOrder(kiteConnect);
 
-                examples.modifyMFSIP(kiteConnect);
+            examples.placeMFSIP(kiteConnect);
 
-                examples.cancelMFSIP(kiteConnect);
+            examples.modifyMFSIP(kiteConnect);
 
-                examples.getMFSIPS(kiteConnect);
+            examples.cancelMFSIP(kiteConnect);
 
-                examples.getMFSIP(kiteConnect);
+            examples.getMFSIPS(kiteConnect);
 
-                examples.getMFHoldings(kiteConnect);
+            examples.getMFSIP(kiteConnect);
 
-                examples.logout(kiteConnect);
+            examples.getMFHoldings(kiteConnect);
 
-                ArrayList<Long> tokens = new ArrayList<>();
-                tokens.add(Long.parseLong("256265"));
-                examples.tickerUsage(kiteConnect, tokens);
+            examples.logout(kiteConnect);
+
+            ArrayList<Long> tokens = new ArrayList<>();
+            tokens.add(Long.parseLong("256265"));
+            examples.tickerUsage(kiteConnect, tokens);
         } catch (KiteException e) {
             System.out.println(e.message+" "+e.code+" "+e.getClass().getName());
         } catch (JSONException e) {

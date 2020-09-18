@@ -259,6 +259,34 @@ public class KiteConnect {
         return gson.fromJson(String.valueOf(response.get("data")), type);
     }
 
+    /** Get margins required data before placing an order.
+     * @return MarginCalculationData object, it contains the total, var, exposure, span and other components of the margin required.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection error.
+     * */
+    public List<MarginCalculationData> getMarginCalculation(List<MarginCalculationParams> params) throws IOException, KiteException, JSONException{
+        String url = routes.get("margin.calculation.order");
+        JSONArray jsonArray = new JSONArray();
+        for(int k =0; k< params.size(); k++) {
+            MarginCalculationParams param = params.get(k);
+            JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("tradingsymbol", param.tradingSymbol);
+            jsonObject.put("exchange", param.exchange);
+            jsonObject.put("transaction_type", param.transactionType);
+            jsonObject.put("variety", param.variety);
+            jsonObject.put("product", param.product);
+            jsonObject.put("order_type", param.orderType);
+            jsonObject.put("quantity", param.quantity);
+            jsonObject.put("price", param.price);
+            jsonObject.put("trigger_price", param.triggerPrice);
+            jsonArray.put(jsonObject);
+        }
+        JSONObject response = kiteRequestHandler.postRequestJSON(url, jsonArray, apiKey, accessToken);
+        return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), MarginCalculationData[].class));
+    }
+
     /**
      * Places an order.
      * @param orderParams is Order params.
