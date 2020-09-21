@@ -29,7 +29,7 @@ Get login url. Use this url in webview to login user, after authenticating user 
 String url = kiteSdk.getLoginUrl();
 
 // Get accessToken as follows,
-User user =  kiteSdk.requestAccessToken("request_token", "your_apiSecret");
+User user =  kiteSdk.generateSession("request_token", "your_apiSecret");
 
 // Set request token and public token which are obtained from login process.
 kiteSdk.setAccessToken(userModel.accessToken);
