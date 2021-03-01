@@ -45,7 +45,7 @@ public class KiteTicker {
             BseCD = 6,
             McxFO = 7,
             McxSX = 8,
-            NseIndices = 9;
+            Indices = 9;
 
     private  final String mSubscribe = "subscribe",
             mUnSubscribe = "unsubscribe",
@@ -457,16 +457,16 @@ public class KiteTicker {
             int dec1 = (segment == NseCD) ? 10000000 : 100;
 
             if(bin.length == 8) {
-                Tick tick = getLtpQuote(bin, x, dec1);
+                Tick tick = getLtpQuote(bin, x, dec1, segment != Indices);
                 ticks.add(tick);
             }else if(bin.length == 28 || bin.length == 32) {
-                Tick tick = getIndeciesData(bin, x);
+                Tick tick = getIndeciesData(bin, x, segment != Indices);
                 ticks.add(tick);
             }else if(bin.length == 44) {
-                Tick tick = getQuoteData(bin, x, dec1);
+                Tick tick = getQuoteData(bin, x, dec1, segment != Indices);
                 ticks.add(tick);
             } else if(bin.length == 184) {
-                Tick tick = getQuoteData(bin, x, dec1);
+                Tick tick = getQuoteData(bin, x, dec1, segment != Indices);
                 tick.setMode(modeFull);
                 ticks.add(getFullData(bin, dec1, tick));
             }
@@ -476,11 +476,11 @@ public class KiteTicker {
 
     /** Parses NSE indices data.
      * @return Tick is the parsed index data. */
-    private Tick getIndeciesData(byte[] bin, int x){
+    private Tick getIndeciesData(byte[] bin, int x, boolean tradable){
         int dec = 100;
         Tick tick = new Tick();
-        tick.setMode(modeFull);
-        tick.setTradable(false);
+        tick.setMode(modeQuote);
+        tick.setTradable(tradable);
         tick.setInstrumentToken(x);
         tick.setLastTradedPrice(convertToDouble(getBytes(bin, 4, 8)) / dec);
         tick.setHighPrice(convertToDouble(getBytes(bin, 8, 12)) / dec);
@@ -489,6 +489,7 @@ public class KiteTicker {
         tick.setClosePrice(convertToDouble(getBytes(bin, 20, 24)) / dec);
         tick.setNetPriceChangeFromClosingPrice(convertToDouble(getBytes(bin, 24, 28)) / dec);
         if(bin.length > 28) {
+            tick.setMode(modeFull);
             long tickTimeStamp = convertToLong(getBytes(bin, 28, 32)) * 1000;
             if(isValidDate(tickTimeStamp)) {
                 tick.setTickTimestamp(new Date(tickTimeStamp));
@@ -500,20 +501,21 @@ public class KiteTicker {
     }
 
     /** Parses LTP data.*/
-    private Tick getLtpQuote(byte[] bin, int x, int dec1){
+    private Tick getLtpQuote(byte[] bin, int x, int dec1, boolean tradable){
         Tick tick1 = new Tick();
         tick1.setMode(modeLTP);
-        tick1.setTradable(true);
+        tick1.setTradable(tradable);
         tick1.setInstrumentToken(x);
         tick1.setLastTradedPrice(convertToDouble(getBytes(bin, 4, 8)) / dec1);
         return tick1;
     }
 
     /** Get quote data (last traded price, last traded quantity, average traded price, volume, total bid(buy quantity), total ask(sell quantity), open, high, low, close.) */
-    private Tick getQuoteData(byte[] bin, int x, int dec1){
+    private Tick getQuoteData(byte[] bin, int x, int dec1, boolean tradable){
         Tick tick2 = new Tick();
         tick2.setMode(modeQuote);
         tick2.setInstrumentToken(x);
+        tick2.setTradable(tradable);
         double lastTradedPrice = convertToDouble(getBytes(bin, 4, 8)) / dec1;
         tick2.setLastTradedPrice(lastTradedPrice);
         tick2.setLastTradedQuantity(convertToDouble(getBytes(bin, 8, 12)));
