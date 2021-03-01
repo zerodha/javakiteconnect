@@ -101,6 +101,7 @@ public class Routes {
             put("api.token", "/session/token");
 
             put("margin.calculation.order", "/margins/orders");
+            put("margin.calculation.basket", "/margins/basket");
         }};
     }
 

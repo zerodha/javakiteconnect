@@ -283,8 +283,42 @@ public class KiteConnect {
             jsonObject.put("trigger_price", param.triggerPrice);
             jsonArray.put(jsonObject);
         }
-        JSONObject response = kiteRequestHandler.postRequestJSON(url, jsonArray, apiKey, accessToken);
+        JSONObject response = kiteRequestHandler.postRequestJSON(url, jsonArray, new HashMap<String, Object>(), apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), MarginCalculationData[].class));
+    }
+
+    /** Get margins required data for multiple instruments before placing an order,
+     * this can be used to check the margin required for taking hedged positions.
+     * @return CombinedMarginData object, it contains the initial, final and margin calculation for each order.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection error.
+     * */
+    public CombinedMarginData getCombinedMarginCalculation(List<MarginCalculationParams> params, boolean considerPositions, boolean compactMode) throws IOException, KiteException, JSONException{
+        String url = routes.get("margin.calculation.basket");
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+
+        if(considerPositions) queryParams.put("consider_positions", true);
+        if(compactMode) queryParams.put("mode", "compact");
+
+        JSONArray jsonArray = new JSONArray();
+        for(int k = 0; k < params.size(); k++){
+            MarginCalculationParams param = params.get(k);
+            JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("tradingsymbol", param.tradingSymbol);
+            jsonObject.put("exchange", param.exchange);
+            jsonObject.put("transaction_type", param.transactionType);
+            jsonObject.put("variety", param.variety);
+            jsonObject.put("product", param.product);
+            jsonObject.put("order_type", param.orderType);
+            jsonObject.put("quantity", param.quantity);
+            jsonObject.put("price", param.price);
+            jsonObject.put("trigger_price", param.triggerPrice);
+            jsonArray.put(jsonObject);
+        }
+        JSONObject response = kiteRequestHandler.postRequestJSON(url, jsonArray, queryParams, apiKey, accessToken);
+        return gson.fromJson(String.valueOf(response.get("data")), CombinedMarginData.class);
     }
 
     /**

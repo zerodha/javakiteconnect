@@ -95,8 +95,8 @@ public class KiteRequestHandler {
      * @throws KiteException is thrown for all Kite Trade related errors.
      * @throws JSONException is thrown for parsing errors.
      * */
-    public JSONObject postRequestJSON(String url, JSONArray jsonArray, String apiKey, String accessToken) throws IOException, KiteException, JSONException {
-        Request request = createJsonPostRequest(url, jsonArray, apiKey, accessToken);
+    public JSONObject postRequestJSON(String url, JSONArray jsonArray, Map<String, Object> queryParams, String apiKey, String accessToken) throws IOException, KiteException, JSONException {
+        Request request = createJsonPostRequest(url, jsonArray, queryParams, apiKey, accessToken);
         Response response = client.newCall(request).execute();
         String body = response.body().string();
         return  new KiteResponseHandler().handle(response, body);
@@ -229,11 +229,23 @@ public class KiteRequestHandler {
      * @param accessToken is the access token obtained after successful login process.
      * @param jsonArray is the JSONArray of data that has to be sent in the body.
      * */
-    public Request createJsonPostRequest(String url, JSONArray jsonArray, String apiKey, String accessToken) {
+    public Request createJsonPostRequest(String url, JSONArray jsonArray, Map<String, Object> queryParams, String apiKey, String accessToken) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
+        HttpUrl.Builder httpBuilder = HttpUrl.parse(url).newBuilder();
+        if(queryParams.size() > 0) {
+            for (Map.Entry<String, Object> entry : queryParams.entrySet()) {
+                httpBuilder.addQueryParameter(entry.getKey(), entry.getValue().toString());
+            }
+        }
+
         RequestBody body = RequestBody.create(jsonArray.toString(), JSON);
-        Request request = new Request.Builder()
+        Request request;
+        request = queryParams.size() > 0?  new Request.Builder()
+            .url(httpBuilder.build())
+            .header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").header("Authorization", "token "+apiKey+":"+accessToken)
+            .post(body)
+            .build() : new Request.Builder()
             .url(url)
             .header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").header("Authorization", "token "+apiKey+":"+accessToken)
             .post(body)

@@ -49,6 +49,36 @@ public class Examples {
         System.out.println(data.get(0).total);
     }
 
+    public void getCombinedMarginCalculation(KiteConnect kiteConnect) throws IOException, KiteException{
+        List<MarginCalculationParams> params = new ArrayList<>();
+
+        MarginCalculationParams param = new MarginCalculationParams();
+        param.exchange = "NFO";
+        param.tradingSymbol = "NIFTY21MARFUT";
+        param.orderType = "LIMIT";
+        param.quantity = 75;
+        param.product = "MIS";
+        param.variety = "regular";
+        param.transactionType = "BUY";
+        param.price = 141819;
+
+        MarginCalculationParams param2 = new MarginCalculationParams();
+        param2.exchange = "NFO";
+        param2.tradingSymbol = "NIFTY21MAR15000PE";
+        param2.orderType = "LIMIT";
+        param2.quantity = 75;
+        param2.product = "MIS";
+        param2.variety = "regular";
+        param.transactionType = "BUY";
+        param2.price = 300;
+
+        params.add(param);
+        params.add(param2);
+
+        CombinedMarginData combinedMarginData = kiteConnect.getCombinedMarginCalculation(params, true, false);
+        System.out.println(combinedMarginData.initialMargin.total);
+    }
+
     /**Place order.*/
     public void placeOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         /** Place order method requires a orderParams argument which contains,
@@ -94,8 +124,8 @@ public class Examples {
         orderParams.validity = Constants.VALIDITY_DAY;
         orderParams.squareoff = 3.0;
         orderParams.product = Constants.PRODUCT_MIS;
-         Order order10 = kiteConnect.placeOrder(orderParams, Constants.VARIETY_BO);
-         System.out.println(order10.orderId);
+        Order order10 = kiteConnect.placeOrder(orderParams, Constants.VARIETY_BO);
+        System.out.println(order10.orderId);
     }
 
     /** Place cover order.*/
