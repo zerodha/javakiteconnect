@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class KiteRequestHandler {
 
     private OkHttpClient client;
-    private String USER_AGENT = "javakiteconnect/3.0.0";
+    private String USER_AGENT = "javakiteconnect/3.1.14";
 
     /** Initialize request handler.
      * @param proxy to be set for making requests.*/
