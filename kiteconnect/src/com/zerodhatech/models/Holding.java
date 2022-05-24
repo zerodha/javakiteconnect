@@ -21,8 +21,6 @@ public class Holding {
     public String collateralQuantity;
     @SerializedName("collateral_type")
     public String collateraltype;
-    @SerializedName("account_id")
-    public String accountId;
     @SerializedName("isin")
     public String isin;
     @SerializedName("pnl")
