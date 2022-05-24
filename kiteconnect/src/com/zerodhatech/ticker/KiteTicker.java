@@ -454,7 +454,7 @@ public class KiteTicker {
             //int token = x >> 8;
             int segment = x & 0xff;
 
-            int dec1 = (segment == NseCD) ? 10000000 : 100;
+            int dec1 = (segment == NseCD) ? 10000000 : (segment == BseCD)? 10000 : 100;
 
             if(bin.length == 8) {
                 Tick tick = getLtpQuote(bin, x, dec1, segment != Indices);
