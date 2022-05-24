@@ -19,8 +19,6 @@ public class Order {
     public String tradingSymbol;
     @SerializedName("variety")
     public String orderVariety;
-    @SerializedName("user_id")
-    public String userId;
     @SerializedName("order_type")
     public String orderType;
     @SerializedName("trigger_price")
@@ -39,8 +37,6 @@ public class Order {
     public String exchange;
     @SerializedName("order_id")
     public String orderId;
-    @SerializedName("symbol")
-    public String symbol;
     @SerializedName("pending_quantity")
     public String pendingQuantity;
     @SerializedName("order_timestamp")
