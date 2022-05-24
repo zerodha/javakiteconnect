@@ -68,7 +68,7 @@ public class OrderParams {
     public Double trailingStoploss;
 
     /**
-     * Tag: field for users to tag orders. It accepts alphanumeric 8 character String values.
+     * Tag: field for users to tag orders. It accepts alphanumeric 20 character String values.
      */
      public String tag;
 
