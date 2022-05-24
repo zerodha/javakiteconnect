@@ -35,7 +35,7 @@ public class Tick {
     @SerializedName("averageTradePrice")
     private double averageTradePrice;
     @SerializedName("volumeTradedToday")
-    private double volumeTradedToday;
+    private long volumeTradedToday;
     @SerializedName("totalBuyQuantity")
     private double totalBuyQuantity;
     @SerializedName("totalSellQuantity")
@@ -182,11 +182,11 @@ public class Tick {
         this.averageTradePrice = averageTradePrice;
     }
 
-    public double getVolumeTradedToday() {
+    public long getVolumeTradedToday() {
         return volumeTradedToday;
     }
 
-    public void setVolumeTradedToday(double volumeTradedToday) {
+    public void setVolumeTradedToday(long volumeTradedToday) {
         this.volumeTradedToday = volumeTradedToday;
     }
 

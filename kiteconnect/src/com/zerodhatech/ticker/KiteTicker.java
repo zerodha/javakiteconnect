@@ -524,7 +524,7 @@ public class KiteTicker {
         tick2.setLastTradedPrice(lastTradedPrice);
         tick2.setLastTradedQuantity(convertToDouble(getBytes(bin, 8, 12)));
         tick2.setAverageTradePrice(convertToDouble(getBytes(bin, 12, 16)) / dec1);
-        tick2.setVolumeTradedToday(convertToDouble(getBytes(bin, 16, 20)));
+        tick2.setVolumeTradedToday(convertToLong(getBytes(bin, 16, 20)));
         tick2.setTotalBuyQuantity(convertToDouble(getBytes(bin, 20, 24)));
         tick2.setTotalSellQuantity(convertToDouble(getBytes(bin, 24, 28)));
         tick2.setOpenPrice(convertToDouble(getBytes(bin, 28, 32)) / dec1);
