@@ -482,12 +482,16 @@ public class KiteTicker {
         tick.setMode(modeQuote);
         tick.setTradable(tradable);
         tick.setInstrumentToken(x);
-        tick.setLastTradedPrice(convertToDouble(getBytes(bin, 4, 8)) / dec);
+        double lastTradedPrice = convertToDouble(getBytes(bin, 4, 8)) / dec;
+        tick.setLastTradedPrice(lastTradedPrice);
         tick.setHighPrice(convertToDouble(getBytes(bin, 8, 12)) / dec);
         tick.setLowPrice(convertToDouble(getBytes(bin, 12, 16)) / dec);
         tick.setOpenPrice(convertToDouble(getBytes(bin, 16, 20)) / dec);
-        tick.setClosePrice(convertToDouble(getBytes(bin, 20, 24)) / dec);
-        tick.setNetPriceChangeFromClosingPrice(convertToDouble(getBytes(bin, 24, 28)) / dec);
+        double closePrice = convertToDouble(getBytes(bin, 20, 24)) / dec;
+        tick.setClosePrice(closePrice);
+        // here exchange is sending absolute value, hence we change that to %change
+        //tick.setNetPriceChangeFromClosingPrice(convertToDouble(getBytes(bin, 24, 28)) / dec);
+        setChangeForTick(tick, lastTradedPrice, closePrice);
         if(bin.length > 28) {
             tick.setMode(modeFull);
             long tickTimeStamp = convertToLong(getBytes(bin, 28, 32)) * 1000;
