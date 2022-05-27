@@ -107,24 +107,25 @@ public class Examples {
         System.out.println(order.orderId);
     }
 
-    /** Place bracket order.*/
-    public void placeBracketOrder(KiteConnect kiteConnect) throws KiteException, IOException {
-        /** Bracket order:- following is example param for bracket order*
-         * trailing_stoploss and stoploss_value are points and not tick or price
+    /** Place iceberg order.*/
+    public void placeIcebergOrder(KiteConnect kiteConnect) throws KiteException, IOException {
+        /** Iceberg order:- following is example param for iceberg order with ttl validity.
+         * Minimum number of legs is 2 and maximum number of legs is 10.
+         * TTL validity is always sent as integer wherein number denotes number of minutes an order can be alive.
          */
         OrderParams orderParams = new OrderParams();
-        orderParams.quantity = 1;
+        orderParams.quantity = 10;
         orderParams.orderType = Constants.ORDER_TYPE_LIMIT;
-        orderParams.price = 30.5;
+        orderParams.price = 1440.0;
         orderParams.transactionType = Constants.TRANSACTION_TYPE_BUY;
-        orderParams.tradingsymbol = "SOUTHBANK";
-        orderParams.trailingStoploss = 1.0;
-        orderParams.stoploss = 2.0;
+        orderParams.tradingsymbol = "INFY";
         orderParams.exchange = Constants.EXCHANGE_NSE;
-        orderParams.validity = Constants.VALIDITY_DAY;
-        orderParams.squareoff = 3.0;
+        orderParams.validity = Constants.VALIDITY_TTL;
         orderParams.product = Constants.PRODUCT_MIS;
-        Order order10 = kiteConnect.placeOrder(orderParams, Constants.VARIETY_BO);
+        orderParams.validityTTL = 10;
+        orderParams.icebergLegs = 2;
+        orderParams.icebergQuantity = 5;
+        Order order10 = kiteConnect.placeOrder(orderParams, Constants.VARIETY_ICEBERG);
         System.out.println(order10.orderId);
     }
 

@@ -349,6 +349,12 @@ public class KiteConnect {
         if(orderParams.stoploss != null) params.put("stoploss", orderParams.stoploss);
         if(orderParams.trailingStoploss != null) params.put("trailing_stoploss", orderParams.trailingStoploss);
         if(orderParams.tag != null) params.put("tag", orderParams.tag);
+        if(orderParams.validity != null && orderParams.validity.equals(Constants.VALIDITY_TTL))
+            params.put("validity_ttl",orderParams.validityTTL);
+        if(variety.equals(Constants.VARIETY_ICEBERG)){
+         params.put("iceberg_legs", orderParams.icebergLegs);
+         params.put("iceberg_quantity", orderParams.icebergQuantity);
+        }
 
         JSONObject jsonObject = kiteRequestHandler.postRequest(url, params, apiKey, accessToken);
         Order order =  new Order();

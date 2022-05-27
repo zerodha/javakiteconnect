@@ -21,6 +21,7 @@ public class Constants {
     public static final String VARIETY_BO = "bo";
     public static final String VARIETY_CO = "co";
     public static final String VARIETY_AMO = "amo";
+    public static final String VARIETY_ICEBERG = "iceberg";
 
     /** Transaction types. */
     public static final String TRANSACTION_TYPE_BUY = "BUY";
@@ -33,6 +34,7 @@ public class Constants {
     /** Validity types. */
     public static final String VALIDITY_DAY = "DAY";
     public static final String VALIDITY_IOC = "IOC";
+    public static final String VALIDITY_TTL = "TTL";
 
     /** Exchanges. */
     public static final String EXCHANGE_NSE = "NSE";

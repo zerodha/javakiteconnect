@@ -77,4 +77,18 @@ public class OrderParams {
       */
      public String parentOrderId;
 
+     /**
+      * Custom validity user can enter which denotes time to live in minutes.
+      */
+     public int validityTTL;
+
+     /**
+      * Split quantity for each iceberg leg order.
+      */
+     public int icebergQuantity;
+
+     /**
+      * Total number of legs for iceberg order type. (number of legs per Iceberg should be between 2 and 10)
+      */
+     public  int icebergLegs;
 }

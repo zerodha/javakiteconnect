@@ -59,4 +59,32 @@ public class Order {
     public String tag;
     @SerializedName("guid")
     public String guid;
+    @SerializedName("validity_ttl")
+    public int validityTTL;
+    @SerializedName("meta")
+    public Meta meta;
+
+    /**
+     * Map of arbitrary fields that the system may attach to an order.
+     */
+    public class Meta {
+        @SerializedName("iceberg")
+        public IcebergMeta icebergMeta;
+    }
+
+    /**
+     * Iceberg order related information attached to an order.
+     */
+    public class IcebergMeta{
+        @SerializedName("leg")
+        public int leg;
+        @SerializedName("legs")
+        public int legs;
+        @SerializedName("leg_quantity")
+        public int legQuantity;
+        @SerializedName("total_quantity")
+        public int totalQuantity;
+        @SerializedName("remaining_quantity")
+        public int remainingQuantity;
+    }
 }
