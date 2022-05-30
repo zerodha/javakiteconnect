@@ -154,7 +154,45 @@ For more details, take a look at Examples.java in sample directory.
         tickerProvider.disconnect();
 
 ```
-For more details about different mode of quotes and subscribing for them, take a look at Examples in sample directory.
+For more details about the different mode of quotes and subscribing for them, take a look at Examples in sample directory.
+
+ ## Breaking changes from 3.1.14 to 3.2.0
+
+ #### Holding (model)
+    
+ | version 3.1.14 | version 3.2.0 |
+ | :---: | :---:|
+ | lastPrice(String) | lastPrice(Double) |
+ | t1Quantity(String) | t1Quantity(int) |
+ | pnl(String) | pnl(Double) |
+ | quantity(String) | quantity(int) |
+ | averagePrice(String) | averagePrice(Double) |
+
+ * Removed:
+
+ | version 3.1.14 | version 3.2.0 |
+ | :---: | :---: |
+ | accountId | **NA** |
+
+ ##### Tick (model)
+
+ | version 3.1.14 | version 3.2.0 |
+ | :---: | :---:|
+ | volumeTradedToday(double) | volumeTradedToday(long) |
+
+ * Change attribute for indices tick will have change percent value against
+ the previously sent absolute change value.
+ 
+ #### Order (model)
+ 
+ * Removed:
+
+ | version 3.1.14 | version 3.2.0 |
+ | :---: | :---: |
+ | userId | **NA** |
+ | symbol | **NA** |
+
+
 
  ## Breaking changes from version 2 to version 3
 
