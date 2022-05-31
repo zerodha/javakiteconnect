@@ -176,6 +176,11 @@ public class Examples {
             System.out.println(orders.get(i).tradingSymbol+" "+orders.get(i).orderId+" "+orders.get(i).parentOrderId+
                 " "+orders.get(i).orderType+" "+orders.get(i).averagePrice+" "+orders.get(i).exchangeTimestamp+" "+orders.get(i).exchangeUpdateTimestamp+" "+orders.get(i).guid);
         }
+        // Read iceberg params
+        /** Map<String, Object>  meta = orders.get(0).meta;
+        Map icebergObject = (Map) meta.get("iceberg");
+        System.out.println(icebergObject.keySet());*/
+
         System.out.println("list of orders size is "+orders.size());
     }
 

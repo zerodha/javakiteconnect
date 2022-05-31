@@ -3,6 +3,7 @@ package com.zerodhatech.models;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
 *   A wrapper for order.
@@ -62,29 +63,5 @@ public class Order {
     @SerializedName("validity_ttl")
     public int validityTTL;
     @SerializedName("meta")
-    public Meta meta;
-
-    /**
-     * Map of arbitrary fields that the system may attach to an order.
-     */
-    public class Meta {
-        @SerializedName("iceberg")
-        public IcebergMeta icebergMeta;
-    }
-
-    /**
-     * Iceberg order related information attached to an order.
-     */
-    public class IcebergMeta{
-        @SerializedName("leg")
-        public int leg;
-        @SerializedName("legs")
-        public int legs;
-        @SerializedName("leg_quantity")
-        public int legQuantity;
-        @SerializedName("total_quantity")
-        public int totalQuantity;
-        @SerializedName("remaining_quantity")
-        public int remainingQuantity;
-    }
+    public Map<String, Object> meta;
 }
