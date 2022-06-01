@@ -566,7 +566,7 @@ public class KiteConnect {
      * */
     public GTT cancelGTT(int gttId) throws IOException, KiteException, JSONException {
         String url = routes.get("gtt.delete").replace(":id", gttId+"");
-        JSONObject response  = kiteRequestHandler.deleteRequest(url, new HashMap<>(), apiKey, accessToken);
+        JSONObject response  = kiteRequestHandler.deleteRequest(url, new HashMap<String, Object>(), apiKey, accessToken);
         GTT gtt = new GTT();
         gtt.id = response.getJSONObject("data").getInt("trigger_id");
         return gtt;
