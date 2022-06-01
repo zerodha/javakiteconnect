@@ -1,5 +1,5 @@
 <a href="https://zerodha.tech"><img src="https://zerodha.tech/static/images/github-badge.svg" align="right" /></a>
-# The Kite Connect 3.0 API Java client
+# The Kite Connect 3.2.1 API Java client
 The official Java client for communicating with [Kite Connect API](https://kite.trade).
 
 Kite Connect is a set of REST-like APIs that expose many capabilities required to build a complete investment and trading platform. Execute orders in real time, manage user portfolio, stream live market data (WebSockets), and more, with the simple HTTP API collection.
@@ -13,7 +13,7 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 ## Usage
 - [Download Kite Connect 3 jar file](https://github.com/zerodhatech/javakiteconnect/tree/master/dist) and include it in your build path.
 
-- Include com.zerodhatech.kiteconnect into build path from maven. Use version 3.1.14
+- Include com.zerodhatech.kiteconnect into build path from maven. Use version 3.2.1
 
 - To use javakiteconnect in **Android**, you need to include jar file in the libs directory and add the following line in you module's gradle file ``` compile files('libs/kiteconnect.jar') ```
 
@@ -156,11 +156,11 @@ For more details, take a look at Examples.java in sample directory.
 ```
 For more details about the different mode of quotes and subscribing for them, take a look at Examples in sample directory.
 
- ## Breaking changes from 3.1.14 to 3.2.0
+ ## Breaking changes from 3.1.14 to 3.2.1
 
  #### Holding (model)
     
- | version 3.1.14 | version 3.2.0 |
+ | version 3.1.14 | version 3.2.1 |
  | :---: | :---:|
  | lastPrice(String) | lastPrice(Double) |
  | t1Quantity(String) | t1Quantity(int) |
@@ -170,13 +170,13 @@ For more details about the different mode of quotes and subscribing for them, ta
 
  * Removed:
 
- | version 3.1.14 | version 3.2.0 |
+ | version 3.1.14 | version 3.2.1 |
  | :---: | :---: |
  | accountId | **NA** |
 
  ##### Tick (model)
 
- | version 3.1.14 | version 3.2.0 |
+ | version 3.1.14 | version 3.2.1 |
  | :---: | :---:|
  | volumeTradedToday(double) | volumeTradedToday(long) |
 
@@ -187,7 +187,7 @@ For more details about the different mode of quotes and subscribing for them, ta
  
  * Removed:
 
- | version 3.1.14 | version 3.2.0 |
+ | version 3.1.14 | version 3.2.1 |
  | :---: | :---: |
  | userId | **NA** |
  | symbol | **NA** |
