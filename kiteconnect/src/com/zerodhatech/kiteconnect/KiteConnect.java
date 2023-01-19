@@ -355,6 +355,9 @@ public class KiteConnect {
          params.put("iceberg_legs", orderParams.icebergLegs);
          params.put("iceberg_quantity", orderParams.icebergQuantity);
         }
+        if(variety.equals(Constants.VARIETY_AUCTION)){
+            params.put("auction_number", orderParams.auctionNumber);
+        }
 
         JSONObject jsonObject = kiteRequestHandler.postRequest(url, params, apiKey, accessToken);
         Order order =  new Order();
@@ -449,6 +452,18 @@ public class KiteConnect {
         String url = routes.get("orders");
         JSONObject response = kiteRequestHandler.getRequest(url, apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Order[].class));
+    }
+
+    /** Fetches collection of auction instruments available for bidding.
+     * @return List of Auction Instruments.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection error.
+     * */
+    public List<AuctionInstrument> getAuctionInstruments() throws KiteException, JSONException, IOException{
+        String url = routes.get("portfolio.auctions.instruments");
+        JSONObject response = kiteRequestHandler.getRequest(url, apiKey, accessToken);
+        return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), AuctionInstrument[].class));
     }
 
     /** Fetches list of gtt existing in an account.

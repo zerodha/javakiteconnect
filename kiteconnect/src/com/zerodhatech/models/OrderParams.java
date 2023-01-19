@@ -91,4 +91,9 @@ public class OrderParams {
       * Total number of legs for iceberg order type. (number of legs per Iceberg should be between 2 and 10)
       */
      public  int icebergLegs;
+
+     /**
+      * Auction number
+      * */
+     public String auctionNumber;
 }

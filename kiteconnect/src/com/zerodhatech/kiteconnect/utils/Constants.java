@@ -22,6 +22,7 @@ public class Constants {
     public static final String VARIETY_CO = "co";
     public static final String VARIETY_AMO = "amo";
     public static final String VARIETY_ICEBERG = "iceberg";
+    public static final String VARIETY_AUCTION = "auction";
 
     /** Transaction types. */
     public static final String TRANSACTION_TYPE_BUY = "BUY";

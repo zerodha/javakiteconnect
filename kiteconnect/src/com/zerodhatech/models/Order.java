@@ -64,4 +64,6 @@ public class Order {
     public int validityTTL;
     @SerializedName("meta")
     public Map<String, Object> meta;
+    @SerializedName("auction_number")
+    public String auctionNumber;
 }
