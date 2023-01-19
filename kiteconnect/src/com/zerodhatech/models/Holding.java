@@ -2,6 +2,8 @@ package com.zerodhatech.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 /**
  * A wrapper for holdings.
  */
@@ -35,4 +37,12 @@ public class Holding {
     public String exchange;
     @SerializedName("instrument_token")
     public String instrumentToken;
+    @SerializedName("used_quantity")
+    public int usedQuantity;
+    @SerializedName("authorised_quantity")
+    public int authorisedQuantity;
+    @SerializedName("authorised_date")
+    public Date authorisedDate;
+    @SerializedName("discrepancy")
+    public boolean discrepancy;
 }
