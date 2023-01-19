@@ -10,7 +10,7 @@ public class MarginCalculationData {
     public String type;
     @SerializedName("exchange")
     public String exchange;
-    @SerializedName("tradingSymbol")
+    @SerializedName("tradingsymbol")
     public String tradingSymbol;
     @SerializedName("span")
     public double span;
