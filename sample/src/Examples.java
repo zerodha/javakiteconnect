@@ -43,6 +43,7 @@ public class Examples {
         param.quantity = 1;
         param.product = "MIS";
         param.variety = "regular";
+        param.transactionType = Constants.TRANSACTION_TYPE_BUY;
         List<MarginCalculationParams> params = new ArrayList<>();
         params.add(param);
         List<MarginCalculationData> data = kiteConnect.getMarginCalculation(params);
