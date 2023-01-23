@@ -6,7 +6,7 @@
 
     <groupId>com.zerodhatech.kiteconnect</groupId>
     <artifactId>kiteconnect</artifactId>
-    <version>3.2.1</version>
+    <version>3.3.1</version>
     <packaging>jar</packaging>
 
     <distributionManagement>

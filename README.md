@@ -1,10 +1,10 @@
 <a href="https://zerodha.tech"><img src="https://zerodha.tech/static/images/github-badge.svg" align="right" /></a>
-# The Kite Connect 3.2.1 API Java client
+# The Kite Connect 3.3.1 API Java client
 The official Java client for communicating with [Kite Connect API](https://kite.trade).
 
 Kite Connect is a set of REST-like APIs that expose many capabilities required to build a complete investment and trading platform. Execute orders in real time, manage user portfolio, stream live market data (WebSockets), and more, with the simple HTTP API collection.
 
-[Zerodha Technology Pvt Ltd](http://rainmatter.com) (c) 2018. Licensed under the MIT License.
+[Zerodha Technology Pvt Ltd](http://rainmatter.com) (c) 2019. Licensed under the MIT License.
 
 ## Documentation
 - [Kite Connect HTTP API documentation](https://kite.trade/docs/connect/v3/)
@@ -155,6 +155,14 @@ For more details, take a look at Examples.java in sample directory.
 
 ```
 For more details about the different mode of quotes and subscribing for them, take a look at Examples in sample directory.
+
+ ## Breaking changes form 3.3.1 to 3.2.1
+
+ #### Margin calculation data
+
+ | version 3.3.1 | version 3.2.1 |
+ | :---: | :---:|
+ | option_premium(double) | optionPremium(double) |
 
  ## Breaking changes from 3.1.14 to 3.2.1
 
