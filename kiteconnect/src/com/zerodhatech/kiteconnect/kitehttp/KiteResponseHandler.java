@@ -59,6 +59,10 @@ public class KiteResponseHandler {
 
             case "PermissionException": return new PermissionException(jsonObject.getString("message"), code);
 
+            case "MarginException": return new MarginException(jsonObject.getString("message"), code);
+
+            case "HoldingException": return new HoldingException(jsonObject.getString("message"), code);
+
             default: return new KiteException(jsonObject.getString("message"), code);
         }
     }
