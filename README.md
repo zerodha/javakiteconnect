@@ -156,7 +156,7 @@ For more details, take a look at Examples.java in sample directory.
 ```
 For more details about the different mode of quotes and subscribing for them, take a look at Examples in sample directory.
 
- ## Breaking changes form 3.3.1 to 3.2.1
+ ## Breaking changes from 3.2.1 to 3.3.1
 
  #### Margin calculation data
 
