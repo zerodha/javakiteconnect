@@ -63,13 +63,9 @@ public class Test {
 
             examples.cancelOrder(kiteConnect);
 
-            examples.placeBracketOrder(kiteConnect);
+            examples.getAuctionInstruments(kiteConnect);
 
-            examples.modifyFirstLegBo(kiteConnect);
-
-            examples.modifySecondLegBoSLM(kiteConnect);
-
-            examples.modifySecondLegBoLIMIT(kiteConnect);
+            examples.placeAuctionOrder(kiteConnect);
 
             examples.exitBracketOrder(kiteConnect);
 
