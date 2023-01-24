@@ -32,7 +32,8 @@ public class MarginCalculationData {
     public double total;
     @SerializedName("charges")
     public Charges charges;
-
+    @SerializedName("leverage")
+    public double leverage;
 
     public class PnL {
         @SerializedName("realised")

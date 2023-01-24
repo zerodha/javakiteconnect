@@ -48,6 +48,7 @@ public class Examples {
         params.add(param);
         List<MarginCalculationData> data = kiteConnect.getMarginCalculation(params);
         System.out.println(data.get(0).total);
+        System.out.println(data.get(0).leverage);
     }
 
     public void getCombinedMarginCalculation(KiteConnect kiteConnect) throws IOException, KiteException{
