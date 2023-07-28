@@ -103,6 +103,7 @@ public class Routes {
 
             put("margin.calculation.order", "/margins/orders");
             put("margin.calculation.basket", "/margins/basket");
+            put("contractnote", "/charges/orders");
         }};
     }
 
