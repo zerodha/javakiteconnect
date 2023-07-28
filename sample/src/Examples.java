@@ -81,6 +81,27 @@ public class Examples {
         System.out.println(combinedMarginData.initialMargin.total);
     }
 
+    /**Get virtual contract note.*/
+    public void getVirtualContractNote(KiteConnect kiteConnect) throws  KiteException, IOException {
+        List<ContractNoteParams> virtualContractNoteParams = new ArrayList<ContractNoteParams>();
+        ContractNoteParams contractNoteParams = new ContractNoteParams();
+        contractNoteParams.orderID = "230727202226518";
+        contractNoteParams.tradingSymbol = "ITC";
+        contractNoteParams.exchange = Constants.EXCHANGE_NSE;
+        contractNoteParams.product = Constants.PRODUCT_CNC;
+        contractNoteParams.orderType = Constants.ORDER_TYPE_MARKET;
+        contractNoteParams.variety = Constants.VARIETY_REGULAR;
+        contractNoteParams.transactionType = Constants.TRANSACTION_TYPE_SELL;
+        contractNoteParams.quantity = 1;
+        contractNoteParams.averagePrice = 470.05;
+        virtualContractNoteParams.add(contractNoteParams);
+
+        List<ContractNote> data = kiteConnect.getVirtualContractNote(virtualContractNoteParams);
+        System.out.println(data.size());
+
+        System.out.println(data.get(0).charges.total);
+    }
+
     /**Place order.*/
     public void placeOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         /** Place order method requires a orderParams argument which contains,
