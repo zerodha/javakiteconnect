@@ -260,7 +260,7 @@ public class KiteConnect {
     }
 
     /** Get margins required data before placing an order.
-     * @return List<MarginCalculationData> list contains the total, var, exposure, span and other components of the margin required.
+     * @return MarginCalculationData list contains the total, var, exposure, span and other components of the margin required.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
      * @throws IOException is thrown when there is connection error.
@@ -322,7 +322,7 @@ public class KiteConnect {
     }
 
     /** A virtual contract provides detailed charges order-wise for brokerage, STT, stamp duty, exchange transaction charges, SEBI turnover charge, and GST.
-     * @return List<ContractNote> contains the data and charges for all the orders passed as input.
+     * @return ContractNote list contains the data and charges for all the orders passed as input.
      * @throws KiteException is thrown for all Kite trade related errors.
      * @throws JSONException is thrown when there is exception while parsing response.
      * @throws IOException is thrown when there is connection error.

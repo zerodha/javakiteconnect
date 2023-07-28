@@ -6,7 +6,7 @@
 
     <groupId>com.zerodhatech.kiteconnect</groupId>
     <artifactId>kiteconnect</artifactId>
-    <version>3.3.2</version>
+    <version>3.4.0</version>
     <packaging>jar</packaging>
 
     <distributionManagement>
@@ -135,7 +135,6 @@
             <groupId>com.squareup.okio</groupId>
             <artifactId>okio-jvm</artifactId>
             <version>3.4.0</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
