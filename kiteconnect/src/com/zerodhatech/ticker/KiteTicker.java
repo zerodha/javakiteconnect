@@ -389,7 +389,6 @@ public class KiteTicker {
     public void subscribe(ArrayList<Long> tokens) {
         if(ws != null) {
             if (ws.isOpen()) {
-                createTickerJsonObject(tokens, mSubscribe);
                 ws.sendText(createTickerJsonObject(tokens, mSubscribe).toString());
                 subscribedTokens.addAll(tokens);
                 for(int i = 0; i < tokens.size(); i++){
