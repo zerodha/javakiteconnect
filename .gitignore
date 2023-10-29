@@ -10,3 +10,6 @@ out/*
 !sample/.idea/
 sample/.idea/*
 production/*
+/target/
+/.classpath
+/.project
