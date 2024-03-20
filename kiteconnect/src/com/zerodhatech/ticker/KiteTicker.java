@@ -407,6 +407,30 @@ public class KiteTicker {
         }
     }
 
+    public boolean isSubscribe(ArrayList<Long> tokens) {
+        if(ws != null) {
+            if (ws.isOpen()) {
+                createTickerJsonObject(tokens, mSubscribe);
+                ws.sendText(createTickerJsonObject(tokens, mSubscribe).toString());
+                subscribedTokens.addAll(tokens);
+                for(int i = 0; i < tokens.size(); i++){
+                    modeMap.put(tokens.get(i), modeQuote);
+                }
+                return true;
+            }else {
+                if(onErrorListener != null) {
+                    onErrorListener.onError(new KiteException("ticker is not connected", 504));
+                }
+                return false;
+            }
+        }else {
+            if(onErrorListener != null) {
+                onErrorListener.onError(new KiteException("ticker is null not connected", 504));
+            }
+            return false;
+        }
+    }
+
     /** Create a JSONObject to send message to server. */
     private JSONObject createTickerJsonObject(ArrayList<Long> tokens, String action) {
         JSONObject jobj = new JSONObject();
@@ -435,6 +459,29 @@ public class KiteTicker {
                     modeMap.remove(tokens.get(i));
                 }
             }
+        }
+    }
+
+    public boolean isUnsubscribe(ArrayList<Long> tokens){
+        if(ws != null) {
+            if (ws.isOpen()) {
+                ws.sendText(createTickerJsonObject(tokens, mUnSubscribe).toString());
+                subscribedTokens.removeAll(tokens);
+                for(int i = 0; i < tokens.size(); i++){
+                    modeMap.remove(tokens.get(i));
+                }
+                return true;
+            }else{
+                if(onErrorListener != null) {
+                    onErrorListener.onError(new KiteException("ticker is not connected", 504));
+                }
+                return false;
+            }
+        }else{
+            if(onErrorListener != null) {
+                onErrorListener.onError(new KiteException("ticker is not connected", 504));
+            }
+            return false;
         }
     }
 
