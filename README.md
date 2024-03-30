@@ -11,11 +11,34 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 - [Java library documentation](https://kite.trade/docs/javakiteconnect/)
 
 ## Usage
+Integrate the Kite Connect API Java client into your project using one of the following methods:
+
+### Download jar file
 - [Download Kite Connect 3 jar file](https://github.com/zerodhatech/javakiteconnect/tree/master/dist) and include it in your build path.
 
 - Include com.zerodhatech.kiteconnect into build path from maven. Use version 3.4.0
 
 - To use javakiteconnect in **Android**, you need to include jar file in the libs directory and add the following line in you module's gradle file ``` compile files('libs/kiteconnect.jar') ```
+
+### Maven
+Add the following dependency to your `pom.xml`:
+
+```xml
+<!-- https://mvnrepository.com/artifact/com.zerodhatech.kiteconnect/kiteconnect -->
+<dependency>
+    <groupId>com.zerodhatech.kiteconnect</groupId>
+    <artifactId>kiteconnect</artifactId>
+    <version>3.4.0</version>
+</dependency>
+```
+
+### Gradle
+Add the following line to your build.gradle:
+
+```xml
+// https://mvnrepository.com/artifact/com.zerodhatech.kiteconnect/kiteconnect
+implementation 'com.zerodhatech.kiteconnect:kiteconnect:3.4.0'
+```
 
 ## API usage
 ```java
