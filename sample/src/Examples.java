@@ -418,6 +418,9 @@ public class Examples {
         // Get holdings returns holdings model which contains list of holdings.
         List<Holding> holdings = kiteConnect.getHoldings();
         System.out.println(holdings.size());
+        System.out.println(holdings.get(0).tradingSymbol);
+        System.out.println(holdings.get(0).dayChange);
+        System.out.println(holdings.get(0).dayChangePercentage);
     }
 
     /** Converts position*/

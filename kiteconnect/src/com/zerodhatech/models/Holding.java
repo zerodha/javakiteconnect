@@ -45,4 +45,8 @@ public class Holding {
     public Date authorisedDate;
     @SerializedName("discrepancy")
     public boolean discrepancy;
+    @SerializedName("day_change")
+    public  double dayChange;
+    @SerializedName("day_change_percentage")
+    public  double dayChangePercentage;
 }
