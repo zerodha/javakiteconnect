@@ -9,6 +9,7 @@ public class Constants {
     public static final String PRODUCT_MIS = "MIS";
     public static final String PRODUCT_CNC = "CNC";
     public static final String PRODUCT_NRML = "NRML";
+    public static final String PRODUCT_MTF = "MTF";
 
     /** Order types. */
     public static final String ORDER_TYPE_MARKET = "MARKET";
