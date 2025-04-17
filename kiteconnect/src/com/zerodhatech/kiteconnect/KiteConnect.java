@@ -393,6 +393,52 @@ public class KiteConnect {
     }
 
     /**
+     * Place auto slice order.
+     * @param orderParams is Order params.
+     * @param variety variety="regular". Order variety can be bo, co, amo, regular.
+     * @return Order contains only orderId.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * @throws IOException is thrown when there is connection error.
+     * If the parent order placement fails then users will see error message in
+     * the KiteException thrown from global response handler. But if subsequent
+     * order placement fails then error message is inside the AutoSliceOrderResponse model
+     * */
+    public List<AutoSliceOrderResponse> placeAutoSliceOrder(OrderParams orderParams, String variety) throws KiteException, JSONException, IOException {
+        String url = routes.get("orders.place").replace(":variety", variety);
+        Map<String, Object> params = new HashMap<>();
+
+        JSONArray jsonArray = new JSONArray();
+        if(orderParams.exchange != null) params.put("exchange", orderParams.exchange);
+        if(orderParams.tradingsymbol != null) params.put("tradingsymbol", orderParams.tradingsymbol);
+        if(orderParams.transactionType != null) params.put("transaction_type", orderParams.transactionType);
+        if(orderParams.quantity != null) params.put("quantity", orderParams.quantity);
+        if(orderParams.price != null) params.put("price", orderParams.price);
+        if(orderParams.product != null) params.put("product", orderParams.product);
+        if(orderParams.orderType != null) params.put("order_type", orderParams.orderType);
+        if(orderParams.validity != null) params.put("validity", orderParams.validity);
+        if(orderParams.disclosedQuantity != null) params.put("disclosed_quantity", orderParams.disclosedQuantity);
+        if(orderParams.triggerPrice != null) params.put("trigger_price", orderParams.triggerPrice);
+        if(orderParams.squareoff != null) params.put("squareoff", orderParams.squareoff);
+        if(orderParams.stoploss != null) params.put("stoploss", orderParams.stoploss);
+        if(orderParams.trailingStoploss != null) params.put("trailing_stoploss", orderParams.trailingStoploss);
+        if(orderParams.tag != null) params.put("tag", orderParams.tag);
+        if(orderParams.validity != null && orderParams.validity.equals(Constants.VALIDITY_TTL))
+            params.put("validity_ttl",orderParams.validityTTL);
+        if(variety.equals(Constants.VARIETY_ICEBERG)){
+            params.put("iceberg_legs", orderParams.icebergLegs);
+            params.put("iceberg_quantity", orderParams.icebergQuantity);
+        }
+        if(variety.equals(Constants.VARIETY_AUCTION)){
+            params.put("auction_number", orderParams.auctionNumber);
+        }
+        params.put("autoslice", true);
+
+        JSONObject response = kiteRequestHandler.postRequest(url, params, apiKey, accessToken);
+        return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), AutoSliceOrderResponse[].class));
+    }
+
+    /**
      * Modifies an open order.
      *
      * @param orderParams is Order params.
