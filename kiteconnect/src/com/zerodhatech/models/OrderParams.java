@@ -96,4 +96,13 @@ public class OrderParams {
       * Auction number
       * */
      public String auctionNumber;
+
+     /**
+     * Market protection is allowed only for MARKET and SL-M (stoploss market) orders.
+     * Users can send preferred market protection value, it can be anything between 0 and 1. For Ex: 0.2, 0.9
+     * If users want to place order without market protection then value must be 0
+     * For market protection to be applied automatically by kite
+     * backend users can send -1
+     * */
+    public double marketProtection = 0;
 }

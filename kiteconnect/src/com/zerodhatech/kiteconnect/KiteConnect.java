@@ -385,6 +385,7 @@ public class KiteConnect {
         if(variety.equals(Constants.VARIETY_AUCTION)){
             params.put("auction_number", orderParams.auctionNumber);
         }
+        params.put("market_protection", orderParams.marketProtection);
 
         JSONObject jsonObject = kiteRequestHandler.postRequest(url, params, apiKey, accessToken);
         Order order =  new Order();
@@ -453,6 +454,7 @@ public class KiteConnect {
             params.put("auction_number", orderParams.auctionNumber);
         }
         params.put("autoslice", true);
+        params.put("market_protection", orderParams.marketProtection);
 
         JSONObject response = kiteRequestHandler.postRequest(url, params, apiKey, accessToken);
         return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), AutoSliceOrderResponse[].class));

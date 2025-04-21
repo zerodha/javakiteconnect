@@ -204,6 +204,24 @@ public class Examples {
         }
     }
 
+    public  void placeMarketProtectionOrder(KiteConnect kiteConnect) throws KiteException, IOException{
+        OrderParams orderParams = new OrderParams();
+        orderParams.price = 0.0;
+        orderParams.quantity = 1;
+        orderParams.transactionType = Constants.TRANSACTION_TYPE_BUY;
+        orderParams.orderType = Constants.ORDER_TYPE_MARKET;
+        orderParams.tradingsymbol = "INFY";
+        orderParams.exchange = Constants.EXCHANGE_NSE;
+        orderParams.validity = Constants.VALIDITY_DAY;
+        orderParams.product = Constants.PRODUCT_MIS;
+        // for custom market protection value send any value between 0 and 1 like 0.2 or 0.3
+        // -1 indicates kite backend will auto apply the market protection value.
+        orderParams.marketProtection = -1;
+
+        Order order11 = kiteConnect.placeOrder(orderParams, Constants.VARIETY_REGULAR);
+        System.out.println(order11.orderId);
+    }
+
     /** Get trigger range.*/
     public void getTriggerRange(KiteConnect kiteConnect) throws KiteException, IOException {
         // You need to send transaction_type, exchange and tradingsymbol to get trigger range.
