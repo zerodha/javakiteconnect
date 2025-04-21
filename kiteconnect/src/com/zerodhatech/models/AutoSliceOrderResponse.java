@@ -9,5 +9,7 @@ public class AutoSliceOrderResponse {
     @SerializedName("order_id")
     public String orderId;
     @SerializedName("error")
-    public String error;
+    public AutoSliceException autoSliceException;
 }
+
+

@@ -403,6 +403,26 @@ public class KiteConnect {
      * If the parent order placement fails then users will see error message in
      * the KiteException thrown from global response handler. But if subsequent
      * order placement fails then error message is inside the AutoSliceOrderResponse model
+     * sample response is
+     * {
+     *     "status": "success",
+     *     "data": [
+     *         {
+     *             "order_id": "1914227164488687616"
+     *         },
+     *         {
+     *             "error": {
+     *                 "code": 400,
+     *                 "error_type": "MarginException",
+     *                 "message": "Insufficient funds. Required margin is 228365.92 but available margin is 228358.50.",
+     *                 "data": null
+     *             }
+     *         },
+     *         {
+     *             "order_id": "1914227164681625600"
+     *         }
+     *     ]
+     * }
      * */
     public List<AutoSliceOrderResponse> placeAutoSliceOrder(OrderParams orderParams, String variety) throws KiteException, JSONException, IOException {
         String url = routes.get("orders.place").replace(":variety", variety);
