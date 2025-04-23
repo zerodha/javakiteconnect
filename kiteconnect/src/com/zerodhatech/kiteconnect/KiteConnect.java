@@ -425,11 +425,10 @@ public class KiteConnect {
      *     ]
      * }
      * */
-    public List<AutoSliceOrderResponse> placeAutoSliceOrder(OrderParams orderParams, String variety) throws KiteException, JSONException, IOException {
+    public List<BulkOrderResponse> placeAutoSliceOrder(OrderParams orderParams, String variety) throws KiteException, JSONException, IOException {
         String url = routes.get("orders.place").replace(":variety", variety);
         Map<String, Object> params = new HashMap<>();
 
-        JSONArray jsonArray = new JSONArray();
         if(orderParams.exchange != null) params.put("exchange", orderParams.exchange);
         if(orderParams.tradingsymbol != null) params.put("tradingsymbol", orderParams.tradingsymbol);
         if(orderParams.transactionType != null) params.put("transaction_type", orderParams.transactionType);
@@ -457,7 +456,7 @@ public class KiteConnect {
         params.put("market_protection", orderParams.marketProtection);
 
         JSONObject response = kiteRequestHandler.postRequest(url, params, apiKey, accessToken);
-        return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), AutoSliceOrderResponse[].class));
+        return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), BulkOrderResponse[].class));
     }
 
     /**

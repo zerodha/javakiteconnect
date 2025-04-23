@@ -2,7 +2,7 @@ package com.zerodhatech.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public  class AutoSliceException {
+public  class BulkOrderError {
     @SerializedName("code")
     public int code;
     @SerializedName("error_type")
