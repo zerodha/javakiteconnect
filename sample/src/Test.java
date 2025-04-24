@@ -67,7 +67,9 @@ public class Test {
 
             examples.placeAuctionOrder(kiteConnect);
 
-            examples.exitBracketOrder(kiteConnect);
+            examples.placeAutoSliceOrder(kiteConnect);
+
+            examples.placeMarketProtectionOrder(kiteConnect);
 
             examples.getTriggerRange(kiteConnect);
 
