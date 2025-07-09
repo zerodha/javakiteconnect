@@ -447,6 +447,22 @@ public class Examples {
         System.out.println(holdings.get(0).dayChangePercentage);
     }
 
+    /** Get MTF holdings.*/
+    public void getMTFHoldings(KiteConnect kiteConnect) throws KiteException, IOException {
+        // Get holdings returns holdings model which contains list of holdings.
+        List<Holding> holdings = kiteConnect.getHoldings();
+        List<Holding> mtfHoldings = new ArrayList<>();
+        for (Holding holding : holdings) {
+            if (holding.mtf.quantity > 0) {
+                mtfHoldings.add(holding);
+            }
+        }
+        System.out.println(mtfHoldings.size());
+        System.out.println(mtfHoldings.get(0).tradingSymbol);
+        System.out.println(mtfHoldings.get(0).mtf.quantity);
+        System.out.println(mtfHoldings.get(0).mtf.averagePrice);
+    }
+
     /** Converts position*/
     public void converPosition(KiteConnect kiteConnect) throws KiteException, IOException {
         //Modify product can be used to change MIS to NRML(CNC) or NRML(CNC) to MIS.
