@@ -20,5 +20,6 @@ public class MFHolding {
     public double lastPrice;
     @SerializedName("pnl")
     public double pnl;
-
+    @SerializedName("pledged_quantity")
+    public double pledgedQuantity;
 }
