@@ -27,7 +27,7 @@ public class MFOrder {
     @SerializedName("transaction_type")
     public String transactionType;
     @SerializedName("exchange_order_id")
-    public Date exchangeOrderId;
+    public String exchangeOrderId;
     @SerializedName("exchange_timestamp")
     public Date exchangeTimestamp;
     @SerializedName("fund")

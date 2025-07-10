@@ -38,5 +38,6 @@ public class MFSIP {
     public String status;
     @SerializedName("order_id")
     public String orderId;
-
+    @SerializedName("next_instalment")
+    public Date nextInstalment;
 }

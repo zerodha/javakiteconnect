@@ -6,6 +6,7 @@ import com.zerodhatech.kiteconnect.kitehttp.KiteRequestHandler;
 import com.zerodhatech.kiteconnect.kitehttp.SessionExpiryHook;
 import com.zerodhatech.kiteconnect.kitehttp.exceptions.KiteException;
 import com.zerodhatech.kiteconnect.utils.Constants;
+import com.zerodhatech.kiteconnect.utils.MultipleDateFormatDeserializer;
 import com.zerodhatech.models.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.json.JSONArray;
@@ -64,19 +65,8 @@ public class KiteConnect {
         this.proxy = userProxy;
         this.apiKey = apiKey;
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-
-            @Override
-            public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-                try {
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    return format.parse(jsonElement.getAsString());
-                } catch (ParseException e) {
-                    return null;
-                }
-            }
-        });
-        gson = gsonBuilder.setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        gsonBuilder.registerTypeAdapter(Date.class, new MultipleDateFormatDeserializer("yyyy-MM-dd HH:mm:ss","yyyy-MM-dd"));
+        gson = gsonBuilder.create();
         ENABLE_LOGGING = enableDebugLog;
         kiteRequestHandler = new KiteRequestHandler(proxy);
     }
