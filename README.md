@@ -1,10 +1,10 @@
 <a href="https://zerodha.tech"><img src="https://zerodha.tech/static/images/github-badge.svg" align="right" /></a>
-# The Kite Connect 3.5.0 API Java client
+# The Kite Connect 3.5.1 API Java client
 The official Java client for communicating with [Kite Connect API](https://kite.trade).
 
 Kite Connect is a set of REST-like APIs that expose many capabilities required to build a complete investment and trading platform. Execute orders in real time, manage user portfolio, stream live market data (WebSockets), and more, with the simple HTTP API collection.
 
-[Zerodha Technology Pvt Ltd](http://rainmatter.com) (c) 2019. Licensed under the MIT License.
+[Zerodha Technology](https://zerodha.com/) (c) 2024. Licensed under the MIT License.
 
 ## Documentation
 - [Kite Connect HTTP API documentation](https://kite.trade/docs/connect/v3/)
@@ -13,7 +13,17 @@ Kite Connect is a set of REST-like APIs that expose many capabilities required t
 ## Usage
 - [Download Kite Connect 3 jar file](https://github.com/zerodhatech/javakiteconnect/tree/master/dist) and include it in your build path.
 
-- Include com.zerodhatech.kiteconnect into build path from maven. Use version 3.5.0
+### Maven
+To include com.zerodhatech.kiteconnect into build path from maven. Add the following dependency to `pom.xml` file of your project:
+
+```xml
+<!-- https://central.sonatype.com/artifact/com.zerodhatech.kiteconnect/kiteconnect -->
+<dependency>
+    <groupId>com.zerodhatech.kiteconnect</groupId>
+    <artifactId>kiteconnect</artifactId>
+    <version>3.5.1</version>
+</dependency>
+```
 
 - To use javakiteconnect in **Android**, you need to include jar file in the libs directory and add the following line in you module's gradle file ``` compile files('libs/kiteconnect.jar') ```
 
