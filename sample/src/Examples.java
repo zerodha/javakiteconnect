@@ -214,8 +214,9 @@ public class Examples {
         orderParams.exchange = Constants.EXCHANGE_NSE;
         orderParams.validity = Constants.VALIDITY_DAY;
         orderParams.product = Constants.PRODUCT_MIS;
-        // for custom market protection value send any value between 0 and 1 like 0.2 or 0.3
-        // -1 indicates kite backend will auto apply the market protection value.
+        // Market protection value (0–100) represents the % distance from LTP used to convert a MARKET order into a LIMIT order.
+        // Example: 10.5 → limit price will be placed 10.5% away from LTP to prevent extreme slippage.
+        // -1 → Kite backend automatically applies market protection.
         orderParams.marketProtection = -1;
 
         Order order11 = kiteConnect.placeOrder(orderParams, Constants.VARIETY_REGULAR);
