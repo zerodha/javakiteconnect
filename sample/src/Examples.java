@@ -184,11 +184,11 @@ public class Examples {
     /** Place order with automatic slicing on*/
     public void placeAutoSliceOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         OrderParams orderParams = new OrderParams();
-        orderParams.price = 1.0;
+        orderParams.price = 28.9;
         orderParams.quantity = 5925;
         orderParams.transactionType = Constants.TRANSACTION_TYPE_BUY;
         orderParams.orderType = Constants.ORDER_TYPE_LIMIT;
-        orderParams.tradingsymbol = "NIFTY2543025800CE";
+        orderParams.tradingsymbol = "NIFTY2632423000PE";
         orderParams.exchange = Constants.EXCHANGE_NFO;
         orderParams.validity = Constants.VALIDITY_DAY;
         orderParams.product = Constants.PRODUCT_MIS;

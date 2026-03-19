@@ -15,11 +15,12 @@ import java.util.ArrayList;
  */
 public class Test {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
+        KiteConnect kiteConnect = null;
         try {
             // First you should get request_token, public_token using kitconnect login and then use request_token, public_token, api_secret to make any kiteConnect api call.
             // Initialize KiteSdk with your apiKey.
-            KiteConnect kiteConnect = new KiteConnect("xxxxyyyyzzzz");
+            kiteConnect = new KiteConnect("xxxxyyyyzzzz");
 
             //If you wish to enable debug logs send true in the constructor, this will log request and response.
             //KiteConnect kiteConnect = new KiteConnect("xxxxyyyyzzzz", true);
@@ -45,7 +46,7 @@ public class Test {
                A request token is valid for only a couple of minutes and can be used only once. An access token is valid for one whole day. Don't call this method for every app run.
                Once an access token is received it should be stored in preferences or database for further usage.
             */
-            User user =  kiteConnect.generateSession("xxxxxtttyyy", "xxxxxxxyyyyy");
+            User user = kiteConnect.generateSession("xxxxxtttyyy", "xxxxxxxyyyyy");
             kiteConnect.setAccessToken(user.accessToken);
             kiteConnect.setPublicToken(user.publicToken);
 
@@ -139,13 +140,17 @@ public class Test {
             tokens.add(Long.parseLong("256265"));
             examples.tickerUsage(kiteConnect, tokens);
         } catch (KiteException e) {
-            System.out.println(e.message+" "+e.code+" "+e.getClass().getName());
+            System.out.println(e.message + " " + e.code + " " + e.getClass().getName());
         } catch (JSONException e) {
             e.printStackTrace();
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         } catch (WebSocketException e) {
             e.printStackTrace();
+        } finally {
+            if (kiteConnect != null) {
+                kiteConnect.close();
+            }
         }
     }
 }
