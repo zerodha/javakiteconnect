@@ -403,23 +403,24 @@ public class KiteConnect implements AutoCloseable {
      * sample response is
      * {
      *     "status": "success",
-     *     "data": [
-     *         {
-     *             "order_id": "1914227164488687616"
-     *         },
-     *         {
-     *             "error": {
-     *                 "code": 400,
-     *                 "error_type": "MarginException",
-     *                 "message": "Insufficient funds. Required margin is 228365.92 but available margin is 228358.50.",
-     *                 "data": null
+     *     "data": {
+     *         "order_id": "1914227164488687616",
+     *         "children": [
+     *             {
+     *                 "error": {
+     *                     "code": 400,
+     *                     "error_type": "MarginException",
+     *                     "message": "Insufficient funds. Required margin is 228365.92 but available margin is 228358.50.",
+     *                     "data": null
+     *                 }
+     *             },
+     *             {
+     *                 "order_id": "1914227164681625600"
      *             }
-     *         },
-     *         {
-     *             "order_id": "1914227164681625600"
-     *         }
-     *     ]
+     *         ]
+     *     }
      * }
+     * The response is flattened as: parent order first, followed by each child result.
      * */
     public List<BulkOrderResponse> placeAutoSliceOrder(OrderParams orderParams, String variety) throws KiteException, JSONException, IOException {
         String url = routes.get("orders.place").replace(":variety", variety);
@@ -452,7 +453,19 @@ public class KiteConnect implements AutoCloseable {
         params.put("market_protection", orderParams.marketProtection);
 
         JSONObject response = kiteRequestHandler.postRequest(url, params, apiKey, accessToken);
-        return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), BulkOrderResponse[].class));
+        AutoSliceOrderResponse autoSliceOrderResponse = gson.fromJson(String.valueOf(response.get("data")), AutoSliceOrderResponse.class);
+        List<BulkOrderResponse> orders = new ArrayList<>();
+
+        if (autoSliceOrderResponse.orderId != null) {
+            BulkOrderResponse parentOrder = new BulkOrderResponse();
+            parentOrder.orderId = autoSliceOrderResponse.orderId;
+            orders.add(parentOrder);
+        }
+        if (autoSliceOrderResponse.children != null) {
+            orders.addAll(autoSliceOrderResponse.children);
+        }
+
+        return orders;
     }
 
     /**
