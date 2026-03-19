@@ -300,4 +300,17 @@ public class KiteRequestHandler {
         Request request = new Request.Builder().url(httpBuilder.build()).delete().header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").header("Authorization", "token "+apiKey+":"+accessToken).build();
         return request;
     }
+
+    /** Releases OkHttp resources so the JVM can terminate cleanly after requests complete. */
+    public void close() {
+        client.dispatcher().executorService().shutdown();
+        client.connectionPool().evictAll();
+        Cache cache = client.cache();
+        if (cache != null) {
+            try {
+                cache.close();
+            } catch (IOException ignored) {
+            }
+        }
+    }
 }

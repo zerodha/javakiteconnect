@@ -29,7 +29,7 @@ import java.util.*;
 /**
  * Offers all the functionality like placing order, fetch margins, orderbook, positions, fetch market snap quote.
  */
-public class KiteConnect {
+public class KiteConnect implements AutoCloseable {
 
     public static SessionExpiryHook sessionExpiryHook = null;
     public static boolean ENABLE_LOGGING = false;
@@ -145,6 +145,12 @@ public class KiteConnect {
      * */
     public void setPublicToken(String publicToken){
         this.publicToken = publicToken;
+    }
+
+    /** Releases any network resources associated with this client. */
+    @Override
+    public void close() {
+        kiteRequestHandler.close();
     }
 
     /** Retrieves login url
