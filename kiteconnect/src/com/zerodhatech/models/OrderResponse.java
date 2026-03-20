@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * A wrapper for the new auto slice order response payload.
  */
-public class AutoSliceOrderResponse {
+public class OrderResponse {
     @SerializedName("order_id")
     public String orderId;
 

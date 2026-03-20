@@ -22,7 +22,6 @@ import org.supercsv.prefs.CsvPreference;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.Proxy;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -345,15 +344,25 @@ public class KiteConnect implements AutoCloseable {
     }
 
     /**
-     * Places an order.
-     * @param orderParams is Order params.
-     * @param variety variety="regular". Order variety can be bo, co, amo, regular.
-     * @return Order contains only orderId.
-     * @throws KiteException is thrown for all Kite trade related errors.
-     * @throws JSONException is thrown when there is exception while parsing response.
-     * @throws IOException is thrown when there is connection error.
+     * Places an order for the given variety.
+     *
+     * @param orderParams order input payload. Populate the fields required for the order being placed,
+     *                    such as exchange, tradingsymbol, transactionType, quantity, product, orderType,
+     *                    validity, price, triggerPrice, disclosedQuantity, tag, and marketProtection.
+     *                    For {@link Constants#VALIDITY_TTL}, also set {@code validityTTL}. For
+     *                    {@link Constants#VARIETY_ICEBERG}, also set {@code icebergLegs} and
+     *                    {@code icebergQuantity}. For {@link Constants#VARIETY_AUCTION}, also set
+     *                    {@code auctionNumber}. Set {@code autoslice} to {@code true} to allow the
+     *                    order to be sliced automatically when applicable.
+     * @param variety order variety to place. Supported values include {@code regular}, {@code amo},
+     *                {@code co}, {@code bo}, {@code iceberg}, and {@code auction}, subject to API support.
+     * @return order placement response containing the parent {@code orderId} and, when applicable,
+     *         sliced child order results.
+     * @throws KiteException if the Kite API returns a trading or request error.
+     * @throws JSONException if the response cannot be parsed as JSON.
+     * @throws IOException if a network or connection error occurs while placing the order.
      */
-    public Order placeOrder(OrderParams orderParams, String variety) throws KiteException, JSONException, IOException {
+    public OrderResponse placeOrder(OrderParams orderParams, String variety) throws KiteException, JSONException, IOException {
         String url = routes.get("orders.place").replace(":variety", variety);
 
         Map<String, Object> params = new HashMap<>();
@@ -368,9 +377,6 @@ public class KiteConnect implements AutoCloseable {
         if(orderParams.validity != null) params.put("validity", orderParams.validity);
         if(orderParams.disclosedQuantity != null) params.put("disclosed_quantity", orderParams.disclosedQuantity);
         if(orderParams.triggerPrice != null) params.put("trigger_price", orderParams.triggerPrice);
-        if(orderParams.squareoff != null) params.put("squareoff", orderParams.squareoff);
-        if(orderParams.stoploss != null) params.put("stoploss", orderParams.stoploss);
-        if(orderParams.trailingStoploss != null) params.put("trailing_stoploss", orderParams.trailingStoploss);
         if(orderParams.tag != null) params.put("tag", orderParams.tag);
         if(orderParams.validity != null && orderParams.validity.equals(Constants.VALIDITY_TTL))
             params.put("validity_ttl",orderParams.validityTTL);
@@ -382,90 +388,21 @@ public class KiteConnect implements AutoCloseable {
             params.put("auction_number", orderParams.auctionNumber);
         }
         params.put("market_protection", orderParams.marketProtection);
-
-        JSONObject jsonObject = kiteRequestHandler.postRequest(url, params, apiKey, accessToken);
-        Order order =  new Order();
-        order.orderId = jsonObject.getJSONObject("data").getString("order_id");
-        return order;
-    }
-
-    /**
-     * Place auto slice order.
-     * @param orderParams is Order params.
-     * @param variety variety="regular". Order variety can be bo, co, amo, regular.
-     * @return Order contains only orderId.
-     * @throws KiteException is thrown for all Kite trade related errors.
-     * @throws JSONException is thrown when there is exception while parsing response.
-     * @throws IOException is thrown when there is connection error.
-     * If the parent order placement fails then users will see error message in
-     * the KiteException thrown from global response handler. But if subsequent
-     * order placement fails then error message is inside the AutoSliceOrderResponse model
-     * sample response is
-     * {
-     *     "status": "success",
-     *     "data": {
-     *         "order_id": "1914227164488687616",
-     *         "children": [
-     *             {
-     *                 "error": {
-     *                     "code": 400,
-     *                     "error_type": "MarginException",
-     *                     "message": "Insufficient funds. Required margin is 228365.92 but available margin is 228358.50.",
-     *                     "data": null
-     *                 }
-     *             },
-     *             {
-     *                 "order_id": "1914227164681625600"
-     *             }
-     *         ]
-     *     }
-     * }
-     * The response is flattened as: parent order first, followed by each child result.
-     * */
-    public List<BulkOrderResponse> placeAutoSliceOrder(OrderParams orderParams, String variety) throws KiteException, JSONException, IOException {
-        String url = routes.get("orders.place").replace(":variety", variety);
-        Map<String, Object> params = new HashMap<>();
-
-        if(orderParams.exchange != null) params.put("exchange", orderParams.exchange);
-        if(orderParams.tradingsymbol != null) params.put("tradingsymbol", orderParams.tradingsymbol);
-        if(orderParams.transactionType != null) params.put("transaction_type", orderParams.transactionType);
-        if(orderParams.quantity != null) params.put("quantity", orderParams.quantity);
-        if(orderParams.price != null) params.put("price", orderParams.price);
-        if(orderParams.product != null) params.put("product", orderParams.product);
-        if(orderParams.orderType != null) params.put("order_type", orderParams.orderType);
-        if(orderParams.validity != null) params.put("validity", orderParams.validity);
-        if(orderParams.disclosedQuantity != null) params.put("disclosed_quantity", orderParams.disclosedQuantity);
-        if(orderParams.triggerPrice != null) params.put("trigger_price", orderParams.triggerPrice);
-        if(orderParams.squareoff != null) params.put("squareoff", orderParams.squareoff);
-        if(orderParams.stoploss != null) params.put("stoploss", orderParams.stoploss);
-        if(orderParams.trailingStoploss != null) params.put("trailing_stoploss", orderParams.trailingStoploss);
-        if(orderParams.tag != null) params.put("tag", orderParams.tag);
-        if(orderParams.validity != null && orderParams.validity.equals(Constants.VALIDITY_TTL))
-            params.put("validity_ttl",orderParams.validityTTL);
-        if(variety.equals(Constants.VARIETY_ICEBERG)){
-            params.put("iceberg_legs", orderParams.icebergLegs);
-            params.put("iceberg_quantity", orderParams.icebergQuantity);
-        }
-        if(variety.equals(Constants.VARIETY_AUCTION)){
-            params.put("auction_number", orderParams.auctionNumber);
-        }
-        params.put("autoslice", true);
-        params.put("market_protection", orderParams.marketProtection);
+        params.put("autoslice", orderParams.autoslice);
 
         JSONObject response = kiteRequestHandler.postRequest(url, params, apiKey, accessToken);
-        AutoSliceOrderResponse autoSliceOrderResponse = gson.fromJson(String.valueOf(response.get("data")), AutoSliceOrderResponse.class);
-        List<BulkOrderResponse> orders = new ArrayList<>();
+        OrderResponse orderResponse = gson.fromJson(String.valueOf(response.get("data")), OrderResponse.class);
+        List<BulkOrderResponse> multipleOrdersResponse = new ArrayList<>();
 
-        if (autoSliceOrderResponse.orderId != null) {
+        if (orderResponse.orderId != null) {
             BulkOrderResponse parentOrder = new BulkOrderResponse();
-            parentOrder.orderId = autoSliceOrderResponse.orderId;
-            orders.add(parentOrder);
+            parentOrder.orderId = orderResponse.orderId;
+            multipleOrdersResponse.add(parentOrder);
         }
-        if (autoSliceOrderResponse.children != null) {
-            orders.addAll(autoSliceOrderResponse.children);
+        if (orderResponse.children != null) {
+            multipleOrdersResponse.addAll(orderResponse.children);
         }
-
-        return orders;
+        return orderResponse;
     }
 
     /**
@@ -494,10 +431,9 @@ public class KiteConnect implements AutoCloseable {
         if(orderParams.validity != null) params.put("validity", orderParams.validity);
         if(orderParams.disclosedQuantity != null) params.put("disclosed_quantity", orderParams.disclosedQuantity);
         if(orderParams.triggerPrice != null) params.put("trigger_price", orderParams.triggerPrice);
-        if(orderParams.squareoff != null) params.put("squareoff", orderParams.squareoff);
-        if(orderParams.stoploss != null) params.put("stoploss", orderParams.stoploss);
-        if(orderParams.trailingStoploss != null) params.put("trailing_stoploss", orderParams.trailingStoploss);
         if(orderParams.parentOrderId != null) params.put("parent_order_id", orderParams.parentOrderId);
+
+        params.put("market_protection",orderParams.marketProtection);
 
         JSONObject jsonObject = kiteRequestHandler.putRequest(url, params, apiKey, accessToken);
         Order order =  new Order();
@@ -875,22 +811,6 @@ public class KiteConnect implements AutoCloseable {
     public Map<String, LTPQuote> getLTP(String[] instruments) throws KiteException, IOException, JSONException {
         JSONObject response = kiteRequestHandler.getRequest(routes.get("quote.ltp"), "i", instruments, apiKey, accessToken);
         Type type = new TypeToken<Map<String, LTPQuote>>(){}.getType();
-        return gson.fromJson(String.valueOf(response.get("data")), type);
-    }
-
-    /**
-     * Retrieves buy or sell trigger range for Cover Orders.
-     * @return TriggerRange object is returned.
-     * @param instruments is the array of tradingsymbol and exchange or instrument token.
-     * @param transactionType "BUY or "SELL".
-     * @throws KiteException is thrown for all Kite trade related errors.
-     * @throws JSONException is thrown when there is exception while parsing response.
-     * @throws IOException is thrown when there is connection related error.
-     */
-    public Map<String, TriggerRange> getTriggerRange(String[] instruments, String transactionType) throws KiteException, JSONException, IOException {
-        String url = routes.get("market.trigger_range").replace(":transaction_type", transactionType.toLowerCase());
-        JSONObject response = kiteRequestHandler.getRequest(url, "i", instruments, apiKey, accessToken);
-        Type type = new TypeToken<Map<String, TriggerRange>>(){}.getType();
         return gson.fromJson(String.valueOf(response.get("data")), type);
     }
 

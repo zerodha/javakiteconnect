@@ -53,21 +53,6 @@ public class OrderParams {
     public Double triggerPrice;
 
     /**
-     * Square off value (only for bracket orders)
-     */
-    public Double squareoff;
-
-    /**
-     * Stoploss value (only for bracket orders)
-     */
-    public Double stoploss;
-
-    /**
-     * Trailing stoploss value (only for bracket orders)
-     */
-    public Double trailingStoploss;
-
-    /**
      * Tag: field for users to tag orders. It accepts alphanumeric 20 character String values.
      */
      public String tag;
@@ -99,10 +84,16 @@ public class OrderParams {
 
      /**
      * Market protection is allowed only for MARKET and SL-M (stoploss market) orders.
-     * Users can send preferred market protection value, it can be anything between 0 and 1. For Ex: 0.2, 0.9
+     * Users can send preferred market protection value, it can be anything between 0 and 100. For Ex: 2, 3.5
+     * which means price should be 2% and 3.5% away from last traded price.
      * If users want to place order without market protection then value must be 0
      * For market protection to be applied automatically by kite
      * backend users can send -1
      * */
     public double marketProtection = 0;
+
+    /**
+     * If quantity is more than freeze limit, then this order will be sliced.
+     */
+    public  Boolean autoslice = false;
 }
