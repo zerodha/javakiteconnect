@@ -10,3 +10,4 @@ out/*
 !sample/.idea/
 sample/.idea/*
 production/*
+build
