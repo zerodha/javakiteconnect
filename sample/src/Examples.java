@@ -15,17 +15,32 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by sujith on 15/10/16.
+ * Sample usage snippets for the Kite Connect Java client.
+ *
+ * <p>Each method demonstrates a single API workflow such as placing orders,
+ * fetching portfolio data, working with GTTs, or consuming ticker updates.</p>
  */
 public class Examples {
 
-
+    /**
+     * Fetches the logged-in user's profile details.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws IOException if the profile request fails due to an I/O error.
+     * @throws KiteException if the Kite API returns an error response.
+     */
     public void getProfile(KiteConnect kiteConnect) throws IOException, KiteException {
         Profile profile = kiteConnect.getProfile();
         System.out.println(profile.userName);
     }
 
-    /**Gets Margin.*/
+    /**
+     * Fetches available and utilised margin details for the account.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the margin request fails due to an I/O error.
+     */
     public void getMargins(KiteConnect kiteConnect) throws KiteException, IOException {
         // Get margins returns margin model, you can pass equity or commodity as arguments to get margins of respective segments.
         //Margins margins = kiteConnect.getMargins("equity");
@@ -35,6 +50,13 @@ public class Examples {
         System.out.println(margins.utilised.m2mUnrealised);
     }
 
+    /**
+     * Calculates margin for a single order payload.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws IOException if the margin calculation request fails due to an I/O error.
+     * @throws KiteException if the Kite API returns an error response.
+     */
     public void getMarginCalculation(KiteConnect kiteConnect) throws IOException, KiteException {
         MarginCalculationParams param = new MarginCalculationParams();
         param.exchange = "NSE";
@@ -51,6 +73,13 @@ public class Examples {
         System.out.println(data.get(0).leverage);
     }
 
+    /**
+     * Calculates combined margin for multiple order legs.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws IOException if the margin calculation request fails due to an I/O error.
+     * @throws KiteException if the Kite API returns an error response.
+     */
     public void getCombinedMarginCalculation(KiteConnect kiteConnect) throws IOException, KiteException{
         List<MarginCalculationParams> params = new ArrayList<>();
 
@@ -81,7 +110,13 @@ public class Examples {
         System.out.println(combinedMarginData.initialMargin.total);
     }
 
-    /**Get virtual contract note.*/
+    /**
+     * Generates a virtual contract note for the supplied executed order details.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getVirtualContractNote(KiteConnect kiteConnect) throws  KiteException, IOException {
         List<ContractNoteParams> virtualContractNoteParams = new ArrayList<ContractNoteParams>();
         ContractNoteParams contractNoteParams = new ContractNoteParams();
@@ -102,18 +137,19 @@ public class Examples {
         System.out.println(data.get(0).charges.total);
     }
 
-    /**Place order.*/
+    /**
+     * Demonstrates how to place a regular buy limit order.
+     *
+     * <p>This example builds an {@link OrderParams} payload with the minimum fields
+     * typically required for a CNC limit order and sends it using
+     * {@link Constants#VARIETY_REGULAR}. A successful response confirms only that
+     * the order was accepted by the OMS and returns the generated order ID.</p>
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API rejects the order or returns an error response.
+     * @throws IOException if the order request fails due to an I/O error.
+     */
     public void placeOrder(KiteConnect kiteConnect) throws KiteException, IOException {
-        /** Place order method requires a orderParams argument which contains,
-         * tradingsymbol, exchange, transaction_type, order_type, quantity, product, price, trigger_price, disclosed_quantity, validity
-         * squareoff_value, stoploss_value, trailing_stoploss
-         * and variety (value can be regular, bo, co, amo)
-         * place order will return order model which will have only orderId in the order model
-         *
-         * Following is an example param for LIMIT order,
-         * if a call fails then KiteException will have error message in it
-         * Success of this call implies only order has been placed successfully, not order execution. */
-
         OrderParams orderParams = new OrderParams();
         orderParams.quantity = 1;
         orderParams.orderType = Constants.ORDER_TYPE_LIMIT;
@@ -126,11 +162,17 @@ public class Examples {
         orderParams.triggerPrice = 0.0;
         orderParams.tag = "myTag"; //tag is optional and it cannot be more than 8 characters and only alphanumeric is allowed
 
-        Order order = kiteConnect.placeOrder(orderParams, Constants.VARIETY_REGULAR);
-        System.out.println(order.orderId);
+        OrderResponse orderResponse = kiteConnect.placeOrder(orderParams, Constants.VARIETY_REGULAR);
+        System.out.println(orderResponse.orderId);
     }
 
-    /** Place iceberg order.*/
+    /**
+     * Places an iceberg order using TTL validity.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the order request fails due to an I/O error.
+     */
     public void placeIcebergOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         /** Iceberg order:- following is example param for iceberg order with ttl validity.
          * Minimum number of legs is 2 and maximum number of legs is 10.
@@ -148,11 +190,17 @@ public class Examples {
         orderParams.validityTTL = 10;
         orderParams.icebergLegs = 2;
         orderParams.icebergQuantity = 5;
-        Order order10 = kiteConnect.placeOrder(orderParams, Constants.VARIETY_ICEBERG);
-        System.out.println(order10.orderId);
+        OrderResponse orderResponse = kiteConnect.placeOrder(orderParams, Constants.VARIETY_ICEBERG);
+        System.out.println(orderResponse.orderId);
     }
 
-    /** Place cover order.*/
+    /**
+     * Places a cover order.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the order request fails due to an I/O error.
+     */
     public void placeCoverOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         /** Cover Order:- following is an example param for the cover order
          * key: quantity value: 1
@@ -177,14 +225,20 @@ public class Examples {
         orderParams.triggerPrice = 30.5;
         orderParams.product = Constants.PRODUCT_MIS;
 
-        Order order11 = kiteConnect.placeOrder(orderParams, Constants.VARIETY_CO);
-        System.out.println(order11.orderId);
+        OrderResponse orderResponse = kiteConnect.placeOrder(orderParams, Constants.VARIETY_CO);
+        System.out.println(orderResponse.orderId);
     }
 
-    /** Place order with automatic slicing on*/
-    public void placeAutoSliceOrder(KiteConnect kiteConnect) throws KiteException, IOException {
+    /**
+     * Places a regular order with automatic slicing enabled.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the order request fails due to an I/O error.
+     */
+    public void placeOrderWithAutoSlice(KiteConnect kiteConnect) throws KiteException, IOException {
         OrderParams orderParams = new OrderParams();
-        orderParams.price = 28.9;
+        orderParams.price = 146.55;
         orderParams.quantity = 5925;
         orderParams.transactionType = Constants.TRANSACTION_TYPE_BUY;
         orderParams.orderType = Constants.ORDER_TYPE_LIMIT;
@@ -192,8 +246,18 @@ public class Examples {
         orderParams.exchange = Constants.EXCHANGE_NFO;
         orderParams.validity = Constants.VALIDITY_DAY;
         orderParams.product = Constants.PRODUCT_MIS;
+        orderParams.autoslice = true;
 
-        List<BulkOrderResponse> orders = kiteConnect.placeAutoSliceOrder(orderParams, Constants.VARIETY_REGULAR);
+        OrderResponse orderResponse = kiteConnect.placeOrder(orderParams, Constants.VARIETY_REGULAR);
+        List<BulkOrderResponse> orders = new ArrayList<>();
+        if (orderResponse.orderId != null) {
+            BulkOrderResponse parentOrder = new BulkOrderResponse();
+            parentOrder.orderId = orderResponse.orderId;
+            orders.add(parentOrder);
+        }
+        if (orderResponse.children != null) {
+            orders.addAll(orderResponse.children);
+        }
         for (BulkOrderResponse order : orders) {
             if (order.orderId!=null) {
                 System.out.println(order.orderId);
@@ -204,6 +268,13 @@ public class Examples {
         }
     }
 
+    /**
+     * Places a market order with market protection enabled.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the order request fails due to an I/O error.
+     */
     public  void placeMarketProtectionOrder(KiteConnect kiteConnect) throws KiteException, IOException{
         OrderParams orderParams = new OrderParams();
         orderParams.price = 0.0;
@@ -214,26 +285,22 @@ public class Examples {
         orderParams.exchange = Constants.EXCHANGE_NSE;
         orderParams.validity = Constants.VALIDITY_DAY;
         orderParams.product = Constants.PRODUCT_MIS;
-        // Market protection value (0–100) represents the % distance from LTP used to convert a MARKET order into a LIMIT order.
-        // Example: 10.5 → limit price will be placed 10.5% away from LTP to prevent extreme slippage.
-        // -1 → Kite backend automatically applies market protection.
+        /** Market protection value (0–100) represents the % distance from LTP used to convert a MARKET order into a LIMIT order.
+         Example: 10.5 → limit price will be placed 10.5% away from LTP to prevent extreme slippage.
+         -1 → Kite backend automatically applies market protection.*/
         orderParams.marketProtection = -1;
 
-        Order order11 = kiteConnect.placeOrder(orderParams, Constants.VARIETY_REGULAR);
-        System.out.println(order11.orderId);
+        OrderResponse orderResponse = kiteConnect.placeOrder(orderParams, Constants.VARIETY_REGULAR);
+        System.out.println(orderResponse.orderId);
     }
 
-    /** Get trigger range.*/
-    public void getTriggerRange(KiteConnect kiteConnect) throws KiteException, IOException {
-        // You need to send transaction_type, exchange and tradingsymbol to get trigger range.
-        String[] instruments = {"BSE:INFY", "NSE:APOLLOTYRE", "NSE:SBIN"};
-        Map<String, TriggerRange> triggerRangeMap = kiteConnect.getTriggerRange(instruments, Constants.TRANSACTION_TYPE_BUY);
-        System.out.println(triggerRangeMap.get("NSE:SBIN").lower);
-        System.out.println(triggerRangeMap.get("NSE:APOLLOTYRE").upper);
-        System.out.println(triggerRangeMap.get("BSE:INFY").percentage);
-    }
-
-    /** Get ongoing auction instruments available for the day and it usually starts at 2 PM on a trading day.*/
+    /**
+     * Fetches auction instruments available for the current trading day.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getAuctionInstruments(KiteConnect kiteConnect) throws KiteException, IOException{
         List<AuctionInstrument> auctions = kiteConnect.getAuctionInstruments();
         for (int i =0; i< auctions.size(); i++){
@@ -241,7 +308,13 @@ public class Examples {
         }
     }
 
-    /** Place an auction order. Only sell is allowed.*/
+    /**
+     * Places an auction order.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the order request fails due to an I/O error.
+     */
     public void placeAuctionOrder(KiteConnect kiteConnect) throws KiteException, IOException{
         OrderParams orderParams = new OrderParams();
         orderParams.price = 365.5;
@@ -256,7 +329,13 @@ public class Examples {
         kiteConnect.placeOrder(orderParams, Constants.VARIETY_AUCTION);
     }
 
-    /** Get orderbook.*/
+    /**
+     * Fetches the full order book.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getOrders(KiteConnect kiteConnect) throws KiteException, IOException {
         // Get orders returns order model which will have list of orders inside, which can be accessed as follows,
         List<Order> orders = kiteConnect.getOrders();
@@ -272,7 +351,13 @@ public class Examples {
         System.out.println("list of orders size is "+orders.size());
     }
 
-    /** Get order details*/
+    /**
+     * Fetches order history for a specific order ID.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         List<Order> orders = kiteConnect.getOrderHistory("180111000561605");
         for(int i = 0; i< orders.size(); i++){
@@ -281,7 +366,13 @@ public class Examples {
         System.out.println("list size is "+orders.size());
     }
 
-    /** Get tradebook*/
+    /**
+     * Fetches the complete trade book.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getTrades(KiteConnect kiteConnect) throws KiteException, IOException {
         // Returns tradebook.
         List<Trade> trades = kiteConnect.getTrades();
@@ -291,14 +382,26 @@ public class Examples {
         System.out.println(trades.size());
     }
 
-    /** Get trades for an order.*/
+    /**
+     * Fetches trades for a specific order ID.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getTradesWithOrderId(KiteConnect kiteConnect) throws KiteException, IOException {
         // Returns trades for the given order.
         List<Trade> trades = kiteConnect.getOrderTrades("180111000561605");
         System.out.println(trades.size());
     }
 
-    /** Modify order.*/
+    /**
+     * Modifies an existing open order.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void modifyOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         // Order modify request will return order model which will contain only order_id.
         OrderParams orderParams =  new OrderParams();
@@ -315,7 +418,13 @@ public class Examples {
         System.out.println(order21.orderId);
     }
 
-    /** Cancel an order*/
+    /**
+     * Cancels an open order.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void cancelOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         // Order modify request will return order model which will contain only order_id.
         // Cancel order will return order model which will only have orderId.
@@ -323,12 +432,25 @@ public class Examples {
         System.out.println(order2.orderId);
     }
 
+    /**
+     * Exits a bracket order by cancelling a child leg.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void exitBracketOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         Order order = kiteConnect.cancelOrder("180116000812153","180116000798058", Constants.VARIETY_BO);
         System.out.println(order.orderId);
     }
 
-    /**Get all gtts. */
+    /**
+     * Fetches all configured GTT triggers.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getGTTs(KiteConnect kiteConnect) throws KiteException, IOException {
         List<GTT> gtts = kiteConnect.getGTTs();
         System.out.println(gtts.get(0).createdAt);
@@ -336,13 +458,25 @@ public class Examples {
         System.out.println(gtts.get(0).orders.get(0).price);
     }
 
-    /** Get a particular GTT. */
+    /**
+     * Fetches a single GTT trigger by ID.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws IOException if the request fails due to an I/O error.
+     * @throws KiteException if the Kite API returns an error response.
+     */
     public void getGTT(KiteConnect kiteConnect) throws IOException, KiteException {
         GTT gtt = kiteConnect.getGTT(177574);
         System.out.println(gtt.condition.tradingSymbol);
     }
 
-    /** Place a GTT (Good till trigger)*/
+    /**
+     * Places a two-leg OCO GTT trigger.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws IOException if the request fails due to an I/O error.
+     * @throws KiteException if the Kite API returns an error response.
+     */
     public void placeGTT(KiteConnect kiteConnect) throws IOException, KiteException {
         GTTParams gttParams = new GTTParams();
         gttParams.triggerType = Constants.OCO;
@@ -387,7 +521,13 @@ public class Examples {
         System.out.println(gtt.id);
     }
 
-    /** Modify a GTT (Good till trigger)*/
+    /**
+     * Modifies an existing GTT trigger.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws IOException if the request fails due to an I/O error.
+     * @throws KiteException if the Kite API returns an error response.
+     */
     public void modifyGTT(KiteConnect kiteConnect) throws IOException, KiteException {
         GTTParams gttParams = new GTTParams();
         gttParams.triggerType = Constants.OCO;
@@ -423,13 +563,25 @@ public class Examples {
         System.out.println(gtt.id);
     }
 
-    /** Cancel a GTT.*/
+    /**
+     * Cancels a GTT trigger.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws IOException if the request fails due to an I/O error.
+     * @throws KiteException if the Kite API returns an error response.
+     */
     public void cancelGTT(KiteConnect kiteConnect) throws IOException, KiteException {
         GTT gtt = kiteConnect.cancelGTT(175859);
         System.out.println(gtt.id);
     }
 
-    /** Get all positions.*/
+    /**
+     * Fetches day and net positions.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getPositions(KiteConnect kiteConnect) throws KiteException, IOException {
         // Get positions returns position model which contains list of positions.
         Map<String, List<Position>> position = kiteConnect.getPositions();
@@ -438,7 +590,13 @@ public class Examples {
         System.out.println(position.get("net").get(0).averagePrice);
     }
 
-    /** Get holdings.*/
+    /**
+     * Fetches equity holdings.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getHoldings(KiteConnect kiteConnect) throws KiteException, IOException {
         // Get holdings returns holdings model which contains list of holdings.
         List<Holding> holdings = kiteConnect.getHoldings();
@@ -448,7 +606,13 @@ public class Examples {
         System.out.println(holdings.get(0).dayChangePercentage);
     }
 
-    /** Get MTF holdings.*/
+    /**
+     * Filters and prints holdings with MTF quantity.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getMTFHoldings(KiteConnect kiteConnect) throws KiteException, IOException {
         // Get holdings returns holdings model which contains list of holdings.
         List<Holding> holdings = kiteConnect.getHoldings();
@@ -464,14 +628,26 @@ public class Examples {
         System.out.println(mtfHoldings.get(0).mtf.averagePrice);
     }
 
-    /** Converts position*/
+    /**
+     * Converts a position from one product type to another.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void converPosition(KiteConnect kiteConnect) throws KiteException, IOException {
         //Modify product can be used to change MIS to NRML(CNC) or NRML(CNC) to MIS.
         JSONObject jsonObject6 = kiteConnect.convertPosition("ASHOKLEY", Constants.EXCHANGE_NSE, Constants.TRANSACTION_TYPE_BUY, Constants.POSITION_DAY, Constants.PRODUCT_MIS, Constants.PRODUCT_CNC, 1);
         System.out.println(jsonObject6);
     }
 
-    /** Get all instruments that can be traded using kite connect.*/
+    /**
+     * Fetches the complete instruments dump.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getAllInstruments(KiteConnect kiteConnect) throws KiteException, IOException {
         // Get all instruments list. This call is very expensive as it involves downloading of large data dump.
         // Hence, it is recommended that this call be made once and the results stored locally once every morning before market opening.
@@ -479,14 +655,26 @@ public class Examples {
         System.out.println(instruments.size());
     }
 
-    /** Get instruments for the desired exchange.*/
+    /**
+     * Fetches instruments for a single exchange.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getInstrumentsForExchange(KiteConnect kiteConnect) throws KiteException, IOException {
         // Get instruments for an exchange.
         List<Instrument> nseInstruments = kiteConnect.getInstruments("CDS");
         System.out.println(nseInstruments.size());
     }
 
-    /** Get quote for a scrip.*/
+    /**
+     * Fetches quote data for multiple instruments.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getQuote(KiteConnect kiteConnect) throws KiteException, IOException {
         // Get quotes returns quote for desired tradingsymbol.
         String[] instruments = {"256265","BSE:INFY", "NSE:APOLLOTYRE", "NSE:NIFTY 50", "24507906"};
@@ -501,22 +689,38 @@ public class Examples {
         System.out.println(quotes.get("24507906").oiDayLow);
     }
 
-    /* Get ohlc and lastprice for multiple instruments at once.
-     * Users can either pass exchange with tradingsymbol or instrument token only. For example {NSE:NIFTY 50, BSE:SENSEX} or {256265, 265}*/
+    /**
+     * Fetches OHLC and last traded price data for multiple instruments.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getOHLC(KiteConnect kiteConnect) throws KiteException, IOException {
         String[] instruments = {"256265","BSE:INFY", "NSE:INFY", "NSE:NIFTY 50"};
         System.out.println(kiteConnect.getOHLC(instruments).get("256265").lastPrice);
         System.out.println(kiteConnect.getOHLC(instruments).get("NSE:NIFTY 50").ohlc.open);
     }
 
-    /** Get last price for multiple instruments at once.
-     * USers can either pass exchange with tradingsymbol or instrument token only. For example {NSE:NIFTY 50, BSE:SENSEX} or {256265, 265}*/
+    /**
+     * Fetches LTP data for multiple instruments.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getLTP(KiteConnect kiteConnect) throws KiteException, IOException {
         String[] instruments = {"256265","BSE:INFY", "NSE:INFY", "NSE:NIFTY 50"};
         System.out.println(kiteConnect.getLTP(instruments).get("256265").lastPrice);
     }
 
-    /** Get historical data for an instrument.*/
+    /**
+     * Fetches historical candle data for a single instrument token.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getHistoricalData(KiteConnect kiteConnect) throws KiteException, IOException {
         /** Get historical data dump, requires from and to date, intrument token, interval, continuous (for expired F&O contracts), oi (open interest)
          * returns historical data object which will have list of historical data inside the object.*/
@@ -536,75 +740,155 @@ public class Examples {
         System.out.println(historicalData.dataArrayList.get(0).oi);
     }
 
-    /** Logout user.*/
+    /**
+     * Logs out the current user session.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void logout(KiteConnect kiteConnect) throws KiteException, IOException {
         /** Logout user and kill session. */
         JSONObject jsonObject10 = kiteConnect.logout();
         System.out.println(jsonObject10);
     }
 
-    /** Retrieve mf instrument dump */
+    /**
+     * Fetches the mutual fund instruments dump.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getMFInstruments(KiteConnect kiteConnect) throws KiteException, IOException {
         List<MFInstrument> mfList = kiteConnect.getMFInstruments();
         System.out.println("size of mf instrument list: "+mfList.size());
     }
 
-    /* Get all mutualfunds holdings */
+    /**
+     * Fetches all mutual fund holdings.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getMFHoldings(KiteConnect kiteConnect) throws KiteException, IOException {
         List<MFHolding> MFHoldings = kiteConnect.getMFHoldings();
         System.out.println("mf holdings "+ MFHoldings.size());
     }
 
-    /* Place a mutualfunds order */
+    /**
+     * Places a mutual fund order.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void placeMFOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         System.out.println("place order: "+ kiteConnect.placeMFOrder("INF174K01LS2", Constants.TRANSACTION_TYPE_BUY, 5000, 0, "myTag").orderId);
     }
 
-    /* cancel mutualfunds order */
+    /**
+     * Cancels a mutual fund order.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void cancelMFOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         kiteConnect.cancelMFOrder("668604240868430");
         System.out.println("cancel order successful");
     }
 
-    /* retrieve all mutualfunds orders */
+    /**
+     * Fetches all mutual fund orders.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getMFOrders(KiteConnect kiteConnect) throws KiteException, IOException {
         List<MFOrder> MFOrders = kiteConnect.getMFOrders();
         System.out.println("mf orders: "+ MFOrders.size());
     }
 
-    /* retrieve individual mutualfunds order */
+    /**
+     * Fetches a single mutual fund order by ID.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getMFOrder(KiteConnect kiteConnect) throws KiteException, IOException {
         System.out.println("mf order: "+ kiteConnect.getMFOrder("106580291331583").tradingsymbol);
     }
 
-    /* place mutualfunds sip */
+    /**
+     * Places a mutual fund SIP.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void placeMFSIP(KiteConnect kiteConnect) throws KiteException, IOException {
         System.out.println("mf place sip: "+ kiteConnect.placeMFSIP("INF174K01LS2", "monthly", 1, -1, 5000, 1000).sipId);
     }
 
-    /* modify a mutual fund sip */
+    /**
+     * Modifies an existing mutual fund SIP.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void modifyMFSIP(KiteConnect kiteConnect) throws KiteException, IOException {
         kiteConnect.modifyMFSIP("weekly", 1, 5, 1000, "active", "504341441825418");
     }
 
-    /* cancel a mutualfunds sip */
+    /**
+     * Cancels a mutual fund SIP.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void cancelMFSIP(KiteConnect kiteConnect) throws KiteException, IOException {
         kiteConnect.cancelMFSIP("504341441825418");
         System.out.println("cancel sip successful");
     }
 
-    /* retrieve all mutualfunds sip */
+    /**
+     * Fetches all mutual fund SIPs.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getMFSIPS(KiteConnect kiteConnect) throws KiteException, IOException {
         List<MFSIP> sips = kiteConnect.getMFSIPs();
         System.out.println("mf sips: "+ sips.size());
     }
 
-    /* retrieve individual mutualfunds sip */
+    /**
+     * Fetches a single mutual fund SIP by ID.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws KiteException if the Kite API returns an error response.
+     * @throws IOException if the request fails due to an I/O error.
+     */
     public void getMFSIP(KiteConnect kiteConnect) throws KiteException, IOException {
         System.out.println("mf sip: "+ kiteConnect.getMFSIP("291156521960679").instalments);
     }
 
-    /** Demonstrates com.zerodhatech.ticker connection, subcribing for instruments, unsubscribing for instruments, set mode of tick data, com.zerodhatech.ticker disconnection*/
+    /**
+     * Demonstrates ticker connection setup, subscription, mode changes, and disconnection for live market data.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @param tokens instrument tokens to subscribe to.
+     * @throws IOException if the ticker connection fails due to an I/O error.
+     * @throws WebSocketException if the websocket client reports an error.
+     * @throws KiteException if the Kite API returns an error response.
+     */
     public void tickerUsage(KiteConnect kiteConnect, ArrayList<Long> tokens) throws IOException, WebSocketException, KiteException {
         /** To get live price use websocket connection.
          * It is recommended to use only one websocket connection at any point of time and make sure you stop connection, once user goes out of app.
