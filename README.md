@@ -166,6 +166,55 @@ For more details, take a look at Examples.java in sample directory.
 ```
 For more details about the different mode of quotes and subscribing for them, take a look at Examples in sample directory.
 
+## Breaking changes from 3.5.1 to 4.0.0
+
+#### Order placement API
+
+`placeOrder(...)` no longer returns `Order`. It now returns `OrderResponse`.
+
+Before:
+
+```java
+Order order = kiteConnect.placeOrder(orderParams, Constants.VARIETY_REGULAR);
+System.out.println(order.orderId);
+```
+
+After:
+
+```java
+OrderResponse orderResponse = kiteConnect.placeOrder(orderParams, Constants.VARIETY_REGULAR);
+System.out.println(orderResponse.orderId);
+```
+
+Impact:
+
+- Update variable types from `Order` to `OrderResponse` for `placeOrder(...)`.
+- Continue reading the parent order id from `orderResponse.orderId`.
+
+#### Auto-slice order API
+
+The dedicated `placeAutoSliceOrder(...)` API has been removed. Auto-slice is now handled through `placeOrder(...)` by setting `orderParams.autoslice = true`.
+
+Before:
+
+```java
+List<AutoSliceOrderResponse> orders = kiteConnect.placeAutoSliceOrder(orderParams, Constants.VARIETY_REGULAR);
+```
+
+After:
+
+```java
+orderParams.autoslice = true;
+OrderResponse orderResponse = kiteConnect.placeOrder(orderParams, Constants.VARIETY_REGULAR);
+```
+
+Impact:
+
+- Replace `placeAutoSliceOrder(...)` calls with `placeOrder(...)`.
+- Set `orderParams.autoslice = true` when you want automatic slicing.
+- Child sliced order results are available in `orderResponse.children`.
+- Child-level failures are returned in `BulkOrderResponse.bulkOrderError` and are not thrown as `KiteException`.
+
  ## Breaking changes from 3.2.1 to 3.3.1
 
  #### Margin calculation data
