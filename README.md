@@ -1,5 +1,5 @@
 <a href="https://zerodha.tech"><img src="https://zerodha.tech/static/images/github-badge.svg" align="right" /></a>
-# The Kite Connect 3.5.1 API Java client
+# The Kite Connect 4.0.0 API Java client
 The official Java client for communicating with [Kite Connect API](https://kite.trade).
 
 Kite Connect is a set of REST-like APIs that expose many capabilities required to build a complete investment and trading platform. Execute orders in real time, manage user portfolio, stream live market data (WebSockets), and more, with the simple HTTP API collection.
@@ -21,7 +21,7 @@ To include com.zerodhatech.kiteconnect into build path from maven. Add the follo
 <dependency>
     <groupId>com.zerodhatech.kiteconnect</groupId>
     <artifactId>kiteconnect</artifactId>
-    <version>3.5.1</version>
+    <version>4.0.0</version>
 </dependency>
 ```
 
