@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication - Processing...</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .auth-box {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="spinner"></div>
+            <h2>Authenticating...</h2>
+            <p id="message">Please wait while we process your authentication.</p>
+            <div id="errorMessage" class="error"></div>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script>
+        /**
+         * Handle OAuth callback from Kite.
+         * Extract request token from URL and exchange it for access token.
+         */
+        async function handleCallback() {
+            try {
+                // Extract request token from URL query parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const requestToken = urlParams.get('request_token');
+                
+                if (!requestToken) {
+                    throw new Error('No request token found in URL. Did you approve the application?');
+                }
+                
+                document.getElementById('message').textContent = 'Exchanging token...';
+                
+                // Send request token to backend to exchange for access token
+                const response = await AuthAPI.generateSession(requestToken);
+                
+                if (response.authenticated) {
+                    document.getElementById('message').textContent = 'Authentication successful! Redirecting...';
+                    // Redirect to dashboard after 1 second
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 1000);
+                } else {
+                    throw new Error(response.message || 'Authentication failed');
+                }
+                
+            } catch (error) {
+                console.error('Authentication error:', error);
+                
+                // Show error message
+                const errorDiv = document.getElementById('errorMessage');
+                const message = error.message || 'An error occurred during authentication';
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                
+                document.getElementById('message').textContent = 'Authentication failed. Redirecting to login...';
+                
+                // Redirect to login after 5 seconds
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 5000);
+            }
+        }
+        
+        // Run callback handler when page loads
+        window.addEventListener('load', handleCallback);
+    </script>
+</body>
+</html>

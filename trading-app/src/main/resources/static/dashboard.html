@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .navbar {
+            background-color: #333;
+            padding: 15px 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+        
+        .navbar-menu {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .navbar-menu a, .navbar-menu button {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            background: transparent;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .navbar-menu a:hover, .navbar-menu button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .navbar-menu .logout-btn {
+            background-color: #e74c3c;
+        }
+        
+        .navbar-menu .logout-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .sidebar {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-right: 1px solid #e9ecef;
+            min-height: calc(100vh - 60px);
+            width: 250px;
+            float: left;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            padding: 10px 15px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background-color: #667eea;
+            color: white;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            min-height: calc(100vh - 60px);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card h3 {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .stat-card .subtext {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .navbar-menu {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <h1>Kite Connect Trading App</h1>
+        <div class="navbar-menu">
+            <span id="userInfo">Loading...</span>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
+        </div>
+    </div>
+
+    <div style="display: flex;">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" onclick="showSection(event, 'dashboard')" class="active">Dashboard</a></li>
+                <li><a href="#" onclick="showSection(event, 'trade')">Trade</a></li>
+                <li><a href="#" onclick="showSection(event, 'orders')">Orders</a></li>
+                <li><a href="#" onclick="showSection(event, 'holdings')">Holdings</a></li>
+                <li><a href="#" onclick="showSection(event, 'positions')">Positions</a></li>
+                <li><a href="#" onclick="showSection(event, 'marketwatch')">Market Watch</a></li>
+                <li><a href="#" onclick="showSection(event, 'charts')">Charts</a></li>
+                <li><a href="#" onclick="showSection(event, 'margin')">Margin Calculator</a></li>
+                <li><a href="#" onclick="showSection(event, 'bot')">Algo Bot</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section">
+                <h1>Dashboard</h1>
+                
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <h3>Account Balance</h3>
+                        <div class="value" id="accountBalance">-</div>
+                        <div class="subtext">Available cash</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>Margin Available</h3>
+                        <div class="value" id="marginAvailable">-</div>
+                        <div class="subtext">For trading</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>Open Orders</h3>
+                        <div class="value" id="openOrders">0</div>
+                        <div class="subtext">Pending orders</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>Holdings Value</h3>
+                        <div class="value" id="holdingsValue">-</div>
+                        <div class="subtext">Current value</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Getting Started</h2>
+                    </div>
+                    <div class="card-body">
+                        <p>Welcome to Kite Connect Trading App! This MVP application provides you with the following features:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>Trade:</strong> Place market and limit orders</li>
+                            <li><strong>Orders:</strong> View and manage your active orders</li>
+                            <li><strong>Holdings:</strong> View your long-term stock holdings</li>
+                            <li><strong>Positions:</strong> Monitor your intraday positions</li>
+                            <li><strong>Market Watch:</strong> Watch real-time quotes for your favorite stocks</li>
+                            <li><strong>Charts:</strong> View historical price data and charts</li>
+                            <li><strong>Margin Calculator:</strong> Calculate margin requirements before placing orders</li>
+                        </ul>
+                        <p style="margin-top: 20px;"><strong>Note:</strong> This is an MVP version. Additional features and improvements will be added in future phases.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trade Section (Coming Soon) -->
+            <section id="trade-section" class="content-section" style="display: none;">
+                <h1>Place Order</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Symbol</label>
+                            <input type="text" id="orderSymbol" placeholder="INFY" />
+                        </div>
+                        <div class="form-group">
+                            <label>Exchange</label>
+                            <select id="orderExchange">
+                                <option value="NSE">NSE</option>
+                                <option value="BSE">BSE</option>
+                                <option value="NFO">NFO</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Transaction</label>
+                            <select id="orderTxnType">
+                                <option value="BUY">BUY</option>
+                                <option value="SELL">SELL</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Order Type</label>
+                            <select id="orderType">
+                                <option value="MARKET">MARKET</option>
+                                <option value="LIMIT">LIMIT</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Product</label>
+                            <select id="orderProduct">
+                                <option value="MIS">MIS</option>
+                                <option value="CNC">CNC</option>
+                                <option value="NRML">NRML</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="number" id="orderQty" min="1" value="1" />
+                        </div>
+                        <div class="form-group">
+                            <label>Price (for LIMIT)</label>
+                            <input type="number" id="orderPrice" min="0" step="0.05" placeholder="0" />
+                        </div>
+                        <button class="btn btn-primary" onclick="placeOrder()">Place Order</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Orders Section (Coming Soon) -->
+            <section id="orders-section" class="content-section" style="display: none;">
+                <h1>Orders</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <button class="btn btn-secondary" onclick="loadOrders()">Refresh</button>
+                        <div style="margin-top: 16px; overflow-x: auto;">
+                            <table id="ordersTable">
+                                <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Symbol</th>
+                                    <th>Type</th>
+                                    <th>Side</th>
+                                    <th>Qty</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Holdings Section (Coming Soon) -->
+            <section id="holdings-section" class="content-section" style="display: none;">
+                <h1>Holdings</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <button class="btn btn-secondary" onclick="loadHoldings()">Refresh</button>
+                        <div style="margin-top: 16px; overflow-x: auto;">
+                            <table id="holdingsTable">
+                                <thead>
+                                <tr>
+                                    <th>Symbol</th>
+                                    <th>Qty</th>
+                                    <th>Avg Price</th>
+                                    <th>LTP</th>
+                                    <th>P&L</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Positions Section (Coming Soon) -->
+            <section id="positions-section" class="content-section" style="display: none;">
+                <h1>Positions</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <button class="btn btn-secondary" onclick="loadPositions()">Refresh</button>
+                        <div style="margin-top: 16px; overflow-x: auto;">
+                            <table id="positionsTable">
+                                <thead>
+                                <tr>
+                                    <th>Symbol</th>
+                                    <th>Product</th>
+                                    <th>Qty</th>
+                                    <th>Avg Price</th>
+                                    <th>P&L</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Market Watch Section (Coming Soon) -->
+            <section id="marketwatch-section" class="content-section" style="display: none;">
+                <h1>Market Watch</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Symbols (comma separated)</label>
+                            <input type="text" id="watchSymbols" placeholder="NSE:INFY,NSE:TCS" />
+                        </div>
+                        <button class="btn btn-primary" onclick="loadQuotes()">Get Quotes</button>
+                        <pre id="quotesOutput" style="margin-top: 16px; white-space: pre-wrap;"></pre>
+
+                        <hr style="margin: 16px 0;" />
+                        <h3>Live Stream (WebSocket)</h3>
+                        <div class="form-group">
+                            <label>Instrument Tokens (comma separated)</label>
+                            <input type="text" id="liveTokens" placeholder="408065,738561" />
+                        </div>
+                        <div class="form-group">
+                            <label>Mode</label>
+                            <select id="liveMode">
+                                <option value="quote">quote</option>
+                                <option value="full">full</option>
+                                <option value="ltp">ltp</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="startLiveStream()">Start Live Stream</button>
+                        <button class="btn btn-secondary" onclick="stopLiveStream()">Stop Live Stream</button>
+                        <pre id="liveTicksOutput" style="margin-top: 16px; white-space: pre-wrap;"></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Section (Coming Soon) -->
+            <section id="charts-section" class="content-section" style="display: none;">
+                <h1>Charts</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <p>Historical data chart is now available.</p>
+                        <div class="form-group">
+                            <label>Instrument Token</label>
+                            <input type="text" id="histToken" placeholder="408065" />
+                        </div>
+                        <div class="form-group">
+                            <label>Interval</label>
+                            <input type="text" id="histInterval" value="day" />
+                        </div>
+                        <div class="form-group">
+                            <label>From (yyyy-MM-dd)</label>
+                            <input type="text" id="histFrom" value="2026-01-01" />
+                        </div>
+                        <div class="form-group">
+                            <label>To (yyyy-MM-dd)</label>
+                            <input type="text" id="histTo" value="2026-03-01" />
+                        </div>
+                        <button class="btn btn-primary" onclick="loadHistorical()">Fetch Historical Data</button>
+                        <div style="margin-top: 16px; height: 360px; background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 12px;">
+                            <div id="historicalChart" style="width: 100%; height: 100%;"></div>
+                        </div>
+                        <pre id="historicalOutput" style="margin-top: 16px; white-space: pre-wrap;"></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Margin Calculator Section (Coming Soon) -->
+            <section id="margin-section" class="content-section" style="display: none;">
+                <h1>Margin Calculator</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Symbol</label>
+                            <input type="text" id="marginSymbol" placeholder="INFY" />
+                        </div>
+                        <div class="form-group">
+                            <label>Exchange</label>
+                            <input type="text" id="marginExchange" value="NSE" />
+                        </div>
+                        <div class="form-group">
+                            <label>Transaction</label>
+                            <select id="marginTxnType">
+                                <option value="BUY">BUY</option>
+                                <option value="SELL">SELL</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Product</label>
+                            <input type="text" id="marginProduct" value="MIS" />
+                        </div>
+                        <div class="form-group">
+                            <label>Order Type</label>
+                            <input type="text" id="marginOrderType" value="MARKET" />
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="number" id="marginQty" min="1" value="1" />
+                        </div>
+                        <button class="btn btn-primary" onclick="calculateMargin()">Calculate</button>
+                        <pre id="marginOutput" style="margin-top: 16px; white-space: pre-wrap;"></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="bot-section" class="content-section" style="display: none;">
+                <h1>Algorithm Bot</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Bot Name</label>
+                            <input type="text" id="botName" value="mvp-bot" />
+                        </div>
+                        <div class="form-group">
+                            <label>Exchange</label>
+                            <input type="text" id="botExchange" value="NSE" />
+                        </div>
+                        <div class="form-group">
+                            <label>Trading Symbol</label>
+                            <input type="text" id="botSymbol" placeholder="INFY" />
+                        </div>
+                        <div class="form-group">
+                            <label>Transaction Type</label>
+                            <select id="botTxnType">
+                                <option value="BUY">BUY</option>
+                                <option value="SELL">SELL</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="number" id="botQty" min="1" value="1" />
+                        </div>
+                        <div class="form-group">
+                            <label>Interval Seconds</label>
+                            <input type="number" id="botInterval" min="5" value="30" />
+                        </div>
+                        <div class="form-group">
+                            <label>Dry Run (recommended initially)</label>
+                            <select id="botDryRun">
+                                <option value="true">true</option>
+                                <option value="false">false</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Max Orders/Day (0 = unlimited)</label>
+                            <input type="number" id="botMaxOrders" min="0" value="0" />
+                        </div>
+                        <div class="form-group">
+                            <label>Max Position Size (0 = unlimited)</label>
+                            <input type="number" id="botMaxPos" min="0" value="0" />
+                        </div>
+                        <div class="form-group">
+                            <label>Trading Window Start (HH:mm)</label>
+                            <input type="text" id="botStartTime" value="09:15" />
+                        </div>
+                        <div class="form-group">
+                            <label>Trading Window End (HH:mm)</label>
+                            <input type="text" id="botEndTime" value="15:30" />
+                        </div>
+                        <button class="btn btn-primary" onclick="startBot()">Start Bot</button>
+                        <button class="btn btn-danger" onclick="stopBot()">Stop Bot</button>
+                        <button class="btn btn-secondary" onclick="loadBotStatusAndLogs()">Refresh Bot Status</button>
+
+                        <div style="margin-top: 16px;">
+                            <strong>Active Bot ID:</strong> <span id="activeBotId">-</span>
+                        </div>
+                        <pre id="botStatusOutput" style="margin-top: 16px; white-space: pre-wrap;"></pre>
+                        <pre id="botLogsOutput" style="margin-top: 16px; white-space: pre-wrap;"></pre>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+    <script src="/js/api.js"></script>
+    <script>
+        let stompClient = null;
+        let liveSubscribedTokens = [];
+        let activeBotId = null;
+        let historicalChart = null;
+
+        /**
+         * Initialize dashboard and load user data.
+         */
+        async function initDashboard() {
+            try {
+                // Check authentication
+                const session = await AuthAPI.getSession();
+                
+                if (!session.authenticated) {
+                    window.location.href = '/';
+                    return;
+                }
+                
+                // Display user info
+                if (session.userId) {
+                    document.getElementById('userInfo').textContent = `Welcome, ${session.userId}`;
+                }
+                await loadDashboardSummary();
+                
+            } catch (error) {
+                console.error('Failed to initialize dashboard:', error);
+                showNotification('Failed to load user data. Please login again.', 'error');
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+            }
+        }
+        
+        /**
+         * Show a specific section and hide others.
+         */
+        function showSection(event, section) {
+            event.preventDefault();
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Show selected section
+            const sectionId = section + '-section';
+            const sectionEl = document.getElementById(sectionId);
+            if (sectionEl) {
+                sectionEl.style.display = 'block';
+            }
+            
+            // Update active menu item
+            document.querySelectorAll('.sidebar-menu a').forEach(el => {
+                el.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            if (section === 'orders') {
+                loadOrders();
+            }
+            if (section === 'holdings') {
+                loadHoldings();
+            }
+            if (section === 'positions') {
+                loadPositions();
+            }
+            if (section === 'bot') {
+                loadBotStatusAndLogs();
+            }
+        }
+        
+        /**
+         * Handle logout.
+         */
+        async function handleLogout() {
+            try {
+                await AuthAPI.logout();
+                showNotification('Logged out successfully', 'success');
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1000);
+            } catch (error) {
+                showNotification(handleApiError(error), 'error');
+            }
+        }
+
+        async function loadDashboardSummary() {
+            try {
+                const [margins, holdings, orders] = await Promise.all([
+                    PortfolioAPI.getMargins(),
+                    PortfolioAPI.getHoldings(),
+                    OrdersAPI.getOrders()
+                ]);
+
+                const equity = margins.equity || {};
+                const available = (equity.available && equity.available.cash) ? equity.available.cash : 0;
+                const net = (equity.net) ? equity.net : 0;
+                const openOrders = (orders || []).filter(o => o.status === 'OPEN' || o.status === 'TRIGGER PENDING').length;
+                const holdingsValue = (holdings || []).reduce((sum, h) => sum + ((h.lastPrice || 0) * (h.quantity || 0)), 0);
+
+                document.getElementById('accountBalance').textContent = net.toFixed(2);
+                document.getElementById('marginAvailable').textContent = available.toFixed(2);
+                document.getElementById('openOrders').textContent = openOrders;
+                document.getElementById('holdingsValue').textContent = holdingsValue.toFixed(2);
+            } catch (error) {
+                showNotification(handleApiError(error), 'error');
+            }
+        }
+
+        async function placeOrder() {
+            try {
+                const orderType = document.getElementById('orderType').value;
+                const payload = {
+                    exchange: document.getElementById('orderExchange').value,
+                    tradingSymbol: document.getElementById('orderSymbol').value.trim(),
+                    transactionType: document.getElementById('orderTxnType').value,
+                    orderType: orderType,
+                    product: document.getElementById('orderProduct').value,
+                    quantity: Number(document.getElementById('orderQty').value),
+                    validity: 'DAY',
+                    variety: 'regular'
+                };
+
+                if (orderType === 'LIMIT') {
+                    payload.price = Number(document.getElementById('orderPrice').value || '0');
+                }
+
+                const res = await OrdersAPI.placeOrder(payload);
+                showNotification(`Order placed: ${res.orderId}`, 'success');
+                await loadOrders();
+            } catch (error) {
+                showNotification(handleApiError(error), 'error');
+            }
+        }
+
+        async function loadOrders() {
+            try {
+                const orders = await OrdersAPI.getOrders();
+                const tbody = document.querySelector('#ordersTable tbody');
+                tbody.innerHTML = '';
+                (orders || []).slice(0, 100).forEach(o => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${o.orderId || ''}</td>
+                        <td>${o.tradingSymbol || ''}</td>
+                        <td>${o.orderType || ''}</td>
+                        <td>${o.transactionType || ''}</td>
+                        <td>${o.quantity || ''}</td>
+                        <td>${o.status || ''}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                showNotification(handleApiError(error), 'error');
+            }
+        }
+
+        async function loadHoldings() {
+            try {
+                const holdings = await PortfolioAPI.getHoldings();
+                const tbody = document.querySelector('#holdingsTable tbody');
+                tbody.innerHTML = '';
+                (holdings || []).forEach(h => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${h.tradingSymbol || ''}</td>
+                        <td>${h.quantity || 0}</td>
+                        <td>${h.averagePrice || 0}</td>
+                        <td>${h.lastPrice || 0}</td>
+                        <td>${h.pnl || 0}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                showNotification(handleApiError(error), 'error');
+            }
+        }
+
+        async function loadPositions() {
+            try {
+                const positions = await PortfolioAPI.getPositions();
+                const netPositions = (positions && positions.net) ? positions.net : [];
+                const tbody = document.querySelector('#positionsTable tbody');
+                tbody.innerHTML = '';
+                (netPositions || []).forEach(p => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${p.tradingSymbol || ''}</td>
+                        <td>${p.product || ''}</td>
+                        <td>${p.quantity || 0}</td>
+                        <td>${p.averagePrice || 0}</td>
+                        <td>${p.pnl || 0}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                showNotification(handleApiError(error), 'error');
+            }
+        }
+
+        async function loadQuotes() {
+            try {
+                const symbols = document.getElementById('watchSymbols').value.trim();
+                const quotes = await MarketDataAPI.getQuotes(symbols);
+                document.getElementById('quotesOutput').textContent = JSON.stringify(quotes, null, 2);
+            } catch (error) {
+                showNotification(handleApiError(error), 'error');
+            }
+        }
+
+        function connectTickerSocketIfRequired() {
+            if (stompClient && stompClient.connected) {
+                return;
+            }
+
+            const socket = new SockJS('/ws/trading');
+            stompClient = Stomp.over(socket);
+            stompClient.reconnect_delay = 5000;
+
+            stompClient.connect({}, () => {
+                stompClient.subscribe('/topic/ticks', (message) => {
+                    const data = JSON.parse(message.body);
+                    document.getElementById('liveTicksOutput').textContent = JSON.stringify(data, null, 2);
+                });
+                stompClient.subscribe('/topic/ticker-status', (message) => {
+                    const data = JSON.parse(message.body);
+                    showNotification(`Ticker ${data.status}`, 'info');
+                });
+                stompClient.subscribe('/topic/ticker-errors', (message) => {
+                    const data = JSON.parse(message.body);
+                    showNotification(data.error || 'Ticker error', 'error');
+                });
+
+                stompClient.send('/app/ticker.connect', {}, '{}');
+            }, () => {
+                showNotification('Unable to connect to live ticker socket', 'error');
+            });
+        }
+
+        async function startLiveStream() {
+            try {
+                connectTickerSocketIfRequired();
+                let tokenText = document.getElementById('liveTokens').value.trim();
+                const mode = document.getElementById('liveMode').value;
+
+                // If token input is empty, resolve from symbol input using backend token helper.
+                if (!tokenText) {
+                    const symbols = document.getElementById('watchSymbols').value.trim();
+                    if (symbols) {
+                        const mapping = await MarketDataAPI.getInstrumentTokens(symbols);
+                        tokenText = Object.values(mapping || {}).join(',');
+                        document.getElementById('liveTokens').value = tokenText;
+                    }
+                }
+
+                const tokens = tokenText.split(',').map(t => Number(t.trim())).filter(n => !Number.isNaN(n));
+                if (!tokens.length) {
+                    showNotification('Enter tokens or valid symbols first', 'warning');
+                    return;
+                }
+                liveSubscribedTokens = tokens;
+                const payload = { tokens, mode };
+                stompClient.send('/app/ticker.subscribe', {}, JSON.stringify(payload));
+                showNotification('Live stream subscription sent', 'success');
+            } catch (err) {
+                showNotification(err.message || 'Failed to start live stream', 'error');
+            }
+        }
+
+        function stopLiveStream() {
+            if (!stompClient || !stompClient.connected) {
+                return;
+            }
+            const payload = { tokens: liveSubscribedTokens, mode: 'quote' };
+            stompClient.send('/app/ticker.unsubscribe', {}, JSON.stringify(payload));
+            stompClient.send('/app/ticker.disconnect', {}, '{}');
+            showNotification('Live stream stopped', 'info');
+        }
+
+        async function loadHistorical() {
+            try {
+                const token = document.getElementById('histToken').value.trim();
+                const interval = document.getElementById('histInterval').value.trim();
+                const from = document.getElementById('histFrom').value.trim();
+                const to = document.getElementById('histTo').value.trim();
+                const data = await MarketDataAPI.getHistoricalData(token, interval, from, to);
+                document.getElementById('historicalOutput').textContent = JSON.stringify(data, null, 2);
+                renderHistoricalChart(data);
+            } catch (error) {
+                showNotification(handleApiError(error), 'error');
+            }
+        }
+
+        function renderHistoricalChart(data) {
+            const candles = (data && data.dataArrayList) ? data.dataArrayList : [];
+            const chartEl = document.getElementById('historicalChart');
+            if (!chartEl) {
+                return;
+            }
+
+            if (historicalChart) {
+                historicalChart.destroy();
+            }
+
+            historicalChart = LightweightCharts.createChart(chartEl, {
+                width: chartEl.clientWidth,
+                height: chartEl.clientHeight,
+                layout: {
+                    background: { color: '#ffffff' },
+                    textColor: '#333'
+                },
+                grid: {
+                    vertLines: { color: '#f0f0f0' },
+                    horzLines: { color: '#f0f0f0' }
+                }
+            });
+
+            const series = historicalChart.addCandlestickSeries({
+                upColor: '#16a34a',
+                downColor: '#dc2626',
+                borderDownColor: '#dc2626',
+                borderUpColor: '#16a34a',
+                wickDownColor: '#dc2626',
+                wickUpColor: '#16a34a'
+            });
+
+            const candleData = candles.map(c => ({
+                time: c.timeStamp.substring(0, 10),
+                open: c.open,
+                high: c.high,
+                low: c.low,
+                close: c.close
+            }));
+
+            series.setData(candleData);
+            historicalChart.timeScale().fitContent();
+        }
+
+        async function calculateMargin() {
+            try {
+                const payload = {
+                    legs: [{
+                        exchange: document.getElementById('marginExchange').value.trim(),
+                        tradingSymbol: document.getElementById('marginSymbol').value.trim(),
+                        transactionType: document.getElementById('marginTxnType').value,
+                        variety: 'regular',
+                        product: document.getElementById('marginProduct').value.trim(),
+                        orderType: document.getElementById('marginOrderType').value.trim(),
+                        quantity: Number(document.getElementById('marginQty').value),
+                        price: 0,
+                        triggerPrice: 0
+                    }],
+                    considerPositions: false,
+                    mode: false
+                };
+                const result = await MarginAPI.calculateMargin(payload);
+                document.getElementById('marginOutput').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                showNotification(handleApiError(error), 'error');
+            }
+        }
+
+        async function startBot() {
+            try {
+                const config = {
+                    name: document.getElementById('botName').value.trim(),
+                    exchange: document.getElementById('botExchange').value.trim(),
+                    tradingSymbol: document.getElementById('botSymbol').value.trim(),
+                    transactionType: document.getElementById('botTxnType').value,
+                    product: 'MIS',
+                    orderType: 'MARKET',
+                    quantity: Number(document.getElementById('botQty').value),
+                    intervalSeconds: Number(document.getElementById('botInterval').value),
+                    dryRun: document.getElementById('botDryRun').value === 'true',
+                    maxOrdersPerDay: Number(document.getElementById('botMaxOrders').value || '0'),
+                    maxPositionSize: Number(document.getElementById('botMaxPos').value || '0'),
+                    startTime: document.getElementById('botStartTime').value.trim(),
+                    endTime: document.getElementById('botEndTime').value.trim()
+                };
+                const res = await BotAPI.start(config);
+                activeBotId = res.botId;
+                document.getElementById('activeBotId').textContent = activeBotId;
+                showNotification(`Bot started: ${activeBotId}`, 'success');
+                await loadBotStatusAndLogs();
+            } catch (error) {
+                showNotification(handleApiError(error), 'error');
+            }
+        }
+
+        async function stopBot() {
+            try {
+                if (!activeBotId) {
+                    showNotification('No active bot ID to stop', 'warning');
+                    return;
+                }
+                await BotAPI.stop(activeBotId);
+                showNotification(`Bot stopped: ${activeBotId}`, 'info');
+                await loadBotStatusAndLogs();
+            } catch (error) {
+                showNotification(handleApiError(error), 'error');
+            }
+        }
+
+        async function loadBotStatusAndLogs() {
+            try {
+                const [status, logs] = await Promise.all([BotAPI.status(), BotAPI.logs()]);
+                document.getElementById('botStatusOutput').textContent = JSON.stringify(status, null, 2);
+                document.getElementById('botLogsOutput').textContent = JSON.stringify(logs, null, 2);
+            } catch (error) {
+                showNotification(handleApiError(error), 'error');
+            }
+        }
+        
+        // Initialize dashboard on page load
+        window.addEventListener('load', initDashboard);
+    </script>
+</body>
+</html>

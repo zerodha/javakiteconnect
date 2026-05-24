@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kite Connect Trading App - Login</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .login-box h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .login-box p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .login-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .login-button:active {
+            transform: translateY(0);
+        }
+        
+        .loading {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h1>Trading App</h1>
+            <p>Powered by Kite Connect API</p>
+            
+            <div id="errorMessage" class="error"></div>
+            
+            <button id="loginButton" class="login-button" onclick="handleLogin()">
+                Login with Kite
+            </button>
+            
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Redirecting to Kite login...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script>
+        /**
+         * Handle login button click.
+         * Fetch the login URL from the backend and redirect user to Kite OAuth.
+         */
+        async function handleLogin() {
+            try {
+                const button = document.getElementById('loginButton');
+                const loading = document.getElementById('loading');
+                const errorMessage = document.getElementById('errorMessage');
+                
+                // Hide error message if any
+                errorMessage.style.display = 'none';
+                errorMessage.textContent = '';
+                
+                // Show loading state
+                button.disabled = true;
+                loading.style.display = 'block';
+                
+                // Fetch login URL from backend
+                const response = await fetch('/api/auth/login-url', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to get login URL');
+                }
+                
+                const data = await response.json();
+                const loginUrl = data.loginUrl;
+                
+                if (!loginUrl) {
+                    throw new Error('No login URL received');
+                }
+                
+                // Redirect to Kite login
+                window.location.href = loginUrl;
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                const errorMessage = document.getElementById('errorMessage');
+                errorMessage.textContent = 'Failed to initiate login. Please try again.';
+                errorMessage.style.display = 'block';
+                
+                const button = document.getElementById('loginButton');
+                const loading = document.getElementById('loading');
+                button.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+        
+        // Check if user is already logged in
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch('/api/auth/session', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.authenticated) {
+                        // User is already authenticated, redirect to dashboard
+                        window.location.href = '/dashboard.html';
+                    }
+                }
+            } catch (error) {
+                // User is not authenticated, stay on login page
+                console.log('User not authenticated');
+            }
+        });
+    </script>
+</body>
+</html>

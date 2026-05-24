@@ -1,0 +1,39 @@
+# Maven
+target/
+*.jar
+*.war
+*.zip
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+.project
+.classpath
+.settings/
+
+# Build
+*.class
+*.log
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Application
+application-local.properties
+application-dev.properties
+application-prod.properties
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Node (if using npm later)
+node_modules/
+package-lock.json
