@@ -53,9 +53,14 @@ public class OrderParams {
     public Double triggerPrice;
 
     /**
+     * Optional algo ID to associate with the order.
+     */
+    public String algoId;
+
+    /**
      * Tag: field for users to tag orders. It accepts alphanumeric 20 character String values.
      */
-     public String tag;
+    public String tag;
 
      /**
       * Parent order id is used to send order modify request.
