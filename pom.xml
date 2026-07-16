@@ -130,7 +130,7 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20230227</version>
+            <version>20231013</version>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
@@ -150,7 +150,7 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>logging-interceptor</artifactId>
-            <version>4.4.0</version>
+            <version>4.9.2</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
