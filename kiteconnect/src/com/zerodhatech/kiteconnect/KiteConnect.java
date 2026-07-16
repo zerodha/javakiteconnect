@@ -348,7 +348,7 @@ public class KiteConnect implements AutoCloseable {
      *
      * @param orderParams order input payload. Populate the fields required for the order being placed,
      *                    such as exchange, tradingsymbol, transactionType, quantity, product, orderType,
-     *                    validity, price, triggerPrice, disclosedQuantity, tag, and marketProtection.
+     *                    validity, price, triggerPrice, disclosedQuantity, algoId, tag, and marketProtection.
      *                    For {@link Constants#VALIDITY_TTL}, also set {@code validityTTL}. For
      *                    {@link Constants#VARIETY_ICEBERG}, also set {@code icebergLegs} and
      *                    {@code icebergQuantity}. For {@link Constants#VARIETY_AUCTION}, also set
@@ -377,6 +377,7 @@ public class KiteConnect implements AutoCloseable {
         if(orderParams.validity != null) params.put("validity", orderParams.validity);
         if(orderParams.disclosedQuantity != null) params.put("disclosed_quantity", orderParams.disclosedQuantity);
         if(orderParams.triggerPrice != null) params.put("trigger_price", orderParams.triggerPrice);
+        if(orderParams.algoId != null) params.put("algo_id", orderParams.algoId);
         if(orderParams.tag != null) params.put("tag", orderParams.tag);
         if(orderParams.validity != null && orderParams.validity.equals(Constants.VALIDITY_TTL))
             params.put("validity_ttl",orderParams.validityTTL);
