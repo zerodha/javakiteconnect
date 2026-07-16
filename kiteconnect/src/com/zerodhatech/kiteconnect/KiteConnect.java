@@ -557,6 +557,7 @@ public class KiteConnect implements AutoCloseable {
             gttOrderItem.put("price", order.price);
             gttOrderItem.put("order_type", order.orderType);
             gttOrderItem.put("product", order.product);
+            gttOrderItem.put("market_protection", order.marketProtection);
             ordersParam.put(gttOrderItem);
         }
 

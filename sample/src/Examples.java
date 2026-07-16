@@ -471,6 +471,40 @@ public class Examples {
     }
 
     /**
+     * Places a single-trigger GTT order using market-order parameters.
+     * Market protection is mandatory when placing a GTT market order.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws IOException if the request fails due to an I/O error.
+     * @throws KiteException if the Kite API returns an error response.
+     */
+    public void placeSingleTriggerGTT(KiteConnect kiteConnect) throws IOException, KiteException{
+        GTTParams gttParams = new GTTParams();
+        gttParams.triggerType = Constants.SINGLE;
+        gttParams.exchange = "NSE";
+        gttParams.tradingsymbol = "SBIN";
+        gttParams.lastPrice = 1031.05;
+
+        List<Double> triggerPrices = new ArrayList<>();
+        triggerPrices.add(1035d);
+        gttParams.triggerPrices = triggerPrices;
+
+        GTTParams.GTTOrderParams orderParams = gttParams. new GTTOrderParams();
+        orderParams.orderType = Constants.ORDER_TYPE_MARKET;
+        orderParams.marketProtection = -1;
+        orderParams.product = Constants.PRODUCT_CNC;
+        orderParams.transactionType = Constants.TRANSACTION_TYPE_SELL;
+        orderParams.quantity = 1;
+
+        List<GTTParams.GTTOrderParams> ordersList = new ArrayList();
+        ordersList.add(orderParams);
+        gttParams.orders = ordersList;
+
+        GTT gtt = kiteConnect.placeGTT(gttParams);
+        System.out.println(gtt.id);
+    }
+
+    /**
      * Places a two-leg OCO GTT trigger.
      *
      * @param kiteConnect initialized Kite Connect client.
