@@ -68,11 +68,9 @@ public class Test {
 
             examples.placeAuctionOrder(kiteConnect);
 
-            examples.placeAutoSliceOrder(kiteConnect);
+            examples.placeOrderWithAutoSlice(kiteConnect);
 
             examples.placeMarketProtectionOrder(kiteConnect);
-
-            examples.getTriggerRange(kiteConnect);
 
             examples.placeCoverOrder(kiteConnect);
 
@@ -105,6 +103,8 @@ public class Test {
             examples.getGTTs(kiteConnect);
 
             examples.getGTT(kiteConnect);
+
+            examples.placeSingleTriggerGTT(kiteConnect);
 
             examples.placeGTT(kiteConnect);
 
