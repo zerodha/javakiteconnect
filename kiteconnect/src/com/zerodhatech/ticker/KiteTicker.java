@@ -45,7 +45,8 @@ public class KiteTicker {
             BseCD = 6,
             McxFO = 7,
             McxSX = 8,
-            Indices = 9;
+            Indices = 9,
+			Nco = 12;
 
     private  final String mSubscribe = "subscribe",
             mUnSubscribe = "unsubscribe",
@@ -453,7 +454,7 @@ public class KiteTicker {
             //int token = x >> 8;
             int segment = x & 0xff;
 
-            int dec1 = (segment == NseCD) ? 10000000 : (segment == BseCD)? 10000 : 100;
+            int dec1 = (segment == NseCD) ? 10000000 : (segment == BseCD || segment == Nco)? 10000 : 100;
 
             if(bin.length == 8) {
                 Tick tick = getLtpQuote(bin, x, dec1, segment != Indices);
