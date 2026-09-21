@@ -15,6 +15,7 @@ public class KiteException extends Throwable {
     public KiteException(String message){
         super(message);
         this.message = message;
+        super(message);
     }
 
     // constructor that sets the message and code
@@ -22,5 +23,6 @@ public class KiteException extends Throwable {
         super(message);
         this.message = message;
         this.code = code;
+        super(message, code);
     }
 }
