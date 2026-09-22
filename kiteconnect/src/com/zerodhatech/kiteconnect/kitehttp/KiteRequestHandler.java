@@ -255,7 +255,7 @@ public class KiteRequestHandler {
             }
         }
 
-        RequestBody body = RequestBody.create(jsonArray.toString(), JSON);
+        RequestBody body = RequestBody.create(JSON, jsonArray.toString());
         Request request;
         request = queryParams.size() > 0?  new Request.Builder()
             .url(httpBuilder.build())
