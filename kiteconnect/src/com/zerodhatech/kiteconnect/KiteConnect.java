@@ -733,7 +733,7 @@ public class KiteConnect implements AutoCloseable {
      *		name: 'NIDHI GRANITES',
      *		last_price: '0.0',
      *		expiry: '',
-     *		strike: '0.0',
+     *		strike: 0.0,
      *		tick_size: '0.05',
      *		lot_size: '1',
      *		instrument_type: 'EQ',
@@ -758,7 +758,7 @@ public class KiteConnect implements AutoCloseable {
      *		name: 'NIDHI GRANITES',
      *		last_price: '0.0',
      *		expiry: '',
-     *		strike: '0.0',
+     *		strike: 0.0,
      *		tick_size: '0.05',
      *		lot_size: '1',
      *		instrument_type: 'EQ',
@@ -1093,7 +1093,7 @@ public class KiteConnect implements AutoCloseable {
                 new org.supercsv.cellprocessor.Optional(),                 //company name
                 new NotNull(new ParseDouble()), //last_price
                 new org.supercsv.cellprocessor.Optional(new ParseDate("yyyy-MM-dd")),                 //expiry
-                new org.supercsv.cellprocessor.Optional(),                 //strike
+                new org.supercsv.cellprocessor.Optional(new ParseDouble()),  //strike
                 new NotNull(new ParseDouble()), //tick_size
                 new NotNull(new ParseInt()),    //lot_size
                 new NotNull(),                  //instrument_type
