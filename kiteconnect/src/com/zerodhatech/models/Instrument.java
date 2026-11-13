@@ -9,7 +9,8 @@ public class Instrument {
     public long instrument_token,exchange_token;
     public String tradingsymbol,name;
     public double last_price, tick_size;
-    public String instrument_type,segment,exchange, strike;
+    public String instrument_type,segment,exchange;
+    public double strike;
     public int lot_size;
     public Date expiry;
 
@@ -94,11 +95,11 @@ public class Instrument {
         this.exchange = exchange;
     }
 
-    public String getStrike() {
+    public double getStrike() {
         return strike;
     }
 
-    public void setStrike(String strike) {
+    public void setStrike(double strike) {
         this.strike = strike;
     }
 
