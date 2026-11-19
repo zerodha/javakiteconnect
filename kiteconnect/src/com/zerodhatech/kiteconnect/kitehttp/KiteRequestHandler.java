@@ -146,6 +146,26 @@ public class KiteRequestHandler {
         return json;
     }
 
+    /** Makes a DELETE request that repeats one query parameter for several values.
+     * @return JSONObject which is received by Kite Trade.
+     * @param url is the endpoint to which request has to be sent.
+     * @param commonKey is the query parameter to repeat, for example uuid.
+     * @param values are the values sent for that parameter.
+     * @param apiKey is the api key of the Kite Connect app.
+     * @param accessToken is the access token obtained after successful login process.
+     * @throws IOException is thrown when there is a connection related error.
+     * @throws KiteException is thrown for all Kite Trade related errors.
+     * @throws JSONException is thrown for parsing errors.
+     * */
+    public JSONObject deleteRequest(String url, String commonKey, String[] values, String apiKey, String accessToken) throws IOException, KiteException, JSONException {
+        Request request = createDeleteRequest(url, commonKey, values, apiKey, accessToken);
+        Response response = client.newCall(request).execute();
+        String body = response.body().string();
+        JSONObject json = new KiteResponseHandler().handle(response, body);
+        response.close();
+        return json;
+    }
+
     /** Makes a GET request.
      * @return JSONObject which is received by Kite Trade.
      * @param url is the endpoint to which request has to be sent.
@@ -299,6 +319,21 @@ public class KiteRequestHandler {
 
         Request request = new Request.Builder().url(httpBuilder.build()).delete().header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").header("Authorization", "token "+apiKey+":"+accessToken).build();
         return request;
+    }
+
+    /** Creates a DELETE request that repeats one query parameter for several values.
+     * @param url is the endpoint to which request has to be done.
+     * @param commonKey is the query parameter to repeat.
+     * @param values are the values sent for that parameter.
+     * @param apiKey is the api key of the Kite Connect app.
+     * @param accessToken is the access token obtained after successful login process.
+     * */
+    public Request createDeleteRequest(String url, String commonKey, String[] values, String apiKey, String accessToken){
+        HttpUrl.Builder httpBuilder = HttpUrl.parse(url).newBuilder();
+        for (String value : values) {
+            httpBuilder.addQueryParameter(commonKey, value);
+        }
+        return new Request.Builder().url(httpBuilder.build()).delete().header("User-Agent", USER_AGENT).header("X-Kite-Version", "3").header("Authorization", "token "+apiKey+":"+accessToken).build();
     }
 
     /** Releases OkHttp resources so the JVM can terminate cleanly after requests complete. */

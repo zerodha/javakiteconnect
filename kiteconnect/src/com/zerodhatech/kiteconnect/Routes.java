@@ -71,6 +71,10 @@ public class Routes {
             put("gtt.modify", "/gtt/triggers/:id");
             put("gtt.delete", "/gtt/triggers/:id");
 
+            put("alerts", "/alerts");
+            put("alerts.info", "/alerts/:uuid");
+            put("alerts.history", "/alerts/:uuid/history");
+
             put("portfolio.positions", "/portfolio/positions");
             put("portfolio.holdings", "/portfolio/holdings");
             put("portfolio.positions.modify", "/portfolio/positions");

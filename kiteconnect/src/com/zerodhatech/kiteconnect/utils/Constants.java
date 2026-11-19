@@ -70,6 +70,26 @@ public class Constants {
     public static final String OCO = "two-leg";
     public static final String SINGLE = "single";
 
+    /* Alert types */
+    public static final String ALERT_TYPE_SIMPLE = "simple";
+    public static final String ALERT_TYPE_ATO = "ato";
+
+    /* Alert statuses */
+    public static final String ALERT_STATUS_ENABLED = "enabled";
+    public static final String ALERT_STATUS_DISABLED = "disabled";
+    public static final String ALERT_STATUS_DELETED = "deleted";
+
+    /* Alert condition operators */
+    public static final String ALERT_OPERATOR_LE = "<=";
+    public static final String ALERT_OPERATOR_GE = ">=";
+    public static final String ALERT_OPERATOR_LT = "<";
+    public static final String ALERT_OPERATOR_GT = ">";
+    public static final String ALERT_OPERATOR_EQ = "==";
+
+    /* Alert right-hand side types */
+    public static final String ALERT_RHS_TYPE_CONSTANT = "constant";
+    public static final String ALERT_RHS_TYPE_INSTRUMENT = "instrument";
+
     /*These are commonly used order statuses but there are many other order statuses.
     * Some of the statuses are only intermediate. */
     public static final String ORDER_CANCELLED = "CANCELLED";
