@@ -610,6 +610,51 @@ public class Examples {
     }
 
     /**
+     * Creates a simple alert that fires when NIFTY 50 trades at or above 27000.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws IOException if the request fails due to an I/O error.
+     * @throws KiteException if the Kite API returns an error response.
+     */
+    public void createAlert(KiteConnect kiteConnect) throws IOException, KiteException {
+        AlertParams alertParams = new AlertParams();
+        alertParams.name = "NIFTY 50 above 27000";
+        alertParams.type = Constants.ALERT_TYPE_SIMPLE;
+        alertParams.lhsExchange = "INDICES";
+        alertParams.lhsTradingSymbol = "NIFTY 50";
+        alertParams.lhsAttribute = "LastTradedPrice";
+        alertParams.operator = Constants.ALERT_OPERATOR_GE;
+        alertParams.rhsType = Constants.ALERT_RHS_TYPE_CONSTANT;
+        alertParams.rhsConstant = 27000;
+
+        Alert alert = kiteConnect.createAlert(alertParams);
+        System.out.println(alert.uuid);
+    }
+
+    /**
+     * Fetches all alerts, then the details and trigger history of the first one, and deletes it.
+     *
+     * @param kiteConnect initialized Kite Connect client.
+     * @throws IOException if the request fails due to an I/O error.
+     * @throws KiteException if the Kite API returns an error response.
+     */
+    public void manageAlerts(KiteConnect kiteConnect) throws IOException, KiteException {
+        List<Alert> alerts = kiteConnect.getAlerts();
+        if (alerts.isEmpty()) {
+            return;
+        }
+        Alert alert = kiteConnect.getAlert(alerts.get(0).uuid);
+        System.out.println(alert.name + " " + alert.status);
+
+        List<AlertHistory> history = kiteConnect.getAlertHistory(alert.uuid);
+        for (AlertHistory entry : history) {
+            System.out.println(entry.createdAt + " " + entry.condition);
+        }
+
+        kiteConnect.deleteAlerts(alert.uuid);
+    }
+
+    /**
      * Fetches day and net positions.
      *
      * @param kiteConnect initialized Kite Connect client.

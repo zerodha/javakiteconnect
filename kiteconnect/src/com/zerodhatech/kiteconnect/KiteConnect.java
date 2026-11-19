@@ -628,6 +628,118 @@ public class KiteConnect implements AutoCloseable {
         return gtt;
     }
 
+    /** Creates an alert.
+     * @param alertParams is the alert's condition and, for an ATO alert, the basket of orders to place when it triggers.
+     * @return Alert that was created.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection error.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * */
+    public Alert createAlert(AlertParams alertParams) throws KiteException, IOException, JSONException {
+        String url = routes.get("alerts");
+        JSONObject response = kiteRequestHandler.postRequest(url, alertParamsToMap(alertParams), apiKey, accessToken);
+        return gson.fromJson(String.valueOf(response.get("data")), Alert.class);
+    }
+
+    /** Fetches all alerts of the user.
+     * @return List of alerts.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection error.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * */
+    public List<Alert> getAlerts() throws KiteException, IOException, JSONException {
+        return getAlerts(new HashMap<String, Object>());
+    }
+
+    /** Fetches the alerts of the user that match the given filters.
+     * @param filters are query parameters to filter by, for example status=enabled.
+     * @return List of alerts.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection error.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * */
+    public List<Alert> getAlerts(Map<String, Object> filters) throws KiteException, IOException, JSONException {
+        String url = routes.get("alerts");
+        JSONObject response = kiteRequestHandler.getRequest(url, filters, apiKey, accessToken);
+        return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), Alert[].class));
+    }
+
+    /** Fetches an alert.
+     * @param uuid is the id of the alert.
+     * @return Alert with all its details.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection error.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * */
+    public Alert getAlert(String uuid) throws KiteException, IOException, JSONException {
+        String url = routes.get("alerts.info").replace(":uuid", uuid);
+        JSONObject response = kiteRequestHandler.getRequest(url, apiKey, accessToken);
+        return gson.fromJson(String.valueOf(response.get("data")), Alert.class);
+    }
+
+    /** Modifies an alert.
+     * @param uuid is the id of the alert.
+     * @param alertParams is the alert's new condition and, for an ATO alert, its basket.
+     * @return Alert after the change.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection error.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * */
+    public Alert modifyAlert(String uuid, AlertParams alertParams) throws KiteException, IOException, JSONException {
+        String url = routes.get("alerts.info").replace(":uuid", uuid);
+        JSONObject response = kiteRequestHandler.putRequest(url, alertParamsToMap(alertParams), apiKey, accessToken);
+        return gson.fromJson(String.valueOf(response.get("data")), Alert.class);
+    }
+
+    /** Deletes one or more alerts.
+     * @param uuids are the ids of the alerts to delete.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection error.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * */
+    public void deleteAlerts(String... uuids) throws KiteException, IOException, JSONException {
+        if (uuids == null || uuids.length == 0) {
+            throw new IllegalArgumentException("At least one alert uuid is required");
+        }
+        String url = routes.get("alerts");
+        kiteRequestHandler.deleteRequest(url, "uuid", uuids, apiKey, accessToken);
+    }
+
+    /** Fetches the times an alert has triggered.
+     * @param uuid is the id of the alert.
+     * @return List of trigger records, with the market data at the time.
+     * @throws KiteException is thrown for all Kite trade related errors.
+     * @throws IOException is thrown when there is connection error.
+     * @throws JSONException is thrown when there is exception while parsing response.
+     * */
+    public List<AlertHistory> getAlertHistory(String uuid) throws KiteException, IOException, JSONException {
+        String url = routes.get("alerts.history").replace(":uuid", uuid);
+        JSONObject response = kiteRequestHandler.getRequest(url, apiKey, accessToken);
+        return Arrays.asList(gson.fromJson(String.valueOf(response.get("data")), AlertHistory[].class));
+    }
+
+    private Map<String, Object> alertParamsToMap(AlertParams alertParams) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", alertParams.name);
+        params.put("type", alertParams.type);
+        params.put("lhs_exchange", alertParams.lhsExchange);
+        params.put("lhs_tradingsymbol", alertParams.lhsTradingSymbol);
+        params.put("lhs_attribute", alertParams.lhsAttribute);
+        params.put("operator", alertParams.operator);
+        params.put("rhs_type", alertParams.rhsType);
+        if (Constants.ALERT_RHS_TYPE_CONSTANT.equals(alertParams.rhsType)) {
+            params.put("rhs_constant", new java.math.BigDecimal(String.valueOf(alertParams.rhsConstant)).stripTrailingZeros().toPlainString());
+        } else if (Constants.ALERT_RHS_TYPE_INSTRUMENT.equals(alertParams.rhsType)) {
+            params.put("rhs_exchange", alertParams.rhsExchange);
+            params.put("rhs_tradingsymbol", alertParams.rhsTradingSymbol);
+            params.put("rhs_attribute", alertParams.rhsAttribute);
+        }
+        if (Constants.ALERT_TYPE_ATO.equals(alertParams.type) && alertParams.basket != null) {
+            params.put("basket", gson.toJson(alertParams.basket));
+        }
+        return params;
+    }
+
     /** Returns list of different stages an order has gone through.
      * @return List of multiple stages an order has gone through in the system.
      * @throws KiteException is thrown for all Kite trade related errors.
